@@ -1,6 +1,9 @@
 # TCC
 TCC
 
+### Configuração para os file input
+* - Abra a classe UploadReceiver e coloque os caminhos absolutos para onde deseja que os arquivos vão
+
 ### Instalação
 0 - git clone https://github.com/Juniorrek/TCC.git
 

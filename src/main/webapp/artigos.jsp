@@ -1,0 +1,137 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Artigos</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+        <link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="node_modules/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="node_modules/fine-uploader/fine-uploader/fine-uploader-new.min.css">
+        <link rel="stylesheet" type="text/css" href="resources/css/style.css">
+</script>
+
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-ocean">
+                <div class="container">
+                    <a class="navbar-brand" href="#">
+                        <img src="resources/images/tritomus.png" width="40" height="32" class="d-inline-block align-top" alt="">
+                        Tritomus
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsHeader" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarsHeader">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="principal.jsp">Home</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="projetos.jsp">Projetos</a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="artigos.jsp">Artigos <span class="sr-only">(current)</a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle fa-fw" aria-hidden="true"></i> Nome</a>
+                                <div class="dropdown-menu" aria-labelledby="dropdown">
+                                    <a class="dropdown-item" href="#"><i class="fa fa-address-card fa-fw" aria-hidden="true"></i> Meu perfil</a>
+                                    <a class="dropdown-item" href="#"><i class="fa fa-cog fa-fw" aria-hidden="true"></i> Outra parada</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="index.jsp"><i class="fa fa-sign-out fa-fw" aria-hidden="true"></i> Logout</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="uploader"></div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="node_modules/jquery/dist/jquery.js"></script>
+        <script type="text/javascript" src="node_modules/popper.js/dist/umd/popper.min.js"></script>
+        <script type="text/javascript" src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+        <script type="text/javascript" src="node_modules/fine-uploader/fine-uploader/fine-uploader.min.js"></script>
+        <script type="text/template" id="qq-template">
+            <div class="qq-uploader-selector qq-uploader" qq-drop-area-text="Drop files here">
+                <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
+                    <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
+                </div>
+                <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+                    <span class="qq-upload-drop-area-text-selector"></span>
+                </div>
+                <div class="qq-upload-button-selector qq-upload-button">
+                    <div>Upload a file</div>
+                </div>
+                <span class="qq-drop-processing-selector qq-drop-processing">
+                    <span>Processing dropped files...</span>
+                    <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+                </span>
+                <ul class="qq-upload-list-selector qq-upload-list" aria-live="polite" aria-relevant="additions removals">
+                    <li>
+                        <div class="qq-progress-bar-container-selector">
+                            <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-progress-bar-selector qq-progress-bar"></div>
+                        </div>
+                        <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                        <img class="qq-thumbnail-selector" qq-max-size="100" qq-server-scale>
+                        <span class="qq-upload-file-selector qq-upload-file"></span>
+                        <span class="qq-edit-filename-icon-selector qq-edit-filename-icon" aria-label="Edit filename"></span>
+                        <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+                        <span class="qq-upload-size-selector qq-upload-size"></span>
+                        <button type="button" class="qq-btn qq-upload-cancel-selector qq-upload-cancel">Cancel</button>
+                        <button type="button" class="qq-btn qq-upload-retry-selector qq-upload-retry">Retry</button>
+                        <button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">Delete</button>
+                        <span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                    </li>
+                </ul>
+
+                <dialog class="qq-alert-dialog-selector">
+                    <div class="qq-dialog-message-selector"></div>
+                    <div class="qq-dialog-buttons">
+                        <button type="button" class="qq-cancel-button-selector">Close</button>
+                    </div>
+                </dialog>
+
+                <dialog class="qq-confirm-dialog-selector">
+                    <div class="qq-dialog-message-selector"></div>
+                    <div class="qq-dialog-buttons">
+                        <button type="button" class="qq-cancel-button-selector">No</button>
+                        <button type="button" class="qq-ok-button-selector">Yes</button>
+                    </div>
+                </dialog>
+
+                <dialog class="qq-prompt-dialog-selector">
+                    <div class="qq-dialog-message-selector"></div>
+                    <input type="text">
+                    <div class="qq-dialog-buttons">
+                        <button type="button" class="qq-cancel-button-selector">Cancel</button>
+                        <button type="button" class="qq-ok-button-selector">Ok</button>
+                    </div>
+                </dialog>
+            </div>
+        </script>
+        <script>
+            var uploader = new qq.FineUploader({
+                element: document.getElementById("uploader"),
+                request: {
+                    endpoint: 'upload'
+                }
+            })
+        </script>
+    </body>
+</html>

@@ -4,11 +4,12 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Index</title>
+        <title>Principal</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 
         <link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="node_modules/font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="resources/css/style.css">
     </head>
     <body>
@@ -26,29 +27,24 @@
                     <div class="collapse navbar-collapse" id="navbarsHeader">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item active">
-                                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                                <a class="nav-link" href="principal.jsp">Home <span class="sr-only">(current)</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Link</a>
+                                <a class="nav-link" href="projetos.jsp">Projetos</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link disabled" href="#">Disabled</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown07" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                                <div class="dropdown-menu" aria-labelledby="dropdown07">
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <a class="dropdown-item" href="#">Something else here</a>
-                                </div>
+                                <a class="nav-link" href="artigos.jsp">Artigos</a>
                             </li>
                         </ul>
                         <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a class="nav-link" href="login.jsp">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Cadastro</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle fa-fw" aria-hidden="true"></i> Nome</a>
+                                <div class="dropdown-menu" aria-labelledby="dropdown">
+                                    <a class="dropdown-item" href="#"><i class="fa fa-address-card fa-fw" aria-hidden="true"></i> Meu perfil</a>
+                                    <a class="dropdown-item" href="#"><i class="fa fa-cog fa-fw" aria-hidden="true"></i> Outra parada</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="index.jsp"><i class="fa fa-sign-out fa-fw" aria-hidden="true"></i> Logout</a>
+                                </div>
                             </li>
                         </ul>
                     </div>
