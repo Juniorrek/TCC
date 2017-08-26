@@ -12,8 +12,7 @@
         <link rel="stylesheet" type="text/css" href="node_modules/font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="node_modules/fine-uploader/fine-uploader/fine-uploader-new.min.css">
         <link rel="stylesheet" type="text/css" href="resources/css/style.css">
-</script>
-
+        
     </head>
     <body>
         <header>
@@ -129,9 +128,15 @@
             var uploader = new qq.FineUploader({
                 element: document.getElementById("uploader"),
                 request: {
-                    endpoint: 'upload'
-                }
+                    endpoint: "InserirServlet"
+                },
+                success: true,
+                //autoUpload: false,
+                //text: {
+                //    uploadButton: '<i class="icon-plus icon-white"></i> Select Files'
+                //}
             })
         </script>
+        
     </body>
 </html>
