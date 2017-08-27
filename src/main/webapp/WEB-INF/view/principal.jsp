@@ -27,23 +27,23 @@
                     <div class="collapse navbar-collapse" id="navbarsHeader">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item active">
-                                <a class="nav-link" href="principal.jsp">Home <span class="sr-only">(current)</span></a>
+                                <a class="nav-link" href="${pageContext.request.contextPath}/principal">&nbsp; Home <span class="sr-only">(current)</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="projetos.jsp">Projetos</a>
+                                <a class="nav-link" href="${pageContext.request.contextPath}/projetos">&nbsp; Projetos</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="artigos.jsp">Artigos</a>
+                                <a class="nav-link" href="${pageContext.request.contextPath}/artigos">&nbsp; Artigos</a>
                             </li>
                         </ul>
                         <ul class="navbar-nav">
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle fa-fw" aria-hidden="true"></i> Nome</a>
+                                <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle fa-fw" aria-hidden="true"></i>&nbsp; ${logado.nome}</a>
                                 <div class="dropdown-menu" aria-labelledby="dropdown">
-                                    <a class="dropdown-item" href="#"><i class="fa fa-address-card fa-fw" aria-hidden="true"></i> Meu perfil</a>
-                                    <a class="dropdown-item" href="#"><i class="fa fa-cog fa-fw" aria-hidden="true"></i> Outra parada</a>
+                                    <a class="dropdown-item" href="#"><i class="fa fa-address-card fa-fw" aria-hidden="true"></i>&nbsp; Meu perfil</a>
+                                    <a class="dropdown-item" href="#"><i class="fa fa-cog fa-fw" aria-hidden="true"></i>&nbsp; Outra parada</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="index.jsp"><i class="fa fa-sign-out fa-fw" aria-hidden="true"></i> Logout</a>
+                                    <a class="dropdown-item" href="${pageContext.request.contextPath}/logout"><i class="fa fa-sign-out fa-fw" aria-hidden="true"></i>&nbsp; Logout</a>
                                 </div>
                             </li>
                         </ul>

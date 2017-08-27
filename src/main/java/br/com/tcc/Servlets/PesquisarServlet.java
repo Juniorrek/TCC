@@ -1,6 +1,6 @@
-package Servlets;
+package br.com.tcc.Servlets;
 
-import Facade.Facade;
+import br.com.tcc.Facade.Facade;
 import beans.Texto;
 import java.io.File;
 import java.io.IOException;

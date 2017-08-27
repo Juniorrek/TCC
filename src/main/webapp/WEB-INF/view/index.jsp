@@ -45,10 +45,10 @@
                         </ul>
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link" href="login.jsp">Login</a>
+                                <a class="nav-link" href="${pageContext.request.contextPath}/login">Login</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="cadastro.jsp">Cadastro</a>
+                                <a class="nav-link" href="${pageContext.request.contextPath}/cadastro">Cadastro</a>
                             </li>
                         </ul>
                     </div>

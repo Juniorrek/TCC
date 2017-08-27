@@ -1,4 +1,4 @@
-package util;
+package br.com.tcc.util;
 
 import beans.*;
 import java.util.ArrayList;

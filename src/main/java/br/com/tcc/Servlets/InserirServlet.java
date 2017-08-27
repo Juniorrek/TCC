@@ -1,14 +1,8 @@
-package Servlets;
+package br.com.tcc.Servlets;
 
-import Facade.Facade;
-import beans.Termo;
-import static com.sun.xml.internal.ws.api.message.Packet.Status.Request;
+import br.com.tcc.Facade.Facade;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -16,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 @WebServlet(name = "InserirServlet", urlPatterns = {"/InserirServlet"})
 @MultipartConfig

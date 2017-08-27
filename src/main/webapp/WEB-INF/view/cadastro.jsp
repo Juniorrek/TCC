@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -9,6 +10,7 @@
 
 
         <link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="node_modules/toastr/build/toastr.min.css">
         <link rel="stylesheet" type="text/css" href="resources/css/style.css">
         <style type="text/css">
             .form-login {
@@ -19,7 +21,7 @@
                 border-bottom-right-radius: 0;
                 border-bottom-left-radius: 0;
             }
-            .form-login input[id="inputSenhaConfirmacao"] {
+            .form-login input[id="inputConfirmacaoSenha"] {
                 margin-bottom: 10px;
                 border-top-left-radius: 0;
                 border-top-right-radius: 0;
@@ -45,27 +47,27 @@
                 <div class="col-md-4">
                     <div class="card text-center">
                         <div class="card-block">
-                            <form class="form-login" action="login.jsp" method="post">
+                            <form:form cssClass="form-login" modelAttribute="cadastro" action="${pageContext.request.contextPath}/cadastrar" method="post">
                                 <h2 class="form-login-heading">Cadastrar</h2>
-                                <label for="inputEmail" class="sr-only">Email</label>
-                                <input type="email" id="inputEmail" class="form-control" placeholder="Email" required="" autofocus="">
-                                <br>
-                                <label for="inputNome" class="sr-only">Nome</label>
-                                <input type="text" id="inputNome" class="form-control" placeholder="Nome" required="">
-                                <br>
-                                <label for="inputSenha" class="sr-only">Senha</label>
-                                <input type="password" id="inputSenha" class="form-control" placeholder="Senha" required="">
-                                <label for="inputSenhaConfirmacao" class="sr-only">Confirmação de senha</label>
-                                <input type="password" id="inputSenhaConfirmacao" class="form-control" placeholder="Confirmação de senha" required="">
-                                <button class="btn btn-lg btn-primary btn-block" type="submit">Cadastrar</button>
+                                <form:label path="email" cssClass="sr-only">Email</form:label>
+                                <form:input path="email" cssClass="form-control" placeholder="Email" required="true" autofocus="true"/>
+                                <br/>
+                                <form:label path="nome" cssClass="sr-only">Nome</form:label>
+                                <form:input path="nome" cssClass="form-control" placeholder="Nome" required="true"/>
+                                <br/>
+                                <form:label path="senha" cssClass="sr-only">Senha</form:label>
+                                <form:password id="inputSenha" path="senha" cssClass="form-control" placeholder="Senha" required="true"/>
+                                <form:label path="confirmacaoSenha" cssClass="sr-only">Confirmação de senha</form:label>
+                                <form:password id="inputConfirmacaoSenha" path="confirmacaoSenha" cssClass="form-control" placeholder="Confirmação de senha" required="true"/>
+                                <form:button class="btn btn-lg btn-primary btn-block">Cadastrar</form:button>
                                 <footer>
                                    <div class="row">
                                         <div class="col-md-12">
-                                            <a href="login.jsp">Já tenho uma conta</a>
+                                            <a href="${pageContext.request.contextPath}/login">Já tenho uma conta</a>
                                         </div>
                                     </div> 
                                 </footer>
-                            </form>
+                            </form:form>
                         </div>
                     </div>
                 </div>
@@ -75,5 +77,26 @@
         <script type="text/javascript" src="node_modules/jquery/dist/jquery.js"></script>
         <script type="text/javascript" src="node_modules/popper.js/dist/umd/popper.min.js"></script>
         <script type="text/javascript" src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+        <script type="text/javascript" src="node_modules/toastr/build/toastr.min.js"></script>
+        <script type="text/javascript">
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-full-width",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+            ${retorno}
+        </script>
     </body>
 </html>

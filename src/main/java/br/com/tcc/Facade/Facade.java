@@ -1,7 +1,6 @@
-package Facade;
+package br.com.tcc.Facade;
 
 import beans.Texto;
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -12,14 +11,13 @@ import java.util.List;
 import java.util.logging.Level;
 import javax.servlet.http.Part;
 import org.rosuda.REngine.REXPMismatchException;
-import util.Call;
+import br.com.tcc.util.Call;
 
 public class Facade {
         final String path = "C:/Users/Orestes/Desktop/TCC/SobAnalise";
     
         public String getFileName(final Part part) {
             final String partHeader = part.getHeader("content-disposition");
-            LOGGER.log(Level.INFO, "Part Header = {0}", partHeader);
             for (String content : part.getHeader("content-disposition").split(";")) {
                 if (content.trim().startsWith("filename")) {
                     return content.substring(content.indexOf('=') + 1).trim().replace("\"", "");
@@ -41,9 +39,7 @@ public class Facade {
                 while ((read = filecontent.read(bytes)) != -1) {
                    out.write(bytes, 0, read);
                 }
-                LOGGER.log(Level.INFO, "File{0}being uploaded to {1}", new Object[]{fileName, path});
             } catch (FileNotFoundException fne) {
-                LOGGER.log(Level.SEVERE, "Problems during file upload. Error: {0}", new Object[]{fne.getMessage()});
             } finally {
                 if (out != null) { out.close(); }
                 if (filecontent != null) { filecontent.close(); }                            

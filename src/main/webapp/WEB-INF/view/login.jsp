@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -9,17 +10,18 @@
 
 
         <link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="node_modules/toastr/build/toastr.min.css">
         <link rel="stylesheet" type="text/css" href="resources/css/style.css">
         <style type="text/css">
             .form-login {
                 padding: 15% 8% 25% 8%;
             }
-            .form-login input[type="email"] {
+            .form-login input[id="inputEmail"] {
                 margin-bottom: -1px;
                 border-bottom-right-radius: 0;
                 border-bottom-left-radius: 0;
             }
-            .form-login input[type="password"] {
+            .form-login input[id="inputSenha"] {
                 margin-bottom: 10px;
                 border-top-left-radius: 0;
                 border-top-right-radius: 0;
@@ -45,18 +47,18 @@
                 <div class="col-md-4">
                     <div class="card text-center">
                         <div class="card-block">
-                            <form class="form-login" action="principal.jsp" method="post">
+                            <form:form cssClass="form-login" modelAttribute="login" action="${pageContext.request.contextPath}/logar" method="post">
                                 <h2 class="form-login-heading">Login</h2>
-                                <label for="inputEmail" class="sr-only">Email</label>
-                                <input type="email" id="inputEmail" class="form-control" placeholder="Email" required="" autofocus="">
-                                <label for="inputSenha" class="sr-only">Senha</label>
-                                <input type="password" id="inputSenha" class="form-control" placeholder="Senha" required="">
+                                <form:label path="email" cssClass="sr-only">Email</form:label>
+                                <form:input id="inputEmail" path="email" cssClass="form-control" placeholder="Email" required="true" autofocus="true"/>
+                                <form:label path="senha" cssClass="sr-only">Senha</form:label>
+                                <form:password id="inputSenha" path="senha" cssClass="form-control" placeholder="Senha" required="true" autofocus="true"/>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <a class="btn btn-lg btn-primary btn-block" href="cadastro.jsp">Cadastrar</a>
+                                        <a class="btn btn-lg btn-primary btn-block" href="${pageContext.request.contextPath}/cadastro">Cadastro</a>
                                     </div>
                                     <div class="col-md-6">
-                                        <button class="btn btn-lg btn-success btn-block" type="submit">Entrar</button>
+                                        <form:button class="btn btn-lg btn-success btn-block">Entrar</form:button>
                                     </div>
                                 </div>
                                 <footer>
@@ -66,7 +68,7 @@
                                         </div>
                                     </div> 
                                 </footer>
-                            </form>
+                            </form:form>
                         </div>
                     </div>
                 </div>
@@ -76,5 +78,26 @@
         <script type="text/javascript" src="node_modules/jquery/dist/jquery.js"></script>
         <script type="text/javascript" src="node_modules/popper.js/dist/umd/popper.min.js"></script>
         <script type="text/javascript" src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+        <script type="text/javascript" src="node_modules/toastr/build/toastr.min.js"></script>
+        <script type="text/javascript">
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-full-width",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+            ${retorno}
+        </script>
     </body>
 </html>
