@@ -8,6 +8,10 @@ import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
 
 public class Call {
+        //MUDEM PARA OS CAMINHOS DE VOCÊS!
+        private final String pathorigem = "C:/Users/Orestes/Desktop/TCC"; //caminho de onde estão os pdf
+        private final String path = "C:/Users/Orestes/Desktop/TCC/SobAnalise"; //caminho da pasta que ocorrerá o processo do extractAbstract e findtfidf
+        private final String pdftotext = "C:/Users/Orestes/Desktop/TCC/pdftotext.exe"; //caminho pro pdftotext
               
         public List<Texto> soloArtigo(String nome, String caminho) throws REXPMismatchException { //extrair data_frame com pdf upado
 	RConnection connection = null;
@@ -127,6 +131,52 @@ public class Call {
                                 a.setIdf(connection.eval("aux").asString());
                                 connection.eval("aux=paste(meanVal[" + Integer.toString(i) + ",7])");
                                 a.setTfidf(connection.eval("aux").asString());
+                                termos.add(a);
+                        }
+                        return termos;
+                } catch (RserveException e) {
+                    e.printStackTrace();
+                }finally{
+                    connection.close();
+                }
+                return null;
+        }
+        
+        
+        
+        public List<Texto> abstractTfIdf(String[] nomes) throws REXPMismatchException {
+	RConnection connection = null;
+                try {
+                        connection = new RConnection();
+                        connection.eval("library(tidytext)");
+                        connection.eval("library(dplyr)");                       
+                        connection.eval("source('C:/Users/Orestes/Desktop/TCC/R_files/extractAbstract.R')"); //MUDEM PARA OS CAMINHOS DE VOCÊS!
+                        connection.eval("source('C:/Users/Orestes/Desktop/TCC/R_files/tidynator.R')");
+                        connection.eval("source('C:/Users/Orestes/Desktop/TCC/R_files/find_tf_idf.R')");
+                        for(String arq: nomes) { //PASSANDO ARQUIVOS PARA PASTA DE ANÁLISE
+                            connection.eval("flist = list.files(\"" + pathorigem + "\",\"" + arq + "\", full.names = TRUE)");
+                            connection.eval("file.copy(flist,\"" + path + "\")");
+                        }
+                        connection.eval("xx = extractAbstract(\"" + path + "\",\"" + pdftotext + "\")");
+                        connection.eval("meanVal = find_tf_idf(\"" + path + "\")");
+                        connection.eval("do.call(file.remove, list(list.files(\"" + path + "\", full.names = TRUE)))"); //TIRANDO TUDO DA PASTA DE ANÁLISE PRA NÃO OCORRER ERROS
+                        connection.eval("contador=paste(count(meanVal))");
+                        int linha = Integer.parseInt(connection.eval("contador").asString());                        
+                        List<Texto> termos = new ArrayList();
+                        for(int i=1;i<=linha;i++){
+                                Texto a = new Texto();
+                                connection.eval("aux=as.character(meanVal[[" + Integer.toString(i) + ",1]])");
+                                a.setArtigo(connection.eval("aux").asString());
+                                connection.eval("aux=paste(meanVal[" + Integer.toString(i) + ",2])");
+                                a.setWord(connection.eval("aux").asString());
+                                connection.eval("aux=paste(meanVal[" + Integer.toString(i) + ",3])");
+                                a.setQuant(connection.eval("aux").asString());
+                                connection.eval("aux=paste(meanVal[" + Integer.toString(i) + ",5])");
+                                a.setTf(String.format("%.4f", Double.parseDouble(connection.eval("aux").asString())));
+                                connection.eval("aux=paste(meanVal[" + Integer.toString(i) + ",6])");
+                                a.setIdf(String.format("%.4f", Double.parseDouble(connection.eval("aux").asString())));
+                                connection.eval("aux=paste(meanVal[" + Integer.toString(i) + ",7])");
+                                a.setTfidf(String.format("%.4f", Double.parseDouble(connection.eval("aux").asString())));
                                 termos.add(a);
                         }
                         return termos;
