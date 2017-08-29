@@ -65,6 +65,9 @@
                         <th>Artigo:</th>
                         <th>Palavra:</th>
                         <th>Ocorrências:</th>
+                        <th>Tf:</th>
+                        <th>Idf:</th>
+                        <th>TfIdf</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,6 +76,9 @@
                             <th scope="row">${termo.artigo}</th>
                             <th>${termo.word}</th>
                             <th>${termo.quant}</th>
+                            <th>${termo.tf}</th>
+                            <th>${termo.idf}</th>
+                            <th>${termo.tfidf}</th>
                         </tr>
                     </c:forEach>
                 </tbody>
