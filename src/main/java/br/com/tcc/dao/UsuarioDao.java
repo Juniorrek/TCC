@@ -2,6 +2,7 @@ package br.com.tcc.dao;
 
 import br.com.tcc.factory.ConnectionFactory;
 import br.com.tcc.model.Cadastro;
+import br.com.tcc.model.Projeto;
 import br.com.tcc.model.Usuario;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -71,6 +72,42 @@ public class UsuarioDao {
             if (connection != null)
                 try { connection.close(); }
                 catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
+    }
+    
+    
+    
+    public static Usuario carregar(Projeto projeto) throws SQLException {
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
+        
+        try {
+            stmt = connection.prepareStatement("SELECT u.* FROM Usuario u "
+                                                + "JOIN Projeto p ON p.email = u.email "
+                                                + "WHERE p.id = ?");
+            stmt.setInt(1, projeto.getId());
+            
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                Usuario usuario = new Usuario();
+                usuario.setEmail(rs.getString("email"));
+                usuario.setNome(rs.getString("nome"));
+                
+                return usuario;
+            } else {
+                return null;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
         }
     }
     

@@ -128,7 +128,7 @@
             var uploader = new qq.FineUploader({
                 element: document.getElementById("uploader"),
                 request: {
-                    endpoint: "upload"
+                    endpoint: "${pageContext.request.contextPath}/InserirServlet"
                 },
                 success: true
                 //autoUpload: false,

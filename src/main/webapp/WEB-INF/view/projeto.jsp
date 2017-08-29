@@ -66,7 +66,35 @@
                         </div>
                         <div class="card-block" style="padding: 25px;">
                             <h6 class="card-subtitle mb-2 text-muted">Artigos</h6>
+                            <div class="row">
+                                <c:forEach items="${arq_nomes}" var="arq_nome">
+                                    <div class='col-lg-3 col-md-6'>
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <div class='row'>
+                                                    <div class='col-md-3'>
+                                                        <i class='fa fa-file-pdf-o fa-4x'></i>
+                                                    </div>
+                                                    <div class='colmd-9'>
+                                                        <div>${arq_nome}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <a href="${pageContext.request.contextPath}/projetos/artigos/vizualizar?projeto=${projeto.id}&artigo=${arq_nome}" target="_blank">
+                                                <div class="card-footer text-muted">
+                                                    <span class='pull-left'>Vizualizar</span>
+                                                    <span class='pull-right'><i class='fa fa-arrow-circle-right'></i></span>
+                                                    <div class='clearfix'></div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                            <br/>
                             <div id="uploader"></div>
+                            <br/>
+                            <a href="${pageContext.request.contextPath}/projetos/tfidf?projeto=${projeto.id}" type="button" class="btn btn-primary btn-lg btn-block">TFIDF</a>
                         </div>
                     </div>
                 </div>
@@ -162,7 +190,10 @@
             var uploader = new qq.FineUploader({
                 element: document.getElementById("uploader"),
                 request: {
-                    endpoint: "upload"
+                    endpoint: "${pageContext.request.contextPath}/projetos/artigos/adicionar",
+                    params: {
+                        projeto: '${projeto.id}'
+                    }
                 },
                 success: true
                 //autoUpload: false,

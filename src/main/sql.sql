@@ -20,3 +20,10 @@ CREATE TABLE Projeto (
     PRIMARY KEY (id),
     FOREIGN KEY (email) REFERENCES Usuario (email)
 );
+
+CREATE TABLE Rel_Arq_Pro (
+    pro_id INT,
+    arq_caminho VARCHAR(500),
+
+    FOREIGN KEY (pro_id) REFERENCES Projeto (id)
+);

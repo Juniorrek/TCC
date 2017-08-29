@@ -9,7 +9,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class Interceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest hsr, HttpServletResponse hsr1, Object o) throws Exception {
-        String uri = hsr.getRequestURI();
+        return true;
+        /*String uri = hsr.getRequestURI();
+        System.out.println(uri);
         
         //Publico
         if (uri.endsWith("/") ||
@@ -23,10 +25,11 @@ public class Interceptor implements HandlerInterceptor {
         
         HttpSession session = hsr.getSession();
         if (session.getAttribute("logado") != null) {
+            System.out.println("a");
             return true;
         }
         
-        return false;
+        return false;*/
     }
 
     @Override

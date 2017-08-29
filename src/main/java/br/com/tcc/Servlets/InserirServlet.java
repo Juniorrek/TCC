@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
-@WebServlet(name = "InserirServlet", urlPatterns = {"/InserirServlet"})
+@WebServlet(name = "InserirServleta", urlPatterns = {"/InserirServleta"})
 @MultipartConfig
 public class InserirServlet extends HttpServlet {
 
@@ -26,6 +26,7 @@ public class InserirServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        System.out.println("blink");
         Facade f = new Facade();
         Collection<Part> filePart = request.getParts();
         for(Part p: filePart){
