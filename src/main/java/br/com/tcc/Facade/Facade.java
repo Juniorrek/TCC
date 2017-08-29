@@ -14,7 +14,7 @@ import org.rosuda.REngine.REXPMismatchException;
 import br.com.tcc.util.Call;
 
 public class Facade {
-        final String path = "C:\\Users\\david.INTRANET\\Documents\\testes";
+        final String path = "C:/Users/Orestes/Desktop/TCC/SobAnalise";
     
         public String getFileName(final Part part) {
             final String partHeader = part.getHeader("content-disposition");
@@ -61,7 +61,7 @@ public class Facade {
               
         public List<Texto> manyArtigo(String[] nome) throws REXPMismatchException {
             Call c = new Call();
-            List<Texto> a = c.manyArtigo(nome, path);
+            List<Texto> a = c.abstractTfIdf(nome);
             return a;
         }
 }
