@@ -82,7 +82,7 @@
                                             </div>
                                             <a href="${pageContext.request.contextPath}/projetos/artigos/vizualizar?projeto=${projeto.id}&artigo=${arq_nome}" target="_blank">
                                                 <div class="card-footer text-muted">
-                                                    <span class='pull-left'>Vizualizar</span>
+                                                    <span class='pull-left'>Visualizar</span>
                                                     <span class='pull-right'><i class='fa fa-arrow-circle-right'></i></span>
                                                     <div class='clearfix'></div>
                                                 </div>
@@ -94,7 +94,7 @@
                             <br/>
                             <div id="uploader"></div>
                             <br/>
-                            <a href="${pageContext.request.contextPath}/projetos/tfidf?projeto=${projeto.id}" type="button" class="btn btn-primary btn-lg btn-block">TFIDF</a>
+                            <a href="${pageContext.request.contextPath}/projetos/tfidf?projeto=${projeto.id}" type="button" class="btn btn-primary btn-lg btn-block">Iniciar análise</a>
                         </div>
                     </div>
                 </div>
@@ -129,7 +129,7 @@
         </script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/fine-uploader/fine-uploader/fine-uploader.min.js"></script>
         <script type="text/template" id="qq-template">
-            <div class="qq-uploader-selector qq-uploader" qq-drop-area-text="Drop files here">
+            <div class="qq-uploader-selector qq-uploader" qq-drop-area-text="Arraste seus artigos aqui">
                 <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
                     <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
                 </div>
@@ -137,7 +137,7 @@
                     <span class="qq-upload-drop-area-text-selector"></span>
                 </div>
                 <div class="qq-upload-button-selector qq-upload-button">
-                    <div>Upload a file</div>
+                    <div>Inserir um artigo</div>
                 </div>
                 <span class="qq-drop-processing-selector qq-drop-processing">
                     <span>Processing dropped files...</span>

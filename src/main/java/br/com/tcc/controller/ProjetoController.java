@@ -1,16 +1,10 @@
 package br.com.tcc.controller;
 
-import br.com.tcc.dao.ArquivoDao;
-import br.com.tcc.dao.ProjetoDao;
-import br.com.tcc.dao.UsuarioDao;
-import br.com.tcc.model.Projeto;
-import br.com.tcc.model.Usuario;
-import com.sun.net.httpserver.Authenticator.Success;
-import java.io.BufferedReader;
+import br.com.tcc.model.*;
+import br.com.tcc.dao.*;
+import br.com.tcc.util.Call;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -21,10 +15,8 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.websocket.server.PathParam;
 import org.apache.commons.io.FileUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.rosuda.REngine.REXPMismatchException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -112,8 +104,8 @@ public class ProjetoController {
         model.addAttribute("projeto", projeto);
         
         Usuario logado = (Usuario) session.getAttribute("logado");
-        String folderPath = "C:/Sistema_TCC/arquivos/artigos/"
-                                + logado.getEmail() + "\\"
+        String folderPath = "C:/Users/Orestes/Desktop/TCC/SobAnalise/"
+                                + logado.getEmail() + "/"
                                 + projeto.getId().toString();
         List<String> arq_nomes = ArquivoDao.carregar(folderPath);
         model.addAttribute("arq_nomes", arq_nomes);
@@ -127,7 +119,7 @@ public class ProjetoController {
             Projeto projeto = ProjetoDao.carregar(id);
             Usuario usuario = UsuarioDao.carregar(projeto);
             
-            String filePath = "C:/Sistema_TCC/arquivos/artigos/"
+            String filePath = "C:/Users/Orestes/Desktop/TCC/SobAnalise/"
                                 + usuario.getEmail() + "\\"
                                 + projeto.getId().toString() + "\\"
                                 + file.getOriginalFilename();
@@ -169,7 +161,7 @@ public class ProjetoController {
             Projeto projeto = ProjetoDao.carregar(id);
             Usuario usuario = UsuarioDao.carregar(projeto);
             
-            String filePath = "C:/Sistema_TCC/arquivos/artigos/" + usuario.getEmail() + "/" + projeto.getId() + "/" + nome;
+            String filePath = "C:/Users/Orestes/Desktop/TCC/SobAnalise/" + usuario.getEmail() + "/" + projeto.getId() + "/" + nome;
             
             try {
                 File file = new File(filePath);
@@ -190,18 +182,21 @@ public class ProjetoController {
     }
     
     @RequestMapping("/projetos/tfidf")    
-    public void projetosTfidf(@RequestParam("projeto") Integer id, HttpServletResponse response) {
+    public String projetosTfidf(@RequestParam("projeto") Integer id, HttpServletResponse response, Model model) throws REXPMismatchException {
         try {
             Projeto projeto = ProjetoDao.carregar(id);
             Usuario usuario = UsuarioDao.carregar(projeto);
             
-            String folderPath = "C:/Sistema_TCC/arquivos/artigos/" + usuario.getEmail() + "/" + projeto.getId();
+            String folderPath = "C:/Users/Orestes/Desktop/TCC/SobAnalise/" + usuario.getEmail() + "/" + projeto.getId();
             
             
-            //MANDA PRO RSERVE E FAZ ELE GERAR O ARQUIVO
+            Call c = new Call();
+            List<Texto> lista = c.abstractTfIdf(folderPath);
+            model.addAttribute("Lista", lista);
+            List<Artigo> lista2 = c.abstractObjective(folderPath);
+            model.addAttribute("Lista2", lista2);
             
-            
-            String filePath = "C:/Sistema_TCC/arquivos/artigos/" + usuario.getEmail() + "/" + projeto.getId() + "/" + "resultadoTfidf.pdf";
+            String filePath = "C:/Users/Orestes/Desktop/TCC/SobAnalise/" + usuario.getEmail() + "/" + projeto.getId() + "/" + "resultadoTfidf.pdf";
             try {
                 File file = new File(filePath);
                 FileUtils fu = new FileUtils();
@@ -218,5 +213,6 @@ public class ProjetoController {
         } catch (SQLException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return "resultado";
     }
 }

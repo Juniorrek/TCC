@@ -13,6 +13,7 @@
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css">
         <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/icons/favicon.ico">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     </head>
     <body>
         <header>
@@ -29,16 +30,13 @@
                     <div class="collapse navbar-collapse" id="navbarsHeader">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item active">
-                                <a class="nav-link" href="principal.jsp">Home <span class="sr-only">(current)</span></a>
+                                <a class="nav-link" href="${pageContext.request.contextPath}/principal">Home <span class="sr-only">(current)</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="projetos.jsp">Projetos</a>
+                                <a class="nav-link" href="${pageContext.request.contextPath}/projetos">Projetos</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="artigos.jsp">Artigos</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="PesquisarServlet">Analisar</a>
+                                <a class="nav-link" href="${pageContext.request.contextPath}/artigos">Artigos</a>
                             </li>
                         </ul>
                         <ul class="navbar-nav">
@@ -59,14 +57,13 @@
 
         <div class="container">
             <br/>
+            <div id="tabela" style="height: 400px; overflow: auto">
             <table class="table table-responsive table-striped table-bordered">
                 <thead class="thead-default">
                     <tr>
                         <th>Artigo:</th>
                         <th>Palavra:</th>
                         <th>Ocorrências:</th>
-                        <th>Tf:</th>
-                        <th>Idf:</th>
                         <th>TfIdf</th>
                     </tr>
                 </thead>
@@ -76,15 +73,37 @@
                             <th scope="row">${termo.artigo}</th>
                             <th>${termo.word}</th>
                             <th>${termo.quant}</th>
-                            <th>${termo.tf}</th>
-                            <th>${termo.idf}</th>
                             <th>${termo.tfidf}</th>
                         </tr>
                     </c:forEach>
                 </tbody>
             </table>            
+            </div>
+            
+            <br/>
+            <div id="titObjetivos">Objetivos detectados nos abstracts:</div>
+            <div id="objetivos" style="display: none;">
+               <c:forEach var="resumo" items="${Lista2}">
+                    <p class="nomeArquivo">${resumo.nome}</p><br/>
+                    <p class="resumoArquivo">${resumo.objetivo}</p><br/>
+                </c:forEach>
+            </div> 
         </div>
 
+        <script>
+        $(document).ready(function(){
+            $("#titObjetivos").click(function(){
+                var x = document.getElementById('objetivos');
+                if(x.style.display=='none'){
+                    $("#objetivos").show(1000);
+                }
+                else{
+                    $("#objetivos").hide(1000);
+                }
+            });
+        });
+        </script>
+                        
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/jquery/dist/jquery.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/popper.js/dist/umd/popper.min.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/bootstrap/dist/js/bootstrap.js"></script>

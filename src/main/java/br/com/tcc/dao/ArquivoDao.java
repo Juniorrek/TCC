@@ -51,7 +51,8 @@ public class ArquivoDao {
         List<String> arq_nomes = new ArrayList<String>();
         
         for (File f : listOfFiles) {
-            arq_nomes.add(f.getName());
+            if(f.isFile() && f.getName().endsWith(".pdf"))
+                arq_nomes.add(f.getName());
         }
         
         return arq_nomes;

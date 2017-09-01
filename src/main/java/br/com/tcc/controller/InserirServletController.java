@@ -1,6 +1,5 @@
 package br.com.tcc.controller;
 
-import br.com.tcc.Facade.Facade;
 import br.com.tcc.dao.ProjetoDao;
 import br.com.tcc.model.Projeto;
 import br.com.tcc.model.Usuario;
