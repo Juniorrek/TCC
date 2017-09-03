@@ -20,7 +20,7 @@ public class UsuarioDao {
         PreparedStatement stmt = null;
         String senha = "";
         
-        try {
+        /*try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(cadastro.getSenha().getBytes(), 0, cadastro.getSenha().length());
             senha = new BigInteger(1, md.digest()).toString(16);
@@ -47,7 +47,7 @@ public class UsuarioDao {
             if (connection != null)
                 try { connection.close(); }
                 catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
-        }
+        }*/
     }
     
     public static void confirmarCadastro(String email) throws SQLException {

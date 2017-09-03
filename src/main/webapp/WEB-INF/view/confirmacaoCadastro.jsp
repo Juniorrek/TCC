@@ -3,50 +3,27 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <title>Confirmação de cadastro</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-
-        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/bootstrap/dist/css/bootstrap.min.css">
+        
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/node_modules/material-design-icons-iconfont/dist/fonts/material-icons.css">
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/materialize-css/dist/css/materialize.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css">
         <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/icons/favicon.ico">
-        <style type="text/css">
-            .card-block {
-                padding: 15% 8% 25% 8%;
-            }
-            footer {
-                margin-top: 5%;
-            }
-            .card {
-                margin-top: 25%;
-            }
-            body {
-                background-color: #41859C;
-            }
-            .form-login-heading {
-                margin-bottom: 10%;
-            }
-        </style>
     </head>
-    <body>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4"></div>
-                <div class="col-md-4">
-                    <div class="card text-center">
-                        <div class="card-block">
-                            <h2 class="form-login-heading">Cadastro realizado com sucesso !!!</h2>
-                            <br/>
-                            <h3 class="form-login-heading">Verifique seu email para confirmar seu cadastro.</h3>
-                            <footer>
-                                <div class="row">
-                                     <div class="col-md-12">
-                                         <a href="${pageContext.request.contextPath}/login">Logar</a>
-                                     </div>
-                                 </div> 
-                             </footer>
+    <body style="background-color: #2196f3;">
+        <div class="row">
+            <div class="col s12 m4 offset-m4">
+                <div class="card white">
+                    <div class="card-content">
+                        <span class="card-title">Cadastrado com sucesso !!!</span>
+                        <p>Verifique seu email para confirmar seu cadastro.</p>
+                    </div>
+                    <div class="card-action">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <a class="btn-large waves-effect waves-light blue white-text" href="${pageContext.request.contextPath}/login">Logar</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -54,7 +31,6 @@
         </div>
 
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/jquery/dist/jquery.js"></script>
-        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/popper.js/dist/umd/popper.min.js"></script>
-        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/bootstrap/dist/js/bootstrap.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/materialize-css/dist/js/materialize.js"></script>
     </body>
 </html>

@@ -1,5 +1,6 @@
 package br.com.tcc.upload;
 
+import br.com.tcc.singleton.Singleton;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -17,8 +18,8 @@ import javax.servlet.annotation.WebServlet;
 
 @WebServlet(name = "UploadReceiver", urlPatterns = {"/upload"})
 public class UploadReceiver extends HttpServlet {
-    private static final File UPLOAD_DIR = new File("C:/Users/David/Documents/test/uploads");
-    private static File TEMP_DIR = new File("C:/Users/David/Documents/test/uploadsTemp");
+    private static final File UPLOAD_DIR = new File(Singleton.UPLOAD_DIR);
+    private static File TEMP_DIR = new File(Singleton.TEMP_DIR);
 
     private static String CONTENT_LENGTH = "Content-Length";
     private static int SUCCESS_RESPONSE_CODE = 200;

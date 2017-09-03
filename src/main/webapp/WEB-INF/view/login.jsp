@@ -3,102 +3,53 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <title>Login</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-
-        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/bootstrap/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/toastr/build/toastr.min.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/node_modules/material-design-icons-iconfont/dist/fonts/material-icons.css">
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/materialize-css/dist/css/materialize.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css">
         <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/icons/favicon.ico">
-        <style type="text/css">
-            .form-login {
-                padding: 15% 8% 25% 8%;
-            }
-            .form-login input[id="inputEmail"] {
-                margin-bottom: -1px;
-                border-bottom-right-radius: 0;
-                border-bottom-left-radius: 0;
-            }
-            .form-login input[id="inputSenha"] {
-                margin-bottom: 10px;
-                border-top-left-radius: 0;
-                border-top-right-radius: 0;
-            }
-            footer {
-                margin-top: 5%;
-            }
-            .card {
-                margin-top: 25%;
-            }
-            body {
-                background-color: #41859C;
-            }
-            .form-login-heading {
-                margin-bottom: 10%;
-            }
-        </style>
     </head>
-    <body>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4"></div>
-                <div class="col-md-4">
-                    <div class="card text-center">
-                        <div class="card-block">
-                            <form:form cssClass="form-login" modelAttribute="login" action="${pageContext.request.contextPath}/logar" method="post">
-                                <h2 class="form-login-heading">Login</h2>
-                                <form:label path="email" cssClass="sr-only">Email</form:label>
-                                <form:input id="inputEmail" path="email" cssClass="form-control" placeholder="Email" required="true" autofocus="true"/>
-                                <form:label path="senha" cssClass="sr-only">Senha</form:label>
-                                <form:password id="inputSenha" path="senha" cssClass="form-control" placeholder="Senha" required="true" autofocus="true"/>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <a class="btn btn-lg btn-primary btn-block" href="${pageContext.request.contextPath}/cadastro">Cadastro</a>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <form:button class="btn btn-lg btn-success btn-block">Entrar</form:button>
-                                    </div>
+    <body style="background-color: #2196f3;">
+        <div class="row">
+            <div class="col s12 m4 offset-m4">
+                <div class="card white">
+                    <div class="card-content">
+                        <span class="card-title">Login</span>
+                        <form:form modelAttribute="login" action="${pageContext.request.contextPath}/logar" method="post">
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <form:input path="email" required="true" autofocus="true"/>
+                                    <form:label path="email">Email</form:label>
                                 </div>
-                                <footer>
-                                   <div class="row">
-                                        <div class="col-md-12">
-                                            <a href="#">Esqueci minha senha</a>
-                                        </div>
-                                    </div> 
-                                </footer>
-                            </form:form>
-                        </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <form:password path="senha" cssClass="validate" required="true"/>
+                                    <form:label path="senha">Senha</form:label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <button class="btn-large waves-effect waves-light blue white-text" type="submit" name="action">Logar</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s6 center">
+                                    <a href="${pageContext.request.contextPath}/cadastro">Não tenho uma conta</a>
+                                </div>
+                                <div class="input-field col s6 center">
+                                    <a href="${pageContext.request.contextPath}/esqueci_senha">Esqueci minha senha</a>
+                                </div>
+                            </div>
+                        </form:form>
                     </div>
                 </div>
             </div>
         </div>
 
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/jquery/dist/jquery.js"></script>
-        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/popper.js/dist/umd/popper.min.js"></script>
-        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/bootstrap/dist/js/bootstrap.js"></script>
-        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/toastr/build/toastr.min.js"></script>
-        <script type="text/javascript">
-            toastr.options = {
-                "closeButton": false,
-                "debug": false,
-                "newestOnTop": false,
-                "progressBar": false,
-                "positionClass": "toast-top-full-width",
-                "preventDuplicates": false,
-                "onclick": null,
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": "5000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            };
-            ${retorno}
-        </script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/materialize-css/dist/js/materialize.js"></script>
     </body>
 </html>

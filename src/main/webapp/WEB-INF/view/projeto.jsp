@@ -4,128 +4,157 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <title>Projeto</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 
-        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/bootstrap/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/font-awesome/css/font-awesome.min.css">
-        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/toastr/build/toastr.min.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/node_modules/material-design-icons-iconfont/dist/fonts/material-icons.css">
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/materialize-css/dist/css/materialize.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/fine-uploader/fine-uploader/fine-uploader-new.min.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css">
         <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/icons/favicon.ico">
     </head>
     <body>
-        <header style="margin-bottom: 20px;">
-            <nav class="navbar navbar-expand-lg navbar-dark bg-ocean">
-                <div class="container">
-                    <a class="navbar-brand" href="${pageContext.request.contextPath}/principal">
-                        <img src="${pageContext.request.contextPath}/resources/images/tritomus.png" width="40" height="32" class="d-inline-block align-top" alt="">
-                        Tritomus
-                    </a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsHeader" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div class="collapse navbar-collapse" id="navbarsHeader">
-                        <ul class="navbar-nav mr-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" href="${pageContext.request.contextPath}/principal">&nbsp; Home <span class="sr-only">(current)</span></a>
-                            </li>
-                            <li class="nav-item active">
-                                <a class="nav-link" href="${pageContext.request.contextPath}/projetos">&nbsp; Projetos</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="${pageContext.request.contextPath}/artigos">&nbsp; Artigos</a>
-                            </li>
-                        </ul>
-                        <ul class="navbar-nav">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle fa-fw" aria-hidden="true"></i>&nbsp; ${logado.nome}</a>
-                                <div class="dropdown-menu" aria-labelledby="dropdown">
-                                    <a class="dropdown-item" href="#"><i class="fa fa-address-card fa-fw" aria-hidden="true"></i>&nbsp; Meu perfil</a>
-                                    <a class="dropdown-item" href="#"><i class="fa fa-cog fa-fw" aria-hidden="true"></i>&nbsp; Outra parada</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="${pageContext.request.contextPath}/logout"><i class="fa fa-sign-out fa-fw" aria-hidden="true"></i>&nbsp; Logout</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+        <header>
+            <ul id="dropdown-logado" class="dropdown-content">
+                <li><a href="#!">Meu perfil</a></li>
+                <li class="divider"></li>
+                <li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
+            </ul>
+            <nav class="blue blue-darken-1">
+                <div class="container nav-wrapper">
+                    <a href="${pageContext.request.contextPath}/principal" class="brand-logo">Tritomus</a>
+                    <a href="#" data-activates="mobile-menu" class="button-collapse"><i class="material-icons">menu</i></a>
+                    <ul class="right hide-on-med-and-down">
+                      <li><a href="${pageContext.request.contextPath}/principal"><i class="material-icons left">home</i>Home</a></li>
+                      <li class="active"><a href="${pageContext.request.contextPath}/projetos"><i class="material-icons left">work</i>Projetos</a></li>
+                      <li><a class="dropdown-button" href="#!" data-activates="dropdown-logado"><i class="material-icons left">account_circle</i>${logado.nome}<i class="material-icons right">arrow_drop_down</i></a></li>
+                    </ul>
+                    <ul class="side-nav" id="mobile-menu">
+                      <li><a href="${pageContext.request.contextPath}/principal"><i class="material-icons left">home</i>Home</a></li>
+                      <li class="active"><a href="${pageContext.request.contextPath}/projetos"><i class="material-icons left">work</i>Projetos</a></li>
+                      <li class="divider"></li>
+                      <li><a href="#!">Meu perfil</a></li>
+                      <li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
+                    </ul>
                 </div>
             </nav>
         </header>
-
+                    
         <div class="container">
             <div class="row">
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">Projeto ${projeto.nome}</h4>
+                <div class="col s12">
+                    <div class="card grey lighten-4">
+                        <div class="card-content">
+                            <span class="card-title">Projeto ${projeto.nome}</span>
                         </div>
-                        <div class="card-block" style="padding: 25px;">
-                            <h6 class="card-subtitle mb-2 text-muted">Artigos</h6>
-                            <div class="row">
-                                <c:forEach items="${arq_nomes}" var="arq_nome">
-                                    <div class='col-lg-3 col-md-6'>
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <div class='row'>
-                                                    <div class='col-md-3'>
-                                                        <i class='fa fa-file-pdf-o fa-4x'></i>
-                                                    </div>
-                                                    <div class='colmd-9'>
-                                                        <div>${arq_nome}</div>
-                                                    </div>
-                                                </div>
+                        <div class="card-tabs">
+                            <ul class="tabs tabs-fixed-width">
+                                <li class="tab"><a class="active" href="#dados">Dados</a></li>
+                                <li class="tab"><a href="#artigos">Artigos</a></li>
+                                <li class="tab"><a href="#analise">Análises</a></li>
+                            </ul>
+                        </div>
+                        <div class="card-content white">
+                            <div id="dados">
+                                <form action="${pageContext.request.contextPath}/projetos/editar" method="post">
+                                    <input name="id" type="hidden" value="${projeto.id}">
+                                    <div class="input-field">
+                                        <input id="nomeProjeto" name="nome" type="text" value="${projeto.nome}">
+                                        <label for="nomeProjeto">Nome</label>
+                                    </div>
+                                    <div class="input-field">
+                                        <textarea id="descricaoProjeto" name="descricao" class="materialize-textarea"  data-length="200">${projeto.descricao}</textarea>
+                                        <label for="descricaoProjeto">Descrição</label>
+                                    </div>
+                                    <button type="submit" class="btn-floating halfway-fab waves-effect waves-light blue left"><i class="material-icons">mode_edit</i></button>
+                                </form>
+                            </div>
+                            <div id="artigos">
+                                <div class="row">
+                                    <c:forEach items="${artigos}" var="artigo">
+                                        <div class="col s12 m4">
+                                        <div class="card grey lighten-4">
+                                            <div class="card-content">
+                                                <p>${artigo.getName().replace("_", " ").replace(".pdf", "")}</p>
+                                                <c:set var="absolutePath" value='${artigo.path.replace("\\", "\\\\")}' />
+                                                <button class="btn-floating waves-effect waves-light blue left" onclick="vizualizarArtigo('${artigo.getName()}')"><i class="material-icons">visibility</i></button>
+                                                <button class="btn-floating waves-effect waves-light red right" onclick="deletarArtigo('${absolutePath}')"><i class="material-icons">delete</i></button>
                                             </div>
-                                            <a href="${pageContext.request.contextPath}/projetos/artigos/vizualizar?projeto=${projeto.id}&artigo=${arq_nome}" target="_blank">
-                                                <div class="card-footer text-muted">
-                                                    <span class='pull-left'>Visualizar</span>
-                                                    <span class='pull-right'><i class='fa fa-arrow-circle-right'></i></span>
-                                                    <div class='clearfix'></div>
-                                                </div>
-                                            </a>
                                         </div>
                                     </div>
-                                </c:forEach>
+                                    </c:forEach>
+                                </div>
+                                <button data-target="modalAdicionarArtigo" class="btn-floating halfway-fab waves-effect waves-light green center-btn modal-trigger"><i class="material-icons">add</i></button>
                             </div>
-                            <br/>
-                            <div id="uploader"></div>
-                            <br/>
-                            <a href="${pageContext.request.contextPath}/projetos/tfidf?projeto=${projeto.id}" type="button" class="btn btn-primary btn-lg btn-block">Iniciar análise</a>
+                            <div id="analise">
+                                <button class="btn-floating halfway-fab waves-effect waves-light green"><i class="material-icons">add</i></button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+                                        
+        <div id="modalAdicionarArtigo" class="modal">
+            <div class="modal-content">
+                <h4>Adicionar artigo</h4>
+                <div id="uploader"></div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
+            </div>
+        </div>
+                                        
+        <form:form action="${pageContext.request.contextPath}/projetos/artigos/deletar" method="post">
+            <div id="modalDeletarArtigo" class="modal">
+                <div class="modal-content">
+                    <h4>Deletar artigo</h4>
+                    <input type="hidden" name="id" value="${projeto.id}" />
+                    <input type="hidden" name="caminho" />
+                    <p>Tem certeza que deseja deletar este artigo?</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
+                    <button type="submit" class="waves-effect waves-red btn red">Deletar</button>
+                </div>
+            </div>
+        </form:form>
+                                        
+        <div id="modalVizualizarArtigo" class="modal">
+            <div class="modal-content">
+                <h4>Vizualizar artigo</h4>
+                <iframe width="100%" height="480"></iframe>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
+            </div>
+        </div>
 
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/jquery/dist/jquery.js"></script>
-        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/popper.js/dist/umd/popper.min.js"></script>
-        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/bootstrap/dist/js/bootstrap.js"></script>
-        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/toastr/build/toastr.min.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/materialize-css/dist/js/materialize.js"></script>
         <script type="text/javascript">
-            $(document).ready(function() {
-                toastr.options = {
-                    "closeButton": false,
-                    "debug": false,
-                    "newestOnTop": false,
-                    "progressBar": false,
-                    "positionClass": "toast-bottom-right",
-                    "preventDuplicates": false,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "1000",
-                    "timeOut": "5000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
-                };
-                ${retorno}
+            $(document).ready(function(){
+                $(".button-collapse").sideNav();
+                
+                $(".dropdown-button").dropdown({
+                    belowOrigin: true
+                });
+                
+                $('.modal').modal();
             });
+            
+            function deletarArtigo(caminho) {
+                $('#modalDeletarArtigo input[name="caminho"]').val(caminho);
+                $('#modalDeletarArtigo').modal('open');
+            }
+            
+            function vizualizarArtigo(artigo) {
+                var contextPath = '${pageContext.request.contextPath}';
+                var projeto_id = ${projeto.id}
+                $('#modalVizualizarArtigo iframe').attr('src', contextPath + "/projetos/artigos/vizualizar?projeto=" + projeto_id + "&artigo=" + artigo); 
+                $('#modalVizualizarArtigo').modal('open');
+            }
         </script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/fine-uploader/fine-uploader/fine-uploader.min.js"></script>
         <script type="text/template" id="qq-template">

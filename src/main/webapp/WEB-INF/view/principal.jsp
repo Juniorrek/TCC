@@ -2,128 +2,50 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <title>Principal</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-
-        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/bootstrap/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/node_modules/material-design-icons-iconfont/dist/fonts/material-icons.css">
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/materialize-css/dist/css/materialize.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css">
         <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/icons/favicon.ico">
     </head>
     <body>
         <header>
-            <nav class="navbar navbar-expand-lg navbar-dark bg-ocean">
-                <div class="container">
-                    <a class="navbar-brand" href="${pageContext.request.contextPath}/principal">
-                        <img src="${pageContext.request.contextPath}/resources/images/tritomus.png" width="40" height="32" class="d-inline-block align-top" alt="">
-                        Tritomus
-                    </a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsHeader" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div class="collapse navbar-collapse" id="navbarsHeader">
-                        <ul class="navbar-nav mr-auto">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="${pageContext.request.contextPath}/principal">&nbsp; Home <span class="sr-only">(current)</span></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="${pageContext.request.contextPath}/projetos">&nbsp; Projetos</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="${pageContext.request.contextPath}/artigos">&nbsp; Artigos</a>
-                            </li>
-                        </ul>
-                        <ul class="navbar-nav">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle fa-fw" aria-hidden="true"></i>&nbsp; ${logado.nome}</a>
-                                <div class="dropdown-menu" aria-labelledby="dropdown">
-                                    <a class="dropdown-item" href="#"><i class="fa fa-address-card fa-fw" aria-hidden="true"></i>&nbsp; Meu perfil</a>
-                                    <a class="dropdown-item" href="#"><i class="fa fa-cog fa-fw" aria-hidden="true"></i>&nbsp; Outra parada</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="${pageContext.request.contextPath}/logout"><i class="fa fa-sign-out fa-fw" aria-hidden="true"></i>&nbsp; Logout</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+            <ul id="dropdown-logado" class="dropdown-content">
+                <li><a href="#!">Meu perfil</a></li>
+                <li class="divider"></li>
+                <li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
+            </ul>
+            <nav class="blue blue-darken-1">
+                <div class="container nav-wrapper">
+                    <a href="${pageContext.request.contextPath}/principal" class="brand-logo">Tritomus</a>
+                    <a href="#" data-activates="mobile-menu" class="button-collapse"><i class="material-icons">menu</i></a>
+                    <ul class="right hide-on-med-and-down">
+                      <li class="active"><a href="${pageContext.request.contextPath}/principal"><i class="material-icons left">home</i>Home</a></li>
+                      <li><a href="${pageContext.request.contextPath}/projetos"><i class="material-icons left">work</i>Projetos</a></li>
+                      <li><a class="dropdown-button" href="#!" data-activates="dropdown-logado"><i class="material-icons left">account_circle</i>${logado.nome}<i class="material-icons right">arrow_drop_down</i></a></li>
+                    </ul>
+                    <ul class="side-nav" id="mobile-menu">
+                      <li class="active"><a href="${pageContext.request.contextPath}/principal"><i class="material-icons left">home</i>Home</a></li>
+                      <li><a href="${pageContext.request.contextPath}/projetos"><i class="material-icons left">work</i>Projetos</a></li>
+                      <li class="divider"></li>
+                      <li><a href="#!">Meu perfil</a></li>
+                      <li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
+                    </ul>
                 </div>
             </nav>
         </header>
 
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                    <h1>HI</h1><br>
-                </div>
-            </div>
-        </div>
-
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/jquery/dist/jquery.js"></script>
-        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/popper.js/dist/umd/popper.min.js"></script>
-        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/bootstrap/dist/js/bootstrap.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/materialize-css/dist/js/materialize.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $(".button-collapse").sideNav();
+                $(".dropdown-button").dropdown({
+                    belowOrigin: true
+                });
+            });
+        </script>
     </body>
 </html>

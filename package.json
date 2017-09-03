@@ -6,14 +6,11 @@
   "author": "Juniorrek <juniorrek@hotmail.com>",
   "license": "MIT",
   "dependencies": {
-    "bootstrap": "4.0.0-beta",
     "datatables.net": "^1.10.15",
-    "datatables.net-bs4": "^1.10.15",
-    "datatables.net-buttons": "^1.4.0",
+    "datatables.net-dt": "^1.10.16",
     "fine-uploader": "^5.15.0",
-    "font-awesome": "^4.7.0",
     "jquery": "^3.2.1",
-    "popper.js": "^1.12.3",
-    "toastr": "^2.1.2"
+    "material-design-icons-iconfont": "^3.0.3",
+    "materialize-css": "^0.100.2"
   }
 }

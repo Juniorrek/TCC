@@ -1,6 +1,7 @@
 package br.com.tcc.util;
 
 import br.com.tcc.model.*;
+import br.com.tcc.singleton.Singleton;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
 
 public class Call {
-        private final String pdftotext = "C:/Users/Orestes/Desktop/TCC/pdftotext.exe"; //caminho pro pdftotext
+        private final String pdftotext = Singleton.PDF_TO_TEXT_PATH; //caminho pro pdftotext
               
         public List<Texto> soloArtigo(String nome, String caminho) throws REXPMismatchException { //extrair data_frame com pdf upado
 	RConnection connection = null;
@@ -150,9 +151,9 @@ public class Call {
                         connection = new RConnection();
                         connection.eval("library(tidytext)");
                         connection.eval("library(dplyr)");                       
-                        connection.eval("source('C:/Users/Orestes/Desktop/TCC/R_files/extractAbstract.R')"); //MUDEM PARA OS CAMINHOS DE VOCÊS!
-                        connection.eval("source('C:/Users/Orestes/Desktop/TCC/R_files/tidynator.R')");
-                        connection.eval("source('C:/Users/Orestes/Desktop/TCC/R_files/find_tf_idf.R')");
+                        connection.eval("source('" + Singleton.EXTRACT_ABSTRACT + "')"); //MUDEM PARA OS CAMINHOS DE VOCÊS!
+                        connection.eval("source('" + Singleton.TIDYNATOR + "')");
+                        connection.eval("source('" + Singleton.FIND_TF_IDF + "')");
                         List<String> nomes = arquivos(pathorigem);
                         for(String arq: nomes) { //PASSANDO ARQUIVOS PARA PASTA DE ANÁLISE
                             connection.eval("flist = list.files(\"" + pathorigem + "\",\"" + arq + "\", full.names = TRUE)");
@@ -197,9 +198,9 @@ public class Call {
                 try {
                         connection = new RConnection();
                         connection.eval("library(dplyr)");                       
-                        connection.eval("source('C:/Users/Orestes/Desktop/TCC/R_files/extractAbstract.R')"); //MUDEM PARA OS CAMINHOS DE VOCÊS!
-                        connection.eval("source('C:/Users/Orestes/Desktop/TCC/R_files/tidynator.R')");
-                        connection.eval("source('C:/Users/Orestes/Desktop/TCC/R_files/findObjective.R')");
+                        connection.eval("source('" + Singleton.EXTRACT_ABSTRACT + "')"); //MUDEM PARA OS CAMINHOS DE VOCÊS!
+                        connection.eval("source('" + Singleton.TIDYNATOR + "')");
+                        connection.eval("source('" + Singleton.FIND_TF_IDF + "')");
                         List<String> nomes = arquivos(pathorigem);
                         for(String arq: nomes) { //PASSANDO ARQUIVOS PARA PASTA DE ANÁLISE
                             connection.eval("flist = list.files(\"" + pathorigem + "\",\"" + arq + "\", full.names = TRUE)");

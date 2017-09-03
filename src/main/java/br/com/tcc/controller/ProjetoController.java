@@ -2,6 +2,7 @@ package br.com.tcc.controller;
 
 import br.com.tcc.model.*;
 import br.com.tcc.dao.*;
+import br.com.tcc.singleton.Singleton;
 import br.com.tcc.util.Call;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,8 +71,10 @@ public class ProjetoController {
             ra.addFlashAttribute("retorno", "toastr.error('Erro ao editar projeto !!!');");
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        ra.addFlashAttribute("projeto", projeto);
+        ra.addAttribute("id", projeto.getId());
         
-        return "redirect:/projetos";
+        return "redirect:/projetos/vizualizar";
     }
     
     @RequestMapping("/projetos/deletar")    
@@ -104,11 +109,15 @@ public class ProjetoController {
         model.addAttribute("projeto", projeto);
         
         Usuario logado = (Usuario) session.getAttribute("logado");
-        String folderPath = "C:/Users/Orestes/Desktop/TCC/SobAnalise/"
+        String folderPath = Singleton.UPLOAD_DIR
                                 + logado.getEmail() + "/"
                                 + projeto.getId().toString();
-        List<String> arq_nomes = ArquivoDao.carregar(folderPath);
-        model.addAttribute("arq_nomes", arq_nomes);
+        //List<String> arq_nomes = ArquivoDao.carregar(folderPath);
+        //model.addAttribute("arq_nomes", arq_nomes);
+        File folder = new File(folderPath);
+        File[] listOfFiles = folder.listFiles();
+        
+        model.addAttribute("artigos", listOfFiles);
         
         return "projeto";
     }
@@ -119,7 +128,7 @@ public class ProjetoController {
             Projeto projeto = ProjetoDao.carregar(id);
             Usuario usuario = UsuarioDao.carregar(projeto);
             
-            String filePath = "C:/Users/Orestes/Desktop/TCC/SobAnalise/"
+            String filePath = Singleton.UPLOAD_DIR
                                 + usuario.getEmail() + "\\"
                                 + projeto.getId().toString() + "\\"
                                 + file.getOriginalFilename();
@@ -131,28 +140,24 @@ public class ProjetoController {
         return "{\"success\": true}";
     }
     
-    @RequestMapping("/teste")    
-    public void teste(HttpServletResponse response) {
-        InputStream inputStream = null;
+    @RequestMapping("/projetos/artigos/deletar")
+    public String projetosArtigosDeletar(@RequestParam("id") int id, @RequestParam("caminho") String caminho, RedirectAttributes ra) {
+        Projeto projeto = new Projeto();
+        projeto.setId(id);
+        
         try {
-            File file = new File("C:/Sistema_TCC/arquivos/artigos/juniorrek@hotmail.com/1/Apostila k19 SQL.pdf");
-            FileUtils fu = new FileUtils();
-            byte[] bytes = fu.readFileToByteArray(file);
-            
-            response.setContentType("application/pdf");
-            OutputStream ops = response.getOutputStream();
-            ops.write(bytes);
-        } catch (FileNotFoundException ex) {
+            ArquivoDao.deletar(projeto, caminho);
+        } catch (SQLException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                inputStream.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
+        
+        
+        ra.addFlashAttribute("projeto", projeto);
+        ra.addAttribute("id", projeto.getId());
+            
+        return "redirect:/projetos/vizualizar";
     }
     
     @RequestMapping("/projetos/artigos/vizualizar")    
@@ -161,7 +166,7 @@ public class ProjetoController {
             Projeto projeto = ProjetoDao.carregar(id);
             Usuario usuario = UsuarioDao.carregar(projeto);
             
-            String filePath = "C:/Users/Orestes/Desktop/TCC/SobAnalise/" + usuario.getEmail() + "/" + projeto.getId() + "/" + nome;
+            String filePath = Singleton.UPLOAD_DIR + usuario.getEmail() + "/" + projeto.getId() + "/" + nome;
             
             try {
                 File file = new File(filePath);
@@ -187,7 +192,7 @@ public class ProjetoController {
             Projeto projeto = ProjetoDao.carregar(id);
             Usuario usuario = UsuarioDao.carregar(projeto);
             
-            String folderPath = "C:/Users/Orestes/Desktop/TCC/SobAnalise/" + usuario.getEmail() + "/" + projeto.getId();
+            String folderPath = Singleton.UPLOAD_DIR + usuario.getEmail() + "/" + projeto.getId();
             
             
             Call c = new Call();
@@ -196,7 +201,7 @@ public class ProjetoController {
             List<Artigo> lista2 = c.abstractObjective(folderPath);
             model.addAttribute("Lista2", lista2);
             
-            String filePath = "C:/Users/Orestes/Desktop/TCC/SobAnalise/" + usuario.getEmail() + "/" + projeto.getId() + "/" + "resultadoTfidf.pdf";
+            String filePath = Singleton.UPLOAD_DIR + usuario.getEmail() + "/" + projeto.getId() + "/" + "resultadoTfidf.pdf";
             try {
                 File file = new File(filePath);
                 FileUtils fu = new FileUtils();
