@@ -56,3 +56,17 @@ textarea.materialize-textarea:focus:not([readonly]) + label {
 .center-btn {
     right: 50% !important;
 }
+
+.loadando {
+    position: fixed;
+    z-index: 999;
+    top: -25%;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 125%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    will-change: opacity;
+}

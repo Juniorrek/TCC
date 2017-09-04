@@ -1,20 +1,21 @@
 package br.com.tcc.singleton;
 
 public final class Singleton {
-    public static final String PDF_TO_TEXT_PATH = "C:\\Program Files\\xpdfbin-win-3.04\\bin64\\pdftotext.exe";
+    public static final String PDF_TO_TEXT_PATH = "C:/Program Files/xpdfbin-win-3.04/bin64/pdftotext.exe";
     
     /***********\
     * SCRIPTS R *
     \***********/
-    public static final String EXTRACT_ABSTRACT = "C:\\Users\\David\\Downloads\\extractAbstract.R";
-    public static final String TIDYNATOR = "C:\\Users\\David\\Downloads\\tidynator.R";
-    public static final String FIND_TF_IDF = "C:\\Users\\David\\Downloads\\find_tf_idf.R";
+    public static final String EXTRACT_ABSTRACT = "C:/Users/David/Downloads/extractAbstract.R";
+    public static final String TIDYNATOR = "C:/Users/David/Downloads/tidynator.R";
+    public static final String FIND_TF_IDF = "C:/Users/David/Downloads/find_tf_idf.R";
+    public static final String FIND_OBJECTIVE = "C:/Users/David/Documents/Github/R-Scripts/findObjective.R";
     
     /***********\
     *  UPLOADS  *
     \***********/
-    public static final String UPLOAD_DIR = "C:\\Sistema_TCC\\arquivos\\artigos\\";
-    public static final String TEMP_DIR = "C:\\Sistema_TCC\\arquivos\\temp";
+    public static final String UPLOAD_DIR = "C:/Sistema_TCC/arquivos/artigos";
+    public static final String TEMP_DIR = "C:/Sistema_TCC/arquivos/temp";
     
     /***********\
     *  DATABASE *

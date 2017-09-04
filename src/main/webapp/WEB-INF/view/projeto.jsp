@@ -74,23 +74,53 @@
                                 <div class="row">
                                     <c:forEach items="${artigos}" var="artigo">
                                         <div class="col s12 m4">
-                                        <div class="card grey lighten-4">
-                                            <div class="card-content">
-                                                <p>${artigo.getName().replace("_", " ").replace(".pdf", "")}</p>
-                                                <c:set var="absolutePath" value='${artigo.path.replace("\\", "\\\\")}' />
-                                                <button class="btn-floating waves-effect waves-light blue left" onclick="vizualizarArtigo('${artigo.getName()}')"><i class="material-icons">visibility</i></button>
-                                                <button class="btn-floating waves-effect waves-light red right" onclick="deletarArtigo('${absolutePath}')"><i class="material-icons">delete</i></button>
+                                            <div class="card grey lighten-4">
+                                                <div class="card-content">
+                                                    <p>${artigo.getName().replace("_", " ").replace(".pdf", "")}</p>
+                                                    <c:set var="absolutePath" value='${artigo.path.replace("\\", "/")}' />
+                                                    <button class="btn-floating waves-effect waves-light blue left" onclick="vizualizarArtigo('${artigo.getName()}')"><i class="material-icons">visibility</i></button>
+                                                    <button class="btn-floating waves-effect waves-light red right" onclick="deletarArtigo('${absolutePath}')"><i class="material-icons">delete</i></button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
                                     </c:forEach>
                                 </div>
                                 <button data-target="modalAdicionarArtigo" class="btn-floating halfway-fab waves-effect waves-light green center-btn modal-trigger"><i class="material-icons">add</i></button>
                             </div>
                             <div id="analise">
-                                <button class="btn-floating halfway-fab waves-effect waves-light green"><i class="material-icons">add</i></button>
+                                <div class="row">
+                                    <div class="input-field col s9">
+                                        <select id="selectAnalise">
+                                            <option value="" disabled selected>Escolha sua análise</option>
+                                            <option value="1">Objectivo, metodologia e resultado</option>
+                                        </select>
+                                        <label>Tipo</label>
+                                    </div>
+                                    <div class="input-field col s3">
+                                        <button class="btn btn-large waves-effect waves-light blue" style="width: 100%;" onclick="gerarAnalise()">Gerar
+                                            <i class="material-icons right">send</i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="resultadoAnalise">
+                                    
+                                </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+        <div id="loadando" class="loadando" style="display: none;">
+            <div class="preloader-wrapper big active" style="position: absolute; left: 50%; top: 50%;">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div><div class="gap-patch">
+                        <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                        <div class="circle"></div>
                     </div>
                 </div>
             </div>
@@ -142,6 +172,10 @@
                 });
                 
                 $('.modal').modal();
+                
+                $('select').material_select();
+                
+                $('.collapsible').collapsible();
             });
             
             function deletarArtigo(caminho) {
@@ -154,6 +188,62 @@
                 var projeto_id = ${projeto.id}
                 $('#modalVizualizarArtigo iframe').attr('src', contextPath + "/projetos/artigos/vizualizar?projeto=" + projeto_id + "&artigo=" + artigo); 
                 $('#modalVizualizarArtigo').modal('open');
+            }
+            
+            function gerarAnalise() {
+                $('#loadando').show();
+                var analise = $('#selectAnalise').val();
+                if (analise !== null) {
+                    if (analise == 1) {
+                        $.ajax({
+                            url: "${pageContext.request.contextPath}/projetos/analisar",
+                            type:'get',
+                            data: {
+                                "analise": analise,
+                                "projeto": ${projeto.id}
+                            },
+                            success: function(artigos) {
+                                $('#resultadoAnalise').html("");
+                                var htmlao = "";
+                                    
+                                artigos = JSON.parse(artigos);
+                                artigos.forEach(function(v, k) {
+                                    htmlao += "<div class='row'>" +
+                                                "<div class='col s12'>" +
+                                                    "<div class='card grey lighten-4'>" +
+                                                        "<div class='card-content'>" +
+                                                            "<p>" + v.nome.replace(".pdf", "") + "</p>" +
+                                                            "<ul class='collapsible' data-collapsible='accordion'>" +
+                                                                "<li>" +
+                                                                    "<div class='collapsible-header'>Objetivo</div>" +
+                                                                    "<div class='collapsible-body'><span>" + v.objetivo + "</span></div>" +
+                                                                "</li>" +
+                                                                "<li>" +
+                                                                    "<div class='collapsible-header'>Metodologia</div>" +
+                                                                    "<div class='collapsible-body'><span>" + v.metodologia + "</span></div>" +
+                                                                "</li>" +
+                                                                "<li>" +
+                                                                    "<div class='collapsible-header'>Resultado</div>" +
+                                                                    "<div class='collapsible-body'><span>" + v.resultado + "</span></div>" +
+                                                                "</li>" +
+                                                            "</ul>" +
+                                                        "</div>" +
+                                                    "</div>" +
+                                                "</div>" +
+                                            "</div>";
+                                });
+                                console.log(htmlao);
+                                $('#resultadoAnalise').html(htmlao);
+                                $('.collapsible').collapsible();
+                                $('#loadando').hide();
+                            },
+                            error: function(erro) {
+                                console.log(erro);
+                                $('#loadando').hide();
+                            }
+                        }); 
+                    }
+                }
             }
         </script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/fine-uploader/fine-uploader/fine-uploader.min.js"></script>

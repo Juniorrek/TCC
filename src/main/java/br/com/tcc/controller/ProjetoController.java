@@ -4,6 +4,7 @@ import br.com.tcc.model.*;
 import br.com.tcc.dao.*;
 import br.com.tcc.singleton.Singleton;
 import br.com.tcc.util.Call;
+import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -109,7 +110,7 @@ public class ProjetoController {
         model.addAttribute("projeto", projeto);
         
         Usuario logado = (Usuario) session.getAttribute("logado");
-        String folderPath = Singleton.UPLOAD_DIR
+        String folderPath = Singleton.UPLOAD_DIR + "/"
                                 + logado.getEmail() + "/"
                                 + projeto.getId().toString();
         //List<String> arq_nomes = ArquivoDao.carregar(folderPath);
@@ -128,9 +129,9 @@ public class ProjetoController {
             Projeto projeto = ProjetoDao.carregar(id);
             Usuario usuario = UsuarioDao.carregar(projeto);
             
-            String filePath = Singleton.UPLOAD_DIR
-                                + usuario.getEmail() + "\\"
-                                + projeto.getId().toString() + "\\"
+            String filePath = Singleton.UPLOAD_DIR + "/"
+                                + usuario.getEmail() + "/"
+                                + projeto.getId().toString() + "/"
                                 + file.getOriginalFilename();
             ArquivoDao.adicionar(file, projeto, filePath);
         } catch (SQLException | IOException | IllegalStateException ex) {
@@ -166,7 +167,7 @@ public class ProjetoController {
             Projeto projeto = ProjetoDao.carregar(id);
             Usuario usuario = UsuarioDao.carregar(projeto);
             
-            String filePath = Singleton.UPLOAD_DIR + usuario.getEmail() + "/" + projeto.getId() + "/" + nome;
+            String filePath = Singleton.UPLOAD_DIR + "/" + usuario.getEmail() + "/" + projeto.getId() + "/" + nome;
             
             try {
                 File file = new File(filePath);
@@ -184,6 +185,24 @@ public class ProjetoController {
         } catch (SQLException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    @RequestMapping(value = "/projetos/analisar", method = RequestMethod.GET)    
+    public @ResponseBody String projetosAnalisar(@RequestParam("analise") Integer analise, @RequestParam("projeto") Integer id, HttpSession session) {
+        Gson g = new Gson();
+        List<Artigo> artigos = null;
+        if (analise.equals(1)) {
+            Call call = new Call();
+            try {
+                Usuario logado = (Usuario) session.getAttribute("logado");
+                String path = Singleton.UPLOAD_DIR + "/" + logado.getEmail() + "/" + id + "/";
+                artigos = call.abstractObjective(path);
+            } catch (REXPMismatchException ex) {
+                Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return g.toJson(artigos);
     }
     
     @RequestMapping("/projetos/tfidf")    

@@ -195,18 +195,21 @@ public class Call {
         public List<Artigo> abstractObjective(String pathorigem) throws REXPMismatchException {
                 RConnection connection = null;
                 String path = pathorigem + "/temp";
+                File f = new File(path);
+                f.mkdirs();
                 try {
                         connection = new RConnection();
                         connection.eval("library(dplyr)");                       
                         connection.eval("source('" + Singleton.EXTRACT_ABSTRACT + "')"); //MUDEM PARA OS CAMINHOS DE VOCÊS!
                         connection.eval("source('" + Singleton.TIDYNATOR + "')");
                         connection.eval("source('" + Singleton.FIND_TF_IDF + "')");
+                        connection.eval("source('" + Singleton.FIND_OBJECTIVE + "')");
                         List<String> nomes = arquivos(pathorigem);
                         for(String arq: nomes) { //PASSANDO ARQUIVOS PARA PASTA DE ANÁLISE
                             connection.eval("flist = list.files(\"" + pathorigem + "\",\"" + arq + "\", full.names = TRUE)");
                             connection.eval("file.copy(flist,\"" + path + "\")");
                         }
-                        connection.eval("xx = extractAbstract(\"" + path + "\",\"" + pdftotext + "\")");
+                        connection.eval("xx = extractAbstract(\"" + path + "\",\'\"" + pdftotext + "\"\')");
                         connection.eval("meanVal = findObjective(xx)");
                         connection.eval("do.call(file.remove, list(list.files(\"" + path + "\", full.names = TRUE)))"); //TIRANDO TUDO DA PASTA DE ANÁLISE PRA NÃO OCORRER ERROS
                         List<Artigo> termos = new ArrayList();
@@ -219,12 +222,14 @@ public class Call {
                                 a.setObjetivo(connection.eval("aux").asString());
                                 termos.add(a);
                         }
+                        f.delete();
                         return termos;
                 } catch (RserveException e) {
                     e.printStackTrace();
                 }finally{
                     connection.close();
                 }
+                f.delete();
                 return null;
         }
         
