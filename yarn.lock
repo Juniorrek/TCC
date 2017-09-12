@@ -43,3 +43,7 @@ materialize-css@^0.100.2:
   dependencies:
     hammerjs "^2.0.8"
     jquery "^3.0.0 || ^2.1.4"
+
+wordcloud@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/wordcloud/-/wordcloud-1.0.6.tgz#7e98e0a2fd2410c5ddbf67536135f0ae6e9e91b1"

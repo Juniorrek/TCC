@@ -120,6 +120,16 @@ public class ProjetoController {
         
         model.addAttribute("artigos", listOfFiles);
         
+        String path = Singleton.UPLOAD_DIR + "/" + logado.getEmail() + "/" + projeto.getId() + "/";
+        Call c = new Call();
+        List<Artigo> segmentos_artigos = null;
+        try {
+            segmentos_artigos = c.articlesAnalysis(path);
+        } catch (REXPMismatchException ex) {
+            Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        model.addAttribute("segmentos_artigos", segmentos_artigos);
+        
         return "projeto";
     }
     
