@@ -88,11 +88,38 @@
                                 <button data-target="modalAdicionarArtigo" class="btn-floating halfway-fab waves-effect waves-light green center-btn modal-trigger"><i class="material-icons">add</i></button>
                             </div>
                             <div id="analise">
+                                <c:forEach items="${segmentos_artigos}" var="artigo">
+                                    <div class='row'>
+                                        <div class='col s12'>
+                                            <div class='card grey lighten-4'>
+                                                <div class='card-content'>
+                                                    <p>${artigo.nome}</p>
+                                                    <ul class='collapsible' data-collapsible='accordion'>
+                                                        <li>
+                                                            <div class='collapsible-header'>Objetivo</div>
+                                                            <div class='collapsible-body'><span>${artigo.objetivo}</span></div>
+                                                        </li>
+                                                        <li>
+                                                            <div class='collapsible-header'>Metodologia</div>
+                                                            <div class='collapsible-body'><span>${artigo.metodologia}</span></div>
+                                                        </li>
+                                                        <li>
+                                                            <div class='collapsible-header'>Resultado</div>
+                                                            <div class='collapsible-body'><span>${artigo.resultado}</span></div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                                <hr>
                                 <div class="row">
                                     <div class="input-field col s9">
                                         <select id="selectAnalise">
                                             <option value="" disabled selected>Escolha sua análise</option>
-                                            <option value="1">Objectivo, metodologia e resultado</option>
+                                            <option value="1">Objetivo</option>
+                                            <option value="2">Objetivo, Metodologia e Análise</option>
                                         </select>
                                         <label>Tipo</label>
                                     </div>
@@ -191,10 +218,50 @@
             }
             
             function gerarAnalise() {
-                $('#loadando').show();
                 var analise = $('#selectAnalise').val();
                 if (analise !== null) {
+                    $('#loadando').show();
                     if (analise == 1) {
+                        $.ajax({
+                            url: "${pageContext.request.contextPath}/projetos/analisar",
+                            type:'get',
+                            data: {
+                                "analise": analise,
+                                "projeto": ${projeto.id}
+                            },
+                            success: function(artigos) {
+                                $('#resultadoAnalise').html("");
+                                var htmlao = "";
+                                    
+                                artigos = JSON.parse(artigos);
+                                artigos.forEach(function(v, k) {
+                                    htmlao += "<div class='row'>" +
+                                                "<div class='col s12'>" +
+                                                    "<div class='card grey lighten-4'>" +
+                                                        "<div class='card-content'>" +
+                                                            "<p>" + v.nome.replace(".pdf", "") + "</p>" +
+                                                            "<ul class='collapsible' data-collapsible='accordion'>" +
+                                                                "<li>" +
+                                                                    "<div class='collapsible-header'>Objetivo</div>" +
+                                                                    "<div class='collapsible-body'><span>" + v.objetivo + "</span></div>" +
+                                                                "</li>" +
+                                                            "</ul>" +
+                                                        "</div>" +
+                                                    "</div>" +
+                                                "</div>" +
+                                            "</div>";
+                                });
+                                console.log(htmlao);
+                                $('#resultadoAnalise').html(htmlao);
+                                $('.collapsible').collapsible();
+                                $('#loadando').hide();
+                            },
+                            error: function(erro) {
+                                console.log(erro);
+                                $('#loadando').hide();
+                            }
+                        });
+                    } else if (analise == 2) {
                         $.ajax({
                             url: "${pageContext.request.contextPath}/projetos/analisar",
                             type:'get',

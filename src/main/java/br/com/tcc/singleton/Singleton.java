@@ -10,7 +10,10 @@ public final class Singleton {
     public static final String TIDYNATOR = "C:/Users/bruno/Documents/R/Scripts/tidynator.R";
     public static final String FIND_TF_IDF = "C:/Users/bruno/Documents/R/Scripts/find_tf_idf.R";
     public static final String FIND_OBJECTIVE = "C:/Users/bruno/Documents/R/Scripts/findObjective.R";
+    public static final String FIND_SEGMENT = "C:/Users/bruno/Documents/R/Scripts/findSegment.R";
+    public static final String ARTICLES_ANALYSIS = "C:/Users/bruno/Documents/R/Scripts/articlesAnalysis.R";
     
+   
     /***********\
     *  UPLOADS  *
     \***********/

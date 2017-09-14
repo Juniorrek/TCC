@@ -5,7 +5,12 @@ import br.com.tcc.singleton.Singleton;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
+import org.rosuda.REngine.REngineException;
+import org.rosuda.REngine.RList;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
 
@@ -191,7 +196,6 @@ public class Call {
                 return null;
         }
         
-        
         public List<Artigo> abstractObjective(String pathorigem) throws REXPMismatchException {
                 RConnection connection = null;
                 String path = pathorigem + "/temp";
@@ -231,6 +235,52 @@ public class Call {
                 }
                 f.delete();
                 return null;
+        }
+        
+        public List<Artigo> articlesAnalysis(String pathorigem) throws REXPMismatchException {
+            RConnection connection = null;
+            String path = pathorigem + "/temp";
+            File f = new File(path);
+            f.mkdirs();
+            try {
+                    connection = new RConnection();
+                    connection.eval("library(dplyr)");                       
+                    connection.eval("source('" + Singleton.EXTRACT_ABSTRACT + "')");
+                    connection.eval("source('" + Singleton.FIND_SEGMENT + "')");
+                    connection.eval("source('" + Singleton.ARTICLES_ANALYSIS + "')");
+                    List<String> nomes = arquivos(pathorigem);
+                    for(String arq: nomes) { //PASSANDO ARQUIVOS PARA PASTA DE ANÁLISE
+                        connection.eval("flist = list.files(\"" + pathorigem + "\",\"" + arq + "\", full.names = TRUE)");
+                        connection.eval("file.copy(flist,\"" + path + "\")");
+                    }
+                    connection.eval("xx = extractAbstract(\"" + path + "\",\'\"" + pdftotext + "\"\')");
+                    
+                    //limpando os pdf e o txt abstract
+                    connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+pdf\", full.names = TRUE)");
+                    connection.eval("file.remove(junk)");
+                    connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+abstract.+\", full.names = TRUE)");
+                    connection.eval("file.remove(junk)");
+                    connection.eval("meanVal = articlesAnalysis(\"" + path + "\")");
+                    List<Artigo> artigos = new ArrayList();
+                    int i = 1;
+                    for (String s : nomes) {
+                        Artigo artigo = new Artigo();
+                        artigo.setNome(connection.eval("meanVal[" + i + ", 2]").asList().at(0).asString());
+                        artigo.setObjetivo(connection.eval("meanVal[" + i + ", 4]").asList().at(0).asString());
+                        artigo.setMetodologia(connection.eval("meanVal[" + i + ", 5]").asList().at(0).asString());
+                        artigo.setResultado(connection.eval("meanVal[" + i + ", 6]").asList().at(0).asString());
+                        artigos.add(artigo);
+                        i++;
+                    }
+                    f.delete();
+                    return artigos;
+            } catch (RserveException e) {
+                e.printStackTrace();
+            }finally{
+                connection.close();
+            }
+            f.delete();
+            return null;
         }
         
         
