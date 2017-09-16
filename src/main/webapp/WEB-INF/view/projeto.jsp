@@ -41,15 +41,15 @@
             </nav>
         </header>
                     
-        <div class="container">
+        <!--<div id="containao" class="container">-->
             <div class="row">
-                <div class="col s12">
+                <div id="containao" class="col s8 offset-s2">
                     <div class="card grey lighten-4">
                         <div class="card-content">
                             <span class="card-title">Projeto ${projeto.nome}</span>
                         </div>
                         <div class="card-tabs">
-                            <ul class="tabs tabs-fixed-width">
+                            <ul class="tabs tabs-fixed-width" id="tabMaster">
                                 <li class="tab"><a class="active" href="#dados">Dados</a></li>
                                 <li class="tab"><a href="#artigos">Artigos</a></li>
                                 <li class="tab"><a href="#analise">Análises</a></li>
@@ -88,56 +88,81 @@
                                 <button data-target="modalAdicionarArtigo" class="btn-floating halfway-fab waves-effect waves-light green center-btn modal-trigger"><i class="material-icons">add</i></button>
                             </div>
                             <div id="analise">
-                                <c:forEach items="${segmentos_artigos}" var="artigo">
-                                    <div class='row'>
-                                        <div class='col s12'>
-                                            <div class='card grey lighten-4'>
-                                                <div class='card-content'>
-                                                    <p>${artigo.nome}</p>
-                                                    <ul class='collapsible' data-collapsible='accordion'>
-                                                        <li>
-                                                            <div class='collapsible-header'>Objetivo</div>
-                                                            <div class='collapsible-body'><span>${artigo.objetivo}</span></div>
-                                                        </li>
-                                                        <li>
-                                                            <div class='collapsible-header'>Metodologia</div>
-                                                            <div class='collapsible-body'><span>${artigo.metodologia}</span></div>
-                                                        </li>
-                                                        <li>
-                                                            <div class='collapsible-header'>Resultado</div>
-                                                            <div class='collapsible-body'><span>${artigo.resultado}</span></div>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
+                                <div class='row'>
+                                    <div class='col s12'>
+                                        <ul class="collapsible" data-collapsible="accordion">
+                                            <c:forEach items="${segmentos_artigos}" var="artigo">
+                                                <li>
+                                                    <div class="collapsible-header"><h5>${artigo.nome}</h5></div>
+                                                    <div class="collapsible-body">
+                                                        <span>
+                                                            <div class="row">
+                                                                <div class="col s12">
+                                                                    <ul class="tabs tabs-fixed-width">
+                                                                        <li class="tab col s3"><a class="active" href="#Segmentos">Segmentos</a></li>
+                                                                        <li class="tab col s3"><a href="#TF">TF</a></li>
+                                                                        <li class="tab col s3"><a href="#WORDCLOUD">WORDCLOUD</a></li>
+                                                                    </ul>
+                                                                </div>
+                                                                <div id="Segmentos" class="col s12">
+                                                                    <h6>Resumo</h6>
+                                                                    <ul class='collapsible' data-collapsible='accordion'>
+                                                                        <li>
+                                                                            <div class='collapsible-header'>${artigo.resumo.substring(0, 10)}...</div>
+                                                                            <div class='collapsible-body'><span>${artigo.resumo}</span></div>
+                                                                        </li>
+                                                                    </ul>
+                                                                    <h6>Segmentos</h6>
+                                                                    <ul class='collapsible' data-collapsible='accordion'>
+                                                                        <li>
+                                                                            <div class='collapsible-header'>Objetivo</div>
+                                                                            <div class='collapsible-body'><span>${artigo.objetivo}</span></div>
+                                                                        </li>
+                                                                        <li>
+                                                                            <div class='collapsible-header'>Metodologia</div>
+                                                                            <div class='collapsible-body'><span>${artigo.metodologia}</span></div>
+                                                                        </li>
+                                                                        <li>
+                                                                            <div class='collapsible-header'>Resultado</div>
+                                                                            <div class='collapsible-body'><span>${artigo.resultado}</span></div>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                                <div id="TF" class="col s12">aqui um twisted fate</div>
+                                                                <div id="WORDCLOUD" class="col s12">Aqui é para ter uma wordcloud</div>
+                                                            </div>
+                                                        </span>
+                                                    </div>
+                                                </li>
+                                            </c:forEach>
+                                        </ul>
                                     </div>
-                                </c:forEach>
-                                <hr>
-                                <div class="row">
-                                    <div class="input-field col s9">
-                                        <select id="selectAnalise">
-                                            <option value="" disabled selected>Escolha sua análise</option>
-                                            <option value="1">Objetivo</option>
-                                            <option value="2">Objetivo, Metodologia e Análise</option>
-                                        </select>
-                                        <label>Tipo</label>
-                                    </div>
-                                    <div class="input-field col s3">
-                                        <button class="btn btn-large waves-effect waves-light blue" style="width: 100%;" onclick="gerarAnalise()">Gerar
-                                            <i class="material-icons right">send</i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div id="resultadoAnalise">
-                                    
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div id="configs" class="col s4" style="display: none">
+                    <div class="card grey lighten-4">
+                        <div class="card-content">
+                            <span class="card-title">Filtros</span>
+                        </div>
+                        <div class="card-content white">
+                            <ul class="collapsible" data-collapsible="accordion">
+                                <li>
+                                    <div class="collapsible-header">Agrupamento</div>
+                                    <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-header">Ordenação</div>
+                                    <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        <!--</div>-->
             
         <div id="loadando" class="loadando" style="display: none;">
             <div class="preloader-wrapper big active" style="position: absolute; left: 50%; top: 50%;">
@@ -203,6 +228,22 @@
                 $('select').material_select();
                 
                 $('.collapsible').collapsible();
+                
+                $('#tabMaster').tabs({
+                    onShow: function(e) {
+                        var tab = e[0].id;
+                        
+                        if (tab === 'analise') {
+                            //$('#containao').addClass('vaiprolado');
+                            $('#containao').removeClass('offset-s2');
+                            $('#configs').show();
+                        } else {
+                            //$('#containao').removeClass('vaiprolado');
+                            $('#containao').addClass('offset-s2');
+                            $('#configs').hide();
+                        }
+                    } 
+                });
             });
             
             function deletarArtigo(caminho) {
@@ -215,102 +256,6 @@
                 var projeto_id = ${projeto.id}
                 $('#modalVizualizarArtigo iframe').attr('src', contextPath + "/projetos/artigos/vizualizar?projeto=" + projeto_id + "&artigo=" + artigo); 
                 $('#modalVizualizarArtigo').modal('open');
-            }
-            
-            function gerarAnalise() {
-                var analise = $('#selectAnalise').val();
-                if (analise !== null) {
-                    $('#loadando').show();
-                    if (analise == 1) {
-                        $.ajax({
-                            url: "${pageContext.request.contextPath}/projetos/analisar",
-                            type:'get',
-                            data: {
-                                "analise": analise,
-                                "projeto": ${projeto.id}
-                            },
-                            success: function(artigos) {
-                                $('#resultadoAnalise').html("");
-                                var htmlao = "";
-                                    
-                                artigos = JSON.parse(artigos);
-                                artigos.forEach(function(v, k) {
-                                    htmlao += "<div class='row'>" +
-                                                "<div class='col s12'>" +
-                                                    "<div class='card grey lighten-4'>" +
-                                                        "<div class='card-content'>" +
-                                                            "<p>" + v.nome.replace(".pdf", "") + "</p>" +
-                                                            "<ul class='collapsible' data-collapsible='accordion'>" +
-                                                                "<li>" +
-                                                                    "<div class='collapsible-header'>Objetivo</div>" +
-                                                                    "<div class='collapsible-body'><span>" + v.objetivo + "</span></div>" +
-                                                                "</li>" +
-                                                            "</ul>" +
-                                                        "</div>" +
-                                                    "</div>" +
-                                                "</div>" +
-                                            "</div>";
-                                });
-                                console.log(htmlao);
-                                $('#resultadoAnalise').html(htmlao);
-                                $('.collapsible').collapsible();
-                                $('#loadando').hide();
-                            },
-                            error: function(erro) {
-                                console.log(erro);
-                                $('#loadando').hide();
-                            }
-                        });
-                    } else if (analise == 2) {
-                        $.ajax({
-                            url: "${pageContext.request.contextPath}/projetos/analisar",
-                            type:'get',
-                            data: {
-                                "analise": analise,
-                                "projeto": ${projeto.id}
-                            },
-                            success: function(artigos) {
-                                $('#resultadoAnalise').html("");
-                                var htmlao = "";
-                                    
-                                artigos = JSON.parse(artigos);
-                                artigos.forEach(function(v, k) {
-                                    htmlao += "<div class='row'>" +
-                                                "<div class='col s12'>" +
-                                                    "<div class='card grey lighten-4'>" +
-                                                        "<div class='card-content'>" +
-                                                            "<p>" + v.nome.replace(".pdf", "") + "</p>" +
-                                                            "<ul class='collapsible' data-collapsible='accordion'>" +
-                                                                "<li>" +
-                                                                    "<div class='collapsible-header'>Objetivo</div>" +
-                                                                    "<div class='collapsible-body'><span>" + v.objetivo + "</span></div>" +
-                                                                "</li>" +
-                                                                "<li>" +
-                                                                    "<div class='collapsible-header'>Metodologia</div>" +
-                                                                    "<div class='collapsible-body'><span>" + v.metodologia + "</span></div>" +
-                                                                "</li>" +
-                                                                "<li>" +
-                                                                    "<div class='collapsible-header'>Resultado</div>" +
-                                                                    "<div class='collapsible-body'><span>" + v.resultado + "</span></div>" +
-                                                                "</li>" +
-                                                            "</ul>" +
-                                                        "</div>" +
-                                                    "</div>" +
-                                                "</div>" +
-                                            "</div>";
-                                });
-                                console.log(htmlao);
-                                $('#resultadoAnalise').html(htmlao);
-                                $('.collapsible').collapsible();
-                                $('#loadando').hide();
-                            },
-                            error: function(erro) {
-                                console.log(erro);
-                                $('#loadando').hide();
-                            }
-                        }); 
-                    }
-                }
             }
         </script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/fine-uploader/fine-uploader/fine-uploader.min.js"></script>

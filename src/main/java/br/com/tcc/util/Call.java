@@ -266,6 +266,7 @@ public class Call {
                     for (String s : nomes) {
                         Artigo artigo = new Artigo();
                         artigo.setNome(connection.eval("meanVal[" + i + ", 2]").asList().at(0).asString());
+                        artigo.setResumo(connection.eval("meanVal[" + i + ", 3]").asList().at(0).asList().at(0).asString());
                         artigo.setObjetivo(connection.eval("meanVal[" + i + ", 4]").asList().at(0).asString());
                         artigo.setMetodologia(connection.eval("meanVal[" + i + ", 5]").asList().at(0).asString());
                         artigo.setResultado(connection.eval("meanVal[" + i + ", 6]").asList().at(0).asString());
