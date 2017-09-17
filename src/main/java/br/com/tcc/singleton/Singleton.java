@@ -12,7 +12,8 @@ public final class Singleton {
     public static final String FIND_OBJECTIVE = "C:/Users/Orestes/Desktop/TCC/R_files/findObjective.R";
     public static final String FIND_SEGMENT = "C:/Users/Orestes/Desktop/TCC/R_files/findSegment.R";
     public static final String ARTICLES_ANALYSIS = "C:/Users/Orestes/Desktop/TCC/R_files/articlesAnalysis.R";
-    
+   public static final String TO_GROUPS = "C:/Users/Orestes/Desktop/TCC/R_files/toGroups.R"; 
+   
     /***********\
     *  UPLOADS  *
     \***********/

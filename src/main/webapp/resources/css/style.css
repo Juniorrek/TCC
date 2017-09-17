@@ -70,3 +70,14 @@ textarea.materialize-textarea:focus:not([readonly]) + label {
     display: none;
     will-change: opacity;
 }
+
+.vaiprolado {
+    animation-name: ladoanimationultra;
+    animation-duration: 4s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes ladoanimationultra {
+    from {margin-left: 50%; margin-right: 3%;}
+    to {margin-left: 3%; margin-right: 3%;}
+}

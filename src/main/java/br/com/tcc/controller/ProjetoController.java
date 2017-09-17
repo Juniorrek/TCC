@@ -197,56 +197,51 @@ public class ProjetoController {
         }
     }
     
-    @RequestMapping(value = "/projetos/analisar", method = RequestMethod.GET)    
-    public @ResponseBody String projetosAnalisar(@RequestParam("analise") Integer analise, @RequestParam("projeto") Integer id, HttpSession session) {
-        Gson g = new Gson();
-        List<Artigo> artigos = null;
-        if (analise.equals(1)) {
-            Call call = new Call();
-            try {
-                Usuario logado = (Usuario) session.getAttribute("logado");
-                String path = Singleton.UPLOAD_DIR + "/" + logado.getEmail() + "/" + id + "/";
-                artigos = call.abstractObjective(path);
-            } catch (REXPMismatchException ex) {
-                Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-        return g.toJson(artigos);
-    }
     
-    @RequestMapping("/projetos/tfidf")    
-    public String projetosTfidf(@RequestParam("projeto") Integer id, HttpServletResponse response, Model model) throws REXPMismatchException {
+    /*@RequestMapping("/projetos/artigos/agrupar")    
+    public String projetosAgrupar(@RequestParam("grupos") int quant, @RequestParam("forma") String forma, @RequestParam("id") int id, Model model, HttpSession session, HttpServletRequest request) {
+        Projeto projeto=null;
         try {
-            Projeto projeto = ProjetoDao.carregar(id);
-            Usuario usuario = UsuarioDao.carregar(projeto);
-            
-            String folderPath = Singleton.UPLOAD_DIR + usuario.getEmail() + "/" + projeto.getId();
-            
-            
-            Call c = new Call();
-            List<Texto> lista = c.abstractTfIdf(folderPath);
-            model.addAttribute("Lista", lista);
-            List<Artigo> lista2 = c.abstractObjective(folderPath);
-            model.addAttribute("Lista2", lista2);
-            
-            String filePath = Singleton.UPLOAD_DIR + usuario.getEmail() + "/" + projeto.getId() + "/" + "resultadoTfidf.pdf";
-            try {
-                File file = new File(filePath);
-                FileUtils fu = new FileUtils();
-                byte[] bytes = fu.readFileToByteArray(file);
-
-                response.setContentType("application/pdf");
-                OutputStream ops = response.getOutputStream();
-                ops.write(bytes);
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            projeto = ProjetoDao.carregar(id);
+        } catch (SQLException ex) {
+            model.addAttribute("retorno", "toastr.error('Erro ao carregar projeto !!!');");
+            Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        model.addAttribute("projeto", projeto);
+        
+        Usuario logado = (Usuario) session.getAttribute("logado");
+        String path = Singleton.UPLOAD_DIR + "/" + logado.getEmail() + "/" + projeto.getId() + "/";
+        List<Grupo> grupos = null;
+        Call c = new Call();
+        try {
+            grupos = c.toGroups(path, forma, quant);
+        } catch (REXPMismatchException ex) {
+            Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        model.addAttribute("Agrupamentos", grupos);
+        return "mostra";
+    }*/
+    
+    @RequestMapping(value = "/projetos/artigos/agrupar", method = RequestMethod.GET)    
+    public @ResponseBody String projetosAgrupar(@RequestParam("grupos") int quant, @RequestParam("forma") String forma, @RequestParam("id") int id, HttpSession session) {
+        Projeto projeto=null;
+        Gson g = new Gson();
+        try {
+            projeto = ProjetoDao.carregar(id);
         } catch (SQLException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "resultado";
+        
+        Usuario logado = (Usuario) session.getAttribute("logado");
+        String path = Singleton.UPLOAD_DIR + "/" + logado.getEmail() + "/" + projeto.getId() + "/";
+        List<Grupo> grupos = null;
+        Call c = new Call();
+        try {
+            grupos = c.toGroups(path, forma, quant);
+        } catch (REXPMismatchException ex) {
+            Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return g.toJson(grupos);
     }
+    
 }

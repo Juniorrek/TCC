@@ -12,6 +12,7 @@
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/materialize-css/dist/css/materialize.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/datatables.net-dt/css/jquery.dataTables.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css">
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/projetos.css">
         <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/icons/favicon.ico">
     </head>
     <body>
@@ -47,7 +48,8 @@
                     <div class="card white">
                         <div class="card-content">
                             <span class="card-title">Projetos</span>
-                            <table id="tableProjetos" class="striped">
+                            <table id="tableProjetos" class="striped centered">
+                                <a id="newProject" data-target="modalAdicionarProjeto" class="waves-effect waves-light btn modal-trigger"><i class="material-icons left">add</i>criar projeto</a>
                                 <thead>
                                     <tr>
                                         <th hidden>Id</th>
