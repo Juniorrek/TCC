@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -139,6 +140,9 @@
                                     </div>
                                 </div>
                             </div>
+                                        
+                            <div id="resultadoAnalise"></div>           
+                                        
                         </div>
                     </div>
                 </div>
@@ -149,6 +153,33 @@
                         </div>
                         <div class="card-content white">
                             <ul class="collapsible" data-collapsible="accordion">
+                                <li>
+                                    <div class="collapsible-header">Agrupamento</div>
+                                    <div class="collapsible-body">
+                                            <div class="input-field">
+                                                <select id="forma" name="forma">
+                                                    <option value="text" selected>Texto inteiro</option>
+                                                    <option value="abstract">Resumo</option>
+                                                    <option value="objective">Objetivo</option>
+                                                    <option value="methodology">Metodologia</option>
+                                                    <option value="conclusion">Resultados</option>
+                                                </select>
+                                                <label>Forma de agrupamento</label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="input-field">
+                                                  <input type="number" id="grupos" name="grupos" min="2" max="${fn:length(segmentos_artigos)-1}" value="2" class="validate"  />
+                                                  <label for="grupos">Quantidade de grupos</label>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <button class="btn waves-effect waves-light col s12" onclick="agrupar()">AGRUPAR
+                                                    <i class="material-icons right">send</i>
+                                                </button>
+                                            </div>
+                                            <input type="hidden" name="id" value="${projeto.id}"/>
+                                    </div>
+                                </li>
                                 <li>
                                     <div class="collapsible-header">Ordenação</div>
                                     <div class="collapsible-body">
@@ -189,10 +220,6 @@
                                             </button>
                                         </span>
                                     </div>
-                                </li>
-                                <li>
-                                    <div class="collapsible-header">Agrupamento</div>
-                                    <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
                                 </li>
                             </ul>
                             <div class="center">
@@ -256,6 +283,7 @@
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/jquery/dist/jquery.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/materialize-css/dist/js/materialize.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/loading.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/wordcloud/src/wordcloud2.js"></script>
         <script type="text/javascript">
             var nofilter = "";
             $(document).ready(function(){
@@ -385,6 +413,70 @@
                     }
                 });
             });
+            
+            $("#grupos").keypress(function (evt) {
+                    evt.preventDefault();
+            });
+                        
+            function agrupar() {
+                var grupos = $('#grupos').val();
+                var forma = $('#forma').val();
+                $.ajax({
+                    url: "${pageContext.request.contextPath}/projetos/artigos/agrupar",
+                    type:'get',
+                    data: {
+                        "grupos": grupos,
+                        "forma": forma,
+                        "id": ${projeto.id}
+                    },
+                    success: function(grupos) {
+                        $('#analise').html("");
+                        var htmlao = "<div class='row'>" +
+                                                "<div class='col s12'>" +
+                                                    "<ul class='collapsible' data-collapsible='accordion'>";                                    
+                        grupos = JSON.parse(grupos);
+                        grupos.forEach(function(v, k) {
+                            htmlao += "<li>" +
+                                            "<div class='collapsible-header' onclick='ativar()'><h5>GRUPO " + v.numero + "</h5></div>" +
+                                                "<div class='collapsible-body'>" + 
+                                                    "<span>" + 
+                                                       "<div class='row'>" +
+                                                            "<div class='col s12'>" +
+                                                                "<ul class='tabs tabs-fixed-width'>" +
+                                                                    "<li class='tab col s3'><a class='active' href='#Artigos" + v.numero + "'>ARTIGOS</a></li>" +
+                                                                    "<li class='tab col s3'><a href='#Wordcloud" + v.numero + "'>WORDCLOUD</a></li>" +
+                                                                "</ul>" +
+                                                            "</div>" +
+                                                            "<div id='Artigos" + v.numero + "' class='col s12'>";
+                                                            (v.artigos).forEach(function(t,l) {
+                                                                htmlao += "<p><b>" + t + "</b></p>";
+                                                            });
+                                                            htmlao += "</div>" +
+                                                            "<div id='Wordcloud" + v.numero + "' class='col s12'>";
+                                                            htmlao += "<canvas id='myCanvas" + v.numero + "' width='640' height='480' style='border:1px solid #000000;'></canvas>";
+                                                     htmlao += "</div></div></span>" +
+                                                    "</div>" +
+                                                "</li>";
+                            });
+                            htmlao += "</ul></div></div>";
+                            console.log(htmlao);
+                            $('#analise').html(htmlao);
+                            grupos.forEach(function(v, k) { <!--CONSTRUÇÃO WORDCLOUD-->
+                                var list = [["" , ""]];
+                                (v.keywords).forEach(function(t, l) {
+                                    list.push([t, 100]);
+                                });
+                                list.splice(0,1);
+                                WordCloud(document.getElementById("myCanvas" + v.numero), { list: list } );
+                            });
+                            $('ul.tabs').tabs();
+                            $('.collapsible').collapsible();
+                    },
+                    error: function(erro) {
+                        console.log(erro);
+                    }
+                });
+            }
         </script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/fine-uploader/fine-uploader/fine-uploader.min.js"></script>
         <script type="text/template" id="qq-template">

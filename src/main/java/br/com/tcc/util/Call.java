@@ -5,12 +5,7 @@ import br.com.tcc.singleton.Singleton;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
-import org.rosuda.REngine.REngineException;
-import org.rosuda.REngine.RList;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
 
@@ -337,5 +332,66 @@ public class Call {
                 } 
             }
             return arqs;
+        }
+        
+        
+        public List<Grupo> toGroups(String pathorigem, String segmento, int x) throws REXPMismatchException {
+            RConnection connection = null;
+            String path = pathorigem + "/temp";
+            File f = new File(path);
+            f.mkdirs();
+            try {
+                    connection = new RConnection();
+                    connection.eval("library(dplyr)");                       
+                    connection.eval("source('" + Singleton.EXTRACT_ABSTRACT + "')");
+                    connection.eval("source('" + Singleton.FIND_SEGMENT + "')");
+                    connection.eval("source('" + Singleton.ARTICLES_ANALYSIS + "')");
+                    connection.eval("source('" + Singleton.TO_GROUPS + "')");
+                    List<String> nomes = arquivos(pathorigem);
+                    for(String arq: nomes) { //PASSANDO ARQUIVOS PARA PASTA DE ANÁLISE
+                        connection.eval("flist = list.files(\"" + pathorigem + "\",\"" + arq + "\", full.names = TRUE)");
+                        connection.eval("file.copy(flist,\"" + path + "\")");
+                    }
+                    connection.eval("xx = extractAbstract(\"" + path + "\",\'\"" + pdftotext + "\"\')");
+                    
+                    //limpando os pdf e o txt abstract
+                    connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+pdf\", full.names = TRUE)");
+                    connection.eval("file.remove(junk)");
+                    connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+abstract.+\", full.names = TRUE)");
+                    connection.eval("file.remove(junk)");
+                    connection.eval("meanVal = articlesAnalysis(\"" + path + "\")");
+                    System.out.println(segmento);
+                    connection.eval("meanVal = toGroups(meanVal, \"" + segmento + "\", " + x + ")");
+                    
+                    int topicos = Integer.parseInt(connection.eval("paste(max(meanVal$topic))").asString());
+                    List<Grupo> grupos = new ArrayList();
+                    
+                    for (int i=1; i<=topicos; i++) {
+                        List<String> nome = new ArrayList();
+                        List<String> palavras = new ArrayList();
+                        connection.eval("aux = meanVal[which(meanVal$topic==" + i +"),]");
+                        int cont = Integer.parseInt(connection.eval("paste(count(aux))").asString());
+                        for(int j=1;j<=cont;j++){
+                            nome.add(connection.eval("aux[" + j + ", 1]").asList().at(0).asString());
+                        }
+                        int palavra = Integer.parseInt(connection.eval("length(aux[[1,4]])").asString());
+                        for(int j=1;j<=palavra;j++){
+                            palavras.add(connection.eval("aux[[1,4]][" + j + "]").asString());
+                        }
+                        Grupo grupo = new Grupo();
+                        grupo.setArtigos(nome);
+                        grupo.setKeywords(palavras);
+                        grupo.setNumero(i);
+                        grupos.add(grupo);
+                    }
+                    f.delete();
+                    return grupos;
+            } catch (RserveException e) {
+                e.printStackTrace();
+            }finally{
+                connection.close();
+            }
+            f.delete();
+            return null;
         }
 }

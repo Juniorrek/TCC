@@ -221,4 +221,50 @@ public class ProjetoController {
         
         return g.toJson(artigos);
     }
+    
+    /*@RequestMapping("/projetos/artigos/agrupar")    
+    public String projetosAgrupar(@RequestParam("grupos") int quant, @RequestParam("forma") String forma, @RequestParam("id") int id, Model model, HttpSession session, HttpServletRequest request) {
+        Projeto projeto=null;
+        try {
+            projeto = ProjetoDao.carregar(id);
+        } catch (SQLException ex) {
+            model.addAttribute("retorno", "toastr.error('Erro ao carregar projeto !!!');");
+            Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        model.addAttribute("projeto", projeto);
+        
+        Usuario logado = (Usuario) session.getAttribute("logado");
+        String path = Singleton.UPLOAD_DIR + "/" + logado.getEmail() + "/" + projeto.getId() + "/";
+        List<Grupo> grupos = null;
+        Call c = new Call();
+        try {
+            grupos = c.toGroups(path, forma, quant);
+        } catch (REXPMismatchException ex) {
+            Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        model.addAttribute("Agrupamentos", grupos);
+        return "mostra";
+    }*/
+    
+    @RequestMapping(value = "/projetos/artigos/agrupar", method = RequestMethod.GET)    
+    public @ResponseBody String projetosAgrupar(@RequestParam("grupos") int quant, @RequestParam("forma") String forma, @RequestParam("id") int id, HttpSession session) {
+        Projeto projeto=null;
+        Gson g = new Gson();
+        try {
+            projeto = ProjetoDao.carregar(id);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        Usuario logado = (Usuario) session.getAttribute("logado");
+        String path = Singleton.UPLOAD_DIR + "/" + logado.getEmail() + "/" + projeto.getId() + "/";
+        List<Grupo> grupos = null;
+        Call c = new Call();
+        try {
+            grupos = c.toGroups(path, forma, quant);
+        } catch (REXPMismatchException ex) {
+            Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return g.toJson(grupos);
+    }
 }

@@ -6,6 +6,7 @@ public final class Singleton {
     /***********\
     * SCRIPTS R *
     \***********/
+    
     public static final String EXTRACT_ABSTRACT = "C:/Users/David/Documents/Github/R-Scripts/extractAbstract.R";
     public static final String TIDYNATOR = "C:/Users/David/Documents/Github/R-Scripts/tidynator.R";
     public static final String FIND_TF_IDF = "C:/Users/David/Documents/Github/R-Scripts/find_tf_idf.R";
@@ -13,12 +14,13 @@ public final class Singleton {
     public static final String FIND_SEGMENT = "C:/Users/David/Documents/Github/R-Scripts/findSegment.R";
     public static final String ARTICLES_ANALYSIS = "C:/Users/David/Documents/Github/R-Scripts/articlesAnalysis.R";
     public static final String ARRANGE_BY_RELEVANCY = "C:/Users/David/Documents/Github/R-Scripts/arrangeByRelevancy.R";
+    public static final String TO_GROUPS = "C:/Users/David/Documents/Github/R-Scripts/toGroups.R"; 
    
     /***********\
     *  UPLOADS  *
     \***********/
     public static final String UPLOAD_DIR = "C:/Sistema_TCC/arquivos/artigos";
-    public static final String TEMP_DIR = "C:/Users/bruno/Documents/temp";
+    public static final String TEMP_DIR = "C:/Users/Orestes/Desktop/TCC/SobAnalise";
     
     /***********\
     *  DATABASE *
