@@ -71,7 +71,7 @@ textarea.materialize-textarea:focus:not([readonly]) + label {
     will-change: opacity;
 }
 
-.vaiprolado {
+/*.vaiprolado {
     animation-name: ladoanimationultra;
     animation-duration: 4s;
     animation-fill-mode: forwards;
@@ -80,4 +80,8 @@ textarea.materialize-textarea:focus:not([readonly]) + label {
 @keyframes ladoanimationultra {
     from {margin-left: 50%; margin-right: 3%;}
     to {margin-left: 3%; margin-right: 3%;}
+}*/
+
+.hmdogs p {
+    display: inline;
 }

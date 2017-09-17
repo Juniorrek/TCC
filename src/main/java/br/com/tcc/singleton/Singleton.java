@@ -12,7 +12,7 @@ public final class Singleton {
     public static final String FIND_OBJECTIVE = "C:/Users/David/Documents/Github/R-Scripts/findObjective.R";
     public static final String FIND_SEGMENT = "C:/Users/David/Documents/Github/R-Scripts/findSegment.R";
     public static final String ARTICLES_ANALYSIS = "C:/Users/David/Documents/Github/R-Scripts/articlesAnalysis.R";
-    
+    public static final String ARRANGE_BY_RELEVANCY = "C:/Users/David/Documents/Github/R-Scripts/arrangeByRelevancy.R";
    
     /***********\
     *  UPLOADS  *

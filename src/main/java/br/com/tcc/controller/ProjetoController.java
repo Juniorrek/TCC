@@ -5,11 +5,13 @@ import br.com.tcc.dao.*;
 import br.com.tcc.singleton.Singleton;
 import br.com.tcc.util.Call;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -195,5 +197,28 @@ public class ProjetoController {
         } catch (SQLException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    @RequestMapping(value = "/projetos/ordenar", method = RequestMethod.GET)    
+    public @ResponseBody String projetosOrdenar(@RequestParam("projeto") Integer id,
+                                                HttpSession session,
+                                                @RequestParam("segment") String segment,
+                                                @RequestParam("token") String token,
+                                                @RequestParam("keywords") String keywords) {
+        Gson g = new Gson();
+        Call call = new Call();
+        Type listType = new TypeToken<ArrayList<Tag>>(){}.getType();
+        List<Tag> tags = g.fromJson(keywords, listType);
+        List<Artigo> artigos = null;
+        
+        try {
+            Usuario logado = (Usuario) session.getAttribute("logado");
+            String path = Singleton.UPLOAD_DIR + "/" + logado.getEmail() + "/" + id + "/";
+            artigos = call.ordenar(path, segment, tags);
+        } catch (REXPMismatchException ex) {
+            Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return g.toJson(artigos);
     }
 }

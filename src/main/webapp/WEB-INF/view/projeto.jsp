@@ -150,14 +150,54 @@
                         <div class="card-content white">
                             <ul class="collapsible" data-collapsible="accordion">
                                 <li>
+                                    <div class="collapsible-header">Ordenação</div>
+                                    <div class="collapsible-body">
+                                        <span>
+                                            <div class="input-field">
+                                                <select id="selectPorOrdenacao">
+                                                    <option value="" disabled selected>Escolha uma opção</option>
+                                                    <option value="text">Artigo</option>
+                                                    <option value="abstract">Resumo</option>
+                                                    <option value="objective">Objetivo</option>
+                                                    <option value="methodology">Metodologia</option>
+                                                    <option value="conclusion">Resultado</option>
+                                                </select>
+                                                <label>Por</label>
+                                            </div>
+                                            <br/>
+                                            <div class="hmdogs">
+                                                <p>
+                                                    <input name="group" type="radio" id="radioPalavra" value="palavra" />
+                                                    <label for="radioPalavra">Palavra</label>
+                                                </p>
+                                                <p>
+                                                    <input name="group" type="radio" id="radioBigram" value="bigram" />
+                                                    <label for="radioBigram">Bigram</label>
+                                                </p>
+                                                <p>
+                                                    <input name="group" type="radio" id="radioTrigram" value="trigam" />
+                                                    <label for="radioTrigram">Trigram</label>
+                                                </p>
+                                            </div>
+                                            <br/>
+                                            <div class="input-field">
+                                                <div class="chips"></div>
+                                                <label>Keywords</label>
+                                            </div>
+                                            <button class="btn waves-effect waves-light" id="btnOrdenar" type="button" name="action">Ordenar
+                                                <i class="material-icons right">send</i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </li>
+                                <li>
                                     <div class="collapsible-header">Agrupamento</div>
                                     <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
                                 </li>
-                                <li>
-                                    <div class="collapsible-header">Ordenação</div>
-                                    <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-                                </li>
                             </ul>
+                            <div class="center">
+                                <a href="#" onclick="limparFiltros()">Limpar filtros</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -215,7 +255,9 @@
 
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/jquery/dist/jquery.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/materialize-css/dist/js/materialize.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/loading.js"></script>
         <script type="text/javascript">
+            var nofilter = "";
             $(document).ready(function(){
                 $(".button-collapse").sideNav();
                 
@@ -228,6 +270,8 @@
                 $('select').material_select();
                 
                 $('.collapsible').collapsible();
+                
+                $('.chips').material_chip();
                 
                 $('#tabMaster').tabs({
                     onShow: function(e) {
@@ -244,6 +288,8 @@
                         }
                     } 
                 });
+                
+                nofilter = $('#analise').html();
             });
             
             function deletarArtigo(caminho) {
@@ -257,6 +303,88 @@
                 $('#modalVizualizarArtigo iframe').attr('src', contextPath + "/projetos/artigos/vizualizar?projeto=" + projeto_id + "&artigo=" + artigo); 
                 $('#modalVizualizarArtigo').modal('open');
             }
+            
+            function limparFiltros() {
+                $('#analise').html(nofilter);
+                $('ul.tabs').tabs();
+                $('.collapsible').collapsible();
+            }
+            
+            $('#btnOrdenar').click(function () {
+                var segment = $('#selectPorOrdenacao').val();
+                var token = $('input[name="group"]:checked').val();
+                var keywords = $('.chips').material_chip('data');
+                
+                $.ajax({
+                    url: "${pageContext.request.contextPath}/projetos/ordenar",
+                    type:'get',
+                    dataType: 'json',
+                    data: {
+                        "projeto": ${projeto.id},
+                        "segment": segment,
+                        "token": token,
+                        "keywords": JSON.stringify(keywords)
+                    },
+                    success: function(artigos) {
+                        $('#analise').html("");
+                        var htmlao = "<div class='row'>" +
+                                                "<div class='col s12'>" +
+                                                    "<ul class='collapsible' data-collapsible='accordion'>";
+                        artigos.forEach(function(v, k) {
+                            var idx = k + 1;
+                            htmlao += '<li>' +
+                                        '<div class="collapsible-header"><h5>' + idx + ' - ' + v.nome + '</h5></div>' +
+                                        '<div class="collapsible-body">' +
+                                            '<span>' +
+                                                '<div class="row">' +
+                                                    '<div class="col s12">' +
+                                                        '<ul class="tabs tabs-fixed-width">' +
+                                                            '<li class="tab col s3"><a class="active" href="#Segmentos">Segmentos</a></li>' +
+                                                            '<li class="tab col s3"><a href="#TF">TF</a></li>' +
+                                                            '<li class="tab col s3"><a href="#WORDCLOUD">WORDCLOUD</a></li>' +
+                                                        '</ul>' +
+                                                    '</div>' +
+                                                    '<div id="Segmentos" class="col s12">' +
+                                                        '<h6>Resumo</h6>' +
+                                                        '<ul class="collapsible" data-collapsible="accordion">' +
+                                                            '<li>' +
+                                                                '<div class="collapsible-header">' + v.resumo.substr(0, 10) + '...</div>' +
+                                                                '<div class="collapsible-body"><span>' + v.resumo + '</span></div>' +
+                                                            '</li>' +
+                                                        '</ul>' +
+                                                        '<h6>Segmentos</h6>' +
+                                                        '<ul class="collapsible" data-collapsible="accordion">' +
+                                                            '<li>' +
+                                                                '<div class="collapsible-header">Objetivo</div>' +
+                                                                '<div class="collapsible-body"><span>' + v.objetivo + '</span></div>' +
+                                                            '</li>' +
+                                                            '<li>' +
+                                                                '<div class="collapsible-header">Metodologia</div>' +
+                                                                '<div class="collapsible-body"><span>' + v.metodologia + '</span></div>' +
+                                                            '</li>' +
+                                                            '<li>' +
+                                                                '<div class="collapsible-header">Resultado</div>' +
+                                                                '<div class="collapsible-body"><span>' + v.resultado + '</span></div>' +
+                                                            '</li>' +
+                                                        '</ul>' +
+                                                    '</div>' +
+                                                    '<div id="TF" class="col s12">aqui um twisted fate</div>' +
+                                                    '<div id="WORDCLOUD" class="col s12">Aqui é para ter uma wordcloud</div>' +
+                                                '</div>' +
+                                            '</span>' +
+                                        '</div>' +
+                                    '</li>';
+                        });
+                        htmlao += "</ul></div></div>";
+                        $('#analise').html(htmlao);
+                        $('ul.tabs').tabs();
+                        $('.collapsible').collapsible();
+                    },
+                    error: function(erro) {
+                        console.log(erro);
+                    }
+                });
+            });
         </script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/fine-uploader/fine-uploader/fine-uploader.min.js"></script>
         <script type="text/template" id="qq-template">

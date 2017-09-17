@@ -273,17 +273,59 @@ public class Call {
                         artigos.add(artigo);
                         i++;
                     }
-                    f.delete();
                     return artigos;
             } catch (RserveException e) {
                 e.printStackTrace();
             }finally{
                 connection.close();
             }
-            f.delete();
             return null;
         }
         
+        public List<Artigo> ordenar(String pathorigem, String segment, List<Tag> tags) throws REXPMismatchException {
+            RConnection connection = null;
+            String path = pathorigem + "/temp";
+            File f = new File(path);
+            
+            String keywords = "c(";
+            for (Tag t : tags) {
+                keywords += "'" + t.getTag() + "',";
+            }
+            keywords = keywords.substring(0, keywords.length() - 1);
+            keywords += ")";
+            
+            try {
+                    connection = new RConnection();
+                    connection.eval("library(dplyr)");                       
+                    connection.eval("source('" + Singleton.EXTRACT_ABSTRACT + "')");
+                    connection.eval("source('" + Singleton.FIND_SEGMENT + "')");
+                    connection.eval("source('" + Singleton.ARTICLES_ANALYSIS + "')");
+                    connection.eval("source('" + Singleton.ARRANGE_BY_RELEVANCY + "')");
+                    
+                    connection.eval("meanVal = articlesAnalysis(\"" + path + "\")");
+                    connection.eval("ordenado = arrangeByRelevancy(meanVal, \"" + segment + "\", " + keywords + ")");
+                    List<Artigo> artigos = new ArrayList();
+                    List<String> nomes = arquivos(pathorigem);
+                    int i = 1;
+                    for (String s : nomes) {
+                        Artigo artigo = new Artigo();
+                        artigo.setNome(connection.eval("ordenado[" + i + ", 2]").asList().at(0).asString());
+                        artigo.setResumo(connection.eval("ordenado[" + i + ", 3]").asList().at(0).asList().at(0).asString());
+                        artigo.setObjetivo(connection.eval("ordenado[" + i + ", 4]").asList().at(0).asString());
+                        artigo.setMetodologia(connection.eval("ordenado[" + i + ", 5]").asList().at(0).asString());
+                        artigo.setResultado(connection.eval("ordenado[" + i + ", 6]").asList().at(0).asString());
+                        artigos.add(artigo);
+                        //talvez puxar o numero e ordenar para garantir
+                        i++;
+                    }
+                    return artigos;
+            } catch (RserveException e) {
+                e.printStackTrace();
+            }finally{
+                connection.close();
+            }
+            return null;
+        }
         
         public List<String> arquivos(String path){
             File folder = new File(path);
