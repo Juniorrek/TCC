@@ -1,0 +1,55 @@
+.dataTables_filter {
+    float: left !important;
+}
+
+#addArticle, #addArticleSmall{
+    background-color: #ff7d07 !important;
+    border-color: #ff7d07 !important;
+}
+
+#addArticle:hover a, #adArticleSmall:hover button  {
+    background-color: #ff871c !important; 
+    border-color: #ff871c !important;
+}
+
+#addArticle {
+    position: absolute;
+    right: 20px;
+    top: 95px;
+}
+
+@media screen and (max-width: 680px) {
+	#addArticle {
+            visibility: hidden;
+	}
+}
+
+#tableArtigos {
+    width: 100% !important;
+}
+
+.abstract {
+    background-color: #eeeeee;
+}
+.objective {
+    background-color: #c8e6c9;
+}
+.methodology {
+    background-color: #bbdefb;
+}
+.conclusion {
+    background-color: #ffcdd2;
+}
+
+.article-header{
+    background: #90caf9; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#90caf9, #bbdefb); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#90caf9, #bbdefb); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#90caf9, #bbdefb); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#90caf9, #bbdefb); /* Standard syntax */
+    
+    margin-bottom: 5px;
+    font-size: 12px !important;
+}
+
+

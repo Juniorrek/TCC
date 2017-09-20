@@ -12,7 +12,9 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/node_modules/material-design-icons-iconfont/dist/fonts/material-icons.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/materialize-css/dist/css/materialize.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/fine-uploader/fine-uploader/fine-uploader-new.min.css">
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/datatables.net-dt/css/jquery.dataTables.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css">
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/projeto.css">
         <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/icons/favicon.ico">
     </head>
     <body>
@@ -72,21 +74,55 @@
                                 </form>
                             </div>
                             <div id="artigos">
-                                <div class="row">
-                                    <c:forEach items="${artigos}" var="artigo">
+<!--                                <div class="row">
+                                    <%--<c:forEach items="${artigos}" var="artigo">--%>
                                         <div class="col s12 m4">
                                             <div class="card grey lighten-4">
                                                 <div class="card-content">
                                                     <p>${artigo.getName().replace("_", " ").replace(".pdf", "")}</p>
-                                                    <c:set var="absolutePath" value='${artigo.path.replace("\\", "/")}' />
+                                                    <%--<c:set var="absolutePath" value='${artigo.path.replace("\\", "/")}' />--%>
                                                     <button class="btn-floating waves-effect waves-light blue left" onclick="vizualizarArtigo('${artigo.getName()}')"><i class="material-icons">visibility</i></button>
                                                     <button class="btn-floating waves-effect waves-light red right" onclick="deletarArtigo('${absolutePath}')"><i class="material-icons">delete</i></button>
                                                 </div>
                                             </div>
                                         </div>
-                                    </c:forEach>
-                                </div>
-                                <button data-target="modalAdicionarArtigo" class="btn-floating halfway-fab waves-effect waves-light green center-btn modal-trigger"><i class="material-icons">add</i></button>
+                                    <%--</c:forEach>--%>
+                                </div>-->
+                                <button id="addArticleSmall" data-target="modalAdicionarArtigo" class="btn-floating halfway-fab waves-effect waves-light green center-btn modal-trigger"><i class="material-icons">add</i></button>
+                                 <div class="container">
+                                   <div class="row">
+                                       <div class="col s12">
+                                           <div class="card white">
+                                               <div class="card-content">
+                                                   <span class="card-title">Artigos</span>
+                                                   <table id="tableArtigos" class="striped centered responsive">
+                                                       <a id="addArticle" data-target="modalAdicionarArtigo" class="waves-effect waves-light btn modal-trigger"><i class="material-icons left">add</i>adicionar artigos</a>
+                                                       <thead>
+                                                           <tr>
+                                                               <th hidden>Id</th>
+                                                               <th>Nome</th>
+                                                               <th>Ação</th>
+                                                           </tr>
+                                                       </thead>
+                                                       <tbody>
+                                                           <c:forEach items="${artigos}" var="artigo">
+                                                               <tr>
+                                                                   <td hidden></td>
+                                                                   <td>${artigo.getName().replace("_", " ").replace(".pdf", "")}</td>
+                                                                   <td>
+                                                                       <c:set var="absolutePath" value='${artigo.path.replace("\\", "/")}' />
+                                                                       <button class="btn-floating wavesartigo-effect waves-light blue" onclick="vizualizarArtigo('${artigo.getName()}')"><i class="material-icons">visibility</i></button>
+                                                                       <button class="btn-floating waves-effect waves-light red" onclick="deletarArtigo('${absolutePath}')"><i class="material-icons">delete</i></button>
+                                                                   </td>
+                                                               </tr>
+                                                           </c:forEach>
+                                                       </tbody>
+                                                   </table>
+                                               </div>
+                                           </div>
+                                       </div>
+                                   </div>
+                                 </div>
                             </div>
                             <div id="analise">
                                 <div class='row'>
@@ -94,7 +130,7 @@
                                         <ul class="collapsible" data-collapsible="accordion">
                                             <c:forEach items="${segmentos_artigos}" var="artigo">
                                                 <li>
-                                                    <div class="collapsible-header"><h5>${artigo.nome}</h5></div>
+                                                    <div class="collapsible-header article-header"><h5>${artigo.nome}</h5></div>
                                                     <div class="collapsible-body">
                                                         <span>
                                                             <div class="row">
@@ -109,22 +145,22 @@
                                                                     <h6>Resumo</h6>
                                                                     <ul class='collapsible' data-collapsible='accordion'>
                                                                         <li>
-                                                                            <div class='collapsible-header'>${artigo.resumo.substring(0, 10)}...</div>
+                                                                            <div class='collapsible-header abstract'>Abstract</div>
                                                                             <div class='collapsible-body'><span>${artigo.resumo}</span></div>
                                                                         </li>
                                                                     </ul>
                                                                     <h6>Segmentos</h6>
                                                                     <ul class='collapsible' data-collapsible='accordion'>
                                                                         <li>
-                                                                            <div class='collapsible-header'>Objetivo</div>
+                                                                            <div class='collapsible-header objective'>Objetivo</div>
                                                                             <div class='collapsible-body'><span>${artigo.objetivo}</span></div>
                                                                         </li>
                                                                         <li>
-                                                                            <div class='collapsible-header'>Metodologia</div>
+                                                                            <div class='collapsible-header methodology'>Metodologia</div>
                                                                             <div class='collapsible-body'><span>${artigo.metodologia}</span></div>
                                                                         </li>
                                                                         <li>
-                                                                            <div class='collapsible-header'>Resultado</div>
+                                                                            <div class='collapsible-header conclusion'>Resultado</div>
                                                                             <div class='collapsible-body'><span>${artigo.resultado}</span></div>
                                                                         </li>
                                                                     </ul>
@@ -144,7 +180,7 @@
                             <div id="resultadoAnalise"></div>           
                                         
                         </div>
-                    </div>
+                </div>
                 </div>
                 <div id="configs" class="col s4" style="display: none">
                     <div class="card grey lighten-4">
@@ -281,6 +317,7 @@
         </div>
 
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/jquery/dist/jquery.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/datatables.net/js/jquery.dataTables.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/materialize-css/dist/js/materialize.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/loading.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/wordcloud/src/wordcloud2.js"></script>
@@ -307,14 +344,27 @@
                         
                         if (tab === 'analise') {
                             //$('#containao').addClass('vaiprolado');
-                            $('#containao').removeClass('offset-s2');
+                            $('#containao').removeClass("offset-s2");
                             $('#configs').show();
                         } else {
                             //$('#containao').removeClass('vaiprolado');
-                            $('#containao').addClass('offset-s2');
+                            $('#containao').addClass("offset-s2");
                             $('#configs').hide();
                         }
                     } 
+                });
+                
+                $('#tableArtigos').DataTable({
+                    "language": lang,
+                    "dom": 'Bfrtip',
+                    "columnDefs": [
+                        { 
+                            "width": "20%",
+                            "targets": 2,
+                            "orderable": false,
+                            "searchable": false
+                        }
+                    ]
                 });
                 
                 nofilter = $('#analise').html();
@@ -391,7 +441,7 @@
                                                                 '<div class="collapsible-body"><span>' + v.metodologia + '</span></div>' +
                                                             '</li>' +
                                                             '<li>' +
-                                                                '<div class="collapsible-header">Resultado</div>' +
+                                                                '<div class="collapsible-header>Resultado</div>' +
                                                                 '<div class="collapsible-body"><span>' + v.resultado + '</span></div>' +
                                                             '</li>' +
                                                         '</ul>' +
@@ -477,6 +527,30 @@
                     }
                 });
             }
+            
+             var lang = {
+                "sEmptyTable": "Nenhum registro encontrado",
+                "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+                "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+                "sInfoPostFix": "",
+                "sInfoThousands": ".",
+                "sLengthMenu": "_MENU_ resultados por página",
+                "sLoadingRecords": "Carregando...",
+                "sProcessing": "Processando...",
+                "sZeroRecords": "Nenhum registro encontrado",
+                "sSearch": "Pesquisar",
+                "oPaginate": {
+                    "sNext": "Próximo",
+                    "sPrevious": "Anterior",
+                    "sFirst": "Primeiro",
+                    "sLast": "Último"
+                },
+                "oAria": {
+                    "sSortAscending": ": Ordenar colunas de forma ascendente",
+                    "sSortDescending": ": Ordenar colunas de forma descendente"
+                }
+            };
         </script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/fine-uploader/fine-uploader/fine-uploader.min.js"></script>
         <script type="text/template" id="qq-template">

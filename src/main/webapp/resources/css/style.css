@@ -85,3 +85,7 @@ textarea.materialize-textarea:focus:not([readonly]) + label {
 .hmdogs p {
     display: inline;
 }
+
+.card-content {
+    margin-top: 15px;
+}
