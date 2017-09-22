@@ -89,3 +89,13 @@ textarea.materialize-textarea:focus:not([readonly]) + label {
 .card-content {
     margin-top: 15px;
 }
+
+.tabs .tab a:hover {
+    background-color: #F5F2F0;
+    color: #939393;
+}
+
+.tabs .tab a.active {
+    background-color: #2196F3;
+    color: #FFFFFF;
+}

@@ -29,16 +29,16 @@
 }
 
 .abstract {
-    background-color: #eeeeee;
+    background-color: #F5F2F0;
 }
 .objective {
-    background-color: #c8e6c9;
+    background-color: #F5F2F0;
 }
 .methodology {
-    background-color: #bbdefb;
+    background-color: #F5F2F0;
 }
 .conclusion {
-    background-color: #ffcdd2;
+    background-color: #F5F2F0;
 }
 
 .article-header{
@@ -49,7 +49,12 @@
     background: linear-gradient(#90caf9, #bbdefb); /* Standard syntax */
     
     margin-bottom: 5px;
-    font-size: 12px !important;
+    font-size: 16px !important;
 }
 
+ .collapsible li.active i {
+  -ms-transform: rotate(180deg); /* IE 9 */
+  -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+  transform: rotate(180deg);
+}
 

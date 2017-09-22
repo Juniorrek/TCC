@@ -104,7 +104,7 @@
                                                                <th>Ação</th>
                                                            </tr>
                                                        </thead>
-                                                       <tbody>
+                                                       <tbody id="tableBody">
                                                            <c:forEach items="${artigos}" var="artigo">
                                                                <tr>
                                                                    <td hidden></td>
@@ -130,7 +130,8 @@
                                         <ul class="collapsible" data-collapsible="accordion">
                                             <c:forEach items="${segmentos_artigos}" var="artigo">
                                                 <li>
-                                                    <div class="collapsible-header article-header"><h5>${artigo.nome}</h5></div>
+                                                    <div class="collapsible-header article-header"><i class="material-icons right more">expand_more</i>${artigo.nome}</div>
+                                                    
                                                     <div class="collapsible-body">
                                                         <span>
                                                             <div class="row">
@@ -288,6 +289,7 @@
             </div>
             <div class="modal-footer">
                 <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
+                <a onClick="reload()" class="modal-action modal-close waves-effect waves-light btn-flat green accent-4">Pronto</a>
             </div>
         </div>
                                         
@@ -370,6 +372,9 @@
                 nofilter = $('#analise').html();
             });
             
+            function reload() {
+                location = window.location.href;
+            }
             function deletarArtigo(caminho) {
                 $('#modalDeletarArtigo input[name="caminho"]').val(caminho);
                 $('#modalDeletarArtigo').modal('open');
@@ -620,7 +625,15 @@
                         projeto: '${projeto.id}'
                     }
                 },
-                success: true
+                success: true,
+                callbacks: {
+                    onComplete: function(id, name, response) {
+                        if (response.success) {
+                            console.log("success");
+                            $('#tableBody').html("text");
+                        }
+                    }
+                }
                 //autoUpload: false,
                 //text: {
                 //    uploadButton: '<i class="icon-plus icon-white"></i> Select Files'

@@ -7,20 +7,20 @@ public final class Singleton {
     * SCRIPTS R *
     \***********/
     
-    public static final String EXTRACT_ABSTRACT = "C:/Users/bruno/Documents/R/R-Scripts/extractAbstract.R";
-    public static final String TIDYNATOR = "C:/Users/bruno/Documents/R/R-Scripts/tidynator.R";
-    public static final String FIND_TF_IDF = "C:/Users/bruno/Documents/R/R-Scripts/find_tf_idf.R";
-    public static final String FIND_OBJECTIVE = "C:/Users/bruno/Documents/R/R-Scripts/findObjective.R";
-    public static final String FIND_SEGMENT = "C:/Users/bruno/Documents/R/R-Scripts/findSegment.R";
-    public static final String ARTICLES_ANALYSIS = "C:/Users/bruno/Documents/R/R-Scripts/articlesAnalysis.R";
-    public static final String ARRANGE_BY_RELEVANCY = "C:/Users/bruno/Documents/R/R-Scripts/arrangeByRelevancy.R";
-    public static final String TO_GROUPS = "C:/Users/bruno/Documents/R/R-Scripts/toGroups.R"; 
+    public static final String EXTRACT_ABSTRACT = "C:/Users/bruno/Documents/R/Scripts/extractAbstract.R";
+    public static final String TIDYNATOR = "C:/Users/bruno/Documents/R/Scripts/tidynator.R";
+    public static final String FIND_TF_IDF = "C:/Users/bruno/Documents/R/Scripts/find_tf_idf.R";
+    public static final String FIND_OBJECTIVE = "C:/Users/bruno/Documents/R/Scripts/findObjective.R";
+    public static final String FIND_SEGMENT = "C:/Users/bruno/Documents/R/Scripts/findSegment.R";
+    public static final String ARTICLES_ANALYSIS = "C:/Users/bruno/Documents/R/Scripts/articlesAnalysis.R";
+    public static final String ARRANGE_BY_RELEVANCY = "C:/Users/bruno/Documents/R/Scripts/arrangeByRelevancy.R";
+    public static final String TO_GROUPS = "C:/Users/bruno/Documents/R/Scripts/toGroups.R"; 
    
     /***********\
     *  UPLOADS  *
     \***********/
-    public static final String UPLOAD_DIR = "C:/Users/bruno/Documents/UPLOAD_DIR";
-    public static final String TEMP_DIR = "C:/Users/bruno/Documents/TEMP_DIR";
+    public static final String UPLOAD_DIR = "C:/Users/bruno/Documents/up";
+    public static final String TEMP_DIR = "C:/Users/bruno/Documents/temp";
     
     /***********\
     *  DATABASE *
