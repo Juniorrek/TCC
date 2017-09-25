@@ -1,5 +1,6 @@
 package br.com.tcc.configuration;
 
+import br.com.tcc.context.ServletContextProvider;
 import br.com.tcc.interceptor.Interceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -47,5 +48,10 @@ public class SpringConfig extends WebMvcConfigurerAdapter{
         multipartResolver.setMaxUploadSize(10000000);
         
         return multipartResolver;
+    }
+    
+    @Bean
+    public ServletContextProvider servletContextProvider() {
+        return new ServletContextProvider();
     }
 }
