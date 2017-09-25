@@ -289,7 +289,7 @@
             </div>
             <div class="modal-footer">
                 <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
-                <a onClick="reload()" class="modal-action modal-close waves-effect waves-light btn-flat green accent-4">Pronto</a>
+                <a class="modal-action modal-close waves-effect waves-light btn-flat green accent-4">Pronto</a>
             </div>
         </div>
                                         
@@ -378,6 +378,7 @@
             function deletarArtigo(caminho) {
                 $('#modalDeletarArtigo input[name="caminho"]').val(caminho);
                 $('#modalDeletarArtigo').modal('open');
+                $('#tableArtigos').load(document.URL +  ' #tableArtigos');
             }
             
             function vizualizarArtigo(artigo) {
@@ -629,8 +630,7 @@
                 callbacks: {
                     onComplete: function(id, name, response) {
                         if (response.success) {
-                            console.log("success");
-                            $('#tableBody').html("text");
+                            $('#tableArtigos').load(document.URL +  ' #tableArtigos');
                         }
                     }
                 }

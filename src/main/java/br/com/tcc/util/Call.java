@@ -298,9 +298,9 @@ public class Call {
                     connection.eval("source('" + Singleton.FIND_SEGMENT + "')");
                     connection.eval("source('" + Singleton.ARTICLES_ANALYSIS + "')");
                     connection.eval("source('" + Singleton.ARRANGE_BY_RELEVANCY + "')");
-                    
-                    connection.eval("meanVal = articlesAnalysis(\"" + path + "\")");
-                    connection.eval("ordenado = arrangeByRelevancy(meanVal, \"" + segment + "\", " + keywords + ")");
+                    connection.eval("a <- 2 + 3");
+                    connection.eval("meanVal <- articlesAnalysis(\"" + path + "\")");
+                    connection.eval("ordenado <- arrangeByRelevancy(meanVal, \"" + segment + "\", " + keywords + ")");
                     List<Artigo> artigos = new ArrayList();
                     List<String> nomes = arquivos(pathorigem);
                     int i = 1;
@@ -366,14 +366,9 @@ public class Call {
                     connection.eval("file.remove(junk)");
                     connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+abstract.+\", full.names = TRUE)");
                     connection.eval("file.remove(junk)");
-                    System.out.println("meanVal <- articlesAnalysis(\"" + path + "\")");
                     connection.eval("meanVal <- articlesAnalysis(\"" + path + "\")");
-                    
-                    String topicos2 = connection.eval("paste(max(meanVal$id))").asString();
-                    System.out.println(topicos2);
-                    
-                    System.out.println("meanVal <- toGroups(meanVal, \"" + segmento + "\", " + x + ")");
                     connection.eval("meanVal <- toGroups(meanVal, \"" + segmento + "\", " + x + ")");
+                    connection.eval("ret <- NULL");
                     
                     int topicos = Integer.parseInt(connection.eval("paste(max(meanVal$topic))").asString());
                     List<Grupo> grupos = new ArrayList();
