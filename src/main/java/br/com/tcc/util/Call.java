@@ -5,9 +5,11 @@ import br.com.tcc.singleton.Singleton;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.ServletContext;
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class Call {
         private final String pdftotext = Singleton.PDF_TO_TEXT_PATH; //caminho pro pdftotext
@@ -239,7 +241,7 @@ public class Call {
             f.mkdirs();
             try {
                     connection = new RConnection();
-                    connection.eval("library(dplyr)");                       
+                    connection.eval("library(dplyr)"); 
                     connection.eval("source('" + Singleton.EXTRACT_ABSTRACT + "')");
                     connection.eval("source('" + Singleton.FIND_SEGMENT + "')");
                     connection.eval("source('" + Singleton.ARTICLES_ANALYSIS + "')");
