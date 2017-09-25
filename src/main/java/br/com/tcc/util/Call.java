@@ -337,12 +337,17 @@ public class Call {
         
         public List<Grupo> toGroups(String pathorigem, String segmento, int x) throws REXPMismatchException {
             RConnection connection = null;
-            String path = pathorigem + "/temp";
+            String path = pathorigem + "temp";
             File f = new File(path);
             f.mkdirs();
             try {
                     connection = new RConnection();
-                    connection.eval("library(dplyr)");                       
+                    connection.eval("library(tm)");
+                    connection.eval("library(dplyr)");         
+                    connection.eval("library(tidytext)");         
+                    connection.eval("library(readr)");         
+                    connection.eval("library(tidyr)");         
+                    connection.eval("library(purrr)");                  
                     connection.eval("source('" + Singleton.EXTRACT_ABSTRACT + "')");
                     connection.eval("source('" + Singleton.FIND_SEGMENT + "')");
                     connection.eval("source('" + Singleton.ARTICLES_ANALYSIS + "')");
@@ -359,9 +364,14 @@ public class Call {
                     connection.eval("file.remove(junk)");
                     connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+abstract.+\", full.names = TRUE)");
                     connection.eval("file.remove(junk)");
-                    connection.eval("meanVal = articlesAnalysis(\"" + path + "\")");
-                    System.out.println(segmento);
-                    connection.eval("meanVal = toGroups(meanVal, \"" + segmento + "\", " + x + ")");
+                    System.out.println("meanVal <- articlesAnalysis(\"" + path + "\")");
+                    connection.eval("meanVal <- articlesAnalysis(\"" + path + "\")");
+                    
+                    String topicos2 = connection.eval("paste(max(meanVal$id))").asString();
+                    System.out.println(topicos2);
+                    
+                    System.out.println("meanVal <- toGroups(meanVal, \"" + segmento + "\", " + x + ")");
+                    connection.eval("meanVal <- toGroups(meanVal, \"" + segmento + "\", " + x + ")");
                     
                     int topicos = Integer.parseInt(connection.eval("paste(max(meanVal$topic))").asString());
                     List<Grupo> grupos = new ArrayList();
