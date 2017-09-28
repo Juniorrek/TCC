@@ -2,24 +2,24 @@
     float: left !important;
 }
 
-#addArticle, #addArticleSmall{
+.orange-button, .orange-button-small{
     background-color: #ff7d07 !important;
     border-color: #ff7d07 !important;
 }
 
-#addArticle:hover a, #adArticleSmall:hover button  {
+.orange-button:hover a, .orange-button-small:hover button  {
     background-color: #ff871c !important; 
     border-color: #ff871c !important;
 }
 
-#addArticle {
+.orange-button {
     position: absolute;
     right: 20px;
     top: 95px;
 }
 
 @media screen and (max-width: 680px) {
-	#addArticle {
+	.orange-button {
             visibility: hidden;
 	}
 }
@@ -41,18 +41,18 @@
     background-color: #F5F2F0;
 }
 
-.article-header{
-    background: #90caf9; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(#90caf9, #bbdefb); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#90caf9, #bbdefb); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#90caf9, #bbdefb); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#90caf9, #bbdefb); /* Standard syntax */
+.article-header {
+    background: #90caf9 !important; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#90caf9, #bbdefb) !important; /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#90caf9, #bbdefb) !important; /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#90caf9, #bbdefb) !important; /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#90caf9, #bbdefb) !important; /* Standard syntax */
     
-    margin-bottom: 5px;
+    margin-bottom: 5px !important;
     font-size: 16px !important;
 }
 
- .collapsible li.active i {
+.collapsible li.active i {
   -ms-transform: rotate(180deg); /* IE 9 */
   -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
   transform: rotate(180deg);

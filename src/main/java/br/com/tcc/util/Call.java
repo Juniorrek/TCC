@@ -300,6 +300,7 @@ public class Call {
                     connection.eval("source('" + Singleton.ARRANGE_BY_RELEVANCY + "')");
                     connection.eval("a <- 2 + 3");
                     connection.eval("meanVal <- articlesAnalysis(\"" + path + "\")");
+                    System.out.println("ordenado <- arrangeByRelevancy(meanVal, \"" + segment + "\", " + keywords + ")");
                     connection.eval("ordenado <- arrangeByRelevancy(meanVal, \"" + segment + "\", " + keywords + ")");
                     List<Artigo> artigos = new ArrayList();
                     List<String> nomes = arquivos(pathorigem);
@@ -374,19 +375,27 @@ public class Call {
                     List<Grupo> grupos = new ArrayList();
                     
                     for (int i=1; i<=topicos; i++) {
-                        List<String> nome = new ArrayList();
+                        List<Artigo> artigos = new ArrayList();
                         List<String> palavras = new ArrayList();
-                        connection.eval("aux = meanVal[which(meanVal$topic==" + i +"),]");
+                        connection.eval("aux <- meanVal[which(meanVal$topic==" + i +"),]");
                         int cont = Integer.parseInt(connection.eval("paste(count(aux))").asString());
-                        for(int j=1;j<=cont;j++){
-                            nome.add(connection.eval("aux[" + j + ", 1]").asList().at(0).asString());
+                        for(int j=1;j<=cont;j++) {
+                            Artigo artigo = new Artigo();
+                            artigo.setNome(connection.eval("aux[" + j + ", 2]").asList().at(0).asString());
+                            artigo.setResumo(connection.eval("aux[" + j + ", 3]").asList().at(0).asList().at(0).asString());
+                            artigo.setObjetivo(connection.eval("aux[" + j + ", 4]").asList().at(0).asString());
+                            artigo.setMetodologia(connection.eval("aux[" + j + ", 5]").asList().at(0).asString());
+                            artigo.setResultado(connection.eval("aux[" + j + ", 6]").asList().at(0).asString());
+                            artigos.add(artigo);
                         }
-                        int palavra = Integer.parseInt(connection.eval("length(aux[[1,4]])").asString());
-                        for(int j=1;j<=palavra;j++){
-                            palavras.add(connection.eval("aux[[1,4]][" + j + "]").asString());
+                        int palavra = Integer.parseInt(connection.eval("length(aux[[1,9]])").asString());
+                        System.out.println(palavra);
+                        for(int j=1;j<=palavra;j++) {
+                            System.out.println(connection.eval("aux[[1,9]][" + j + "]").asString());
+                            palavras.add(connection.eval("aux[[1,9]][" + j + "]").asString());
                         }
                         Grupo grupo = new Grupo();
-                        grupo.setArtigos(nome);
+                        grupo.setArtigos(artigos);
                         grupo.setKeywords(palavras);
                         grupo.setNumero(i);
                         grupos.add(grupo);

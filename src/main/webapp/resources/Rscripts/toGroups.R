@@ -28,7 +28,7 @@ toGroups = function(analizedArticles, segment, qntd, primaryGroup = TRUE) {
   topics_gamma <- tidy(groups, matrix = "gamma")
 
   groups_gamma <- topics_gamma %>%
-    separate(document, c("id"), sep = ".txt", convert = TRUE) %>%
+    separate(document, c("id"), sep=" txt", convert = TRUE) %>%
     arrange(id, desc(gamma))
   
   if (primaryGroup) {
@@ -41,7 +41,7 @@ toGroups = function(analizedArticles, segment, qntd, primaryGroup = TRUE) {
     arrange(topic, desc(beta))
   
   key_words <- tokens_relevancy[order(tokens_relevancy$beta), ]
-  key_words <- by(key_words, key_words["topic"], tail, n=5)
+  key_words <- by(key_words, key_words["topic"], tail, n=20)
   key_words <- Reduce(rbind, key_words) %>%
     arrange(topic, desc(beta)) %>%
     group_by(topic) %>%
@@ -49,6 +49,9 @@ toGroups = function(analizedArticles, segment, qntd, primaryGroup = TRUE) {
   
   topics <- left_join(groups_gamma, key_words) %>%
     arrange(topic)
+  
+  topics <- left_join(analizedArticles, topics) %>%
+    arrange(topic, id)
   
   return(topics)
   

@@ -88,7 +88,7 @@
                                         </div>
                                     <%--</c:forEach>--%>
                                 </div>-->
-                                <button id="addArticleSmall" data-target="modalAdicionarArtigo" class="btn-floating halfway-fab waves-effect waves-light green center-btn modal-trigger"><i class="material-icons">add</i></button>
+                                <button data-target="modalAdicionarArtigo" class="btn-floating halfway-fab waves-effect waves-light green center-btn modal-trigger orange-button-small"><i class="material-icons">add</i></button>
                                  <div class="container">
                                    <div class="row">
                                        <div class="col s12">
@@ -96,7 +96,7 @@
                                                <div class="card-content">
                                                    <span class="card-title">Artigos</span>
                                                    <table id="tableArtigos" class="striped centered responsive">
-                                                       <a id="addArticle" data-target="modalAdicionarArtigo" class="waves-effect waves-light btn modal-trigger"><i class="material-icons left">add</i>adicionar artigos</a>
+                                                       <a data-target="modalAdicionarArtigo" class="waves-effect waves-light btn modal-trigger orange-button"><i class="material-icons left">add</i>adicionar artigos</a>
                                                        <thead>
                                                            <tr>
                                                                <th hidden>Id</th>
@@ -210,7 +210,7 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <button class="btn waves-effect waves-light col s12" onclick="agrupar()">AGRUPAR
+                                                <button class="btn waves-effect waves-light col s12 orange-button-small" onclick="agrupar()">AGRUPAR
                                                     <i class="material-icons right">send</i>
                                                 </button>
                                             </div>
@@ -218,7 +218,7 @@
                                     </div>
                                 </li>
                                 <li>
-                                    <div class="collapsible-header">Ordenação</div>
+                                    <div class="collapsible-header menu">Ordenação</div>
                                     <div class="collapsible-body">
                                         <span>
                                             <div class="input-field">
@@ -252,9 +252,11 @@
                                                 <div class="chips"></div>
                                                 <label>Keywords</label>
                                             </div>
-                                            <button class="btn waves-effect waves-light" id="btnOrdenar" type="button" name="action">Ordenar
-                                                <i class="material-icons right">send</i>
-                                            </button>
+                                             <div class="row">
+                                                <button class="btn waves-effect waves-light col s12 orange-button-small" id="btnOrdenar" name="action">Ordenar
+                                                    <i class="material-icons right">send</i>
+                                                </button>
+                                            </div>
                                         </span>
                                     </div>
                                 </li>
@@ -432,22 +434,22 @@
                                                         '<h6>Resumo</h6>' +
                                                         '<ul class="collapsible" data-collapsible="accordion">' +
                                                             '<li>' +
-                                                                '<div class="collapsible-header">' + v.resumo.substr(0, 10) + '...</div>' +
+                                                                '<div class="collapsible-header abstract"> Abstract <div>' +
                                                                 '<div class="collapsible-body"><span>' + v.resumo + '</span></div>' +
                                                             '</li>' +
                                                         '</ul>' +
                                                         '<h6>Segmentos</h6>' +
                                                         '<ul class="collapsible" data-collapsible="accordion">' +
                                                             '<li>' +
-                                                                '<div class="collapsible-header">Objetivo</div>' +
+                                                                '<div class="collapsible-header objective">Objetivo</div>' +
                                                                 '<div class="collapsible-body"><span>' + v.objetivo + '</span></div>' +
                                                             '</li>' +
                                                             '<li>' +
-                                                                '<div class="collapsible-header">Metodologia</div>' +
+                                                                '<div class="collapsible-header methodology">Metodologia</div>' +
                                                                 '<div class="collapsible-body"><span>' + v.metodologia + '</span></div>' +
                                                             '</li>' +
                                                             '<li>' +
-                                                                '<div class="collapsible-header>Resultado</div>' +
+                                                                '<div class="collapsible-header conclusion>Resultado</div>' +
                                                                 '<div class="collapsible-body"><span>' + v.resultado + '</span></div>' +
                                                             '</li>' +
                                                         '</ul>' +
@@ -491,9 +493,10 @@
                                                 "<div class='col s12'>" +
                                                     "<ul class='collapsible' data-collapsible='accordion'>";                                    
                         grupos = JSON.parse(grupos);
+                        console.log(grupos);
                         grupos.forEach(function(v, k) {
                             htmlao += "<li>" +
-                                            "<div class='collapsible-header' onclick='ativar()'><h5>GRUPO " + v.numero + "</h5></div>" +
+                                            "<div class='collapsible-header'><h5>GRUPO " + v.numero + "</h5></div>" +
                                                 "<div class='collapsible-body'>" + 
                                                     "<span>" + 
                                                        "<div class='row'>" +
@@ -504,9 +507,46 @@
                                                                 "</ul>" +
                                                             "</div>" +
                                                             "<div id='Artigos" + v.numero + "' class='col s12'>";
+                                                            htmlao += "<ul class='collapsible' data-collapsible='accordion'>";  
                                                             (v.artigos).forEach(function(t,l) {
-                                                                htmlao += "<p><b>" + t + "</b></p>";
+                                                                htmlao += "<li>";
+                                                                    htmlao += "<div class='collapsible-header'>" + t.nome + "</div>";
+                                                                    htmlao += "<div class='collapsible-body'>" + 
+                                                                                    "<span>" + 
+                                                                                    "<div class='row'>" + 
+                                                                                        "<div class='col s12'>";
+                                                                                            htmlao += "<ul class='tabs tabs-fixed-width'>" +
+                                                                                                "<li class='tab col s3'><a class='active' href='#Segmentos'>Segmentos</a></li>" +
+                                                                                                "<li class='tab col s3'><a href='#TF'>TF</a></li>" +
+                                                                                                "<li class='tab col s3'><a href='#WORDCLOUD'>WORDCLOUD</a></li>" +
+                                                                                            "</ul></div>";
+                                                                                            htmlao += "<div id='Segmentos' class='col s12'>" +
+                                                                                                '<h6>Resumo</h6>' +
+                                                                                                '<ul class="collapsible" data-collapsible="accordion">' +
+                                                                                                    '<li>' +
+                                                                                                        '<div class="collapsible-header abstract"> Abstract </div>' +
+                                                                                                        '<div class="collapsible-body"><span>' + t.resumo + '</span></div>' +
+                                                                                                    '</li>' +
+                                                                                                '</ul>' +
+                                                                                                '<h6>Segmentos</h6>' +
+                                                                                                '<ul class="collapsible" data-collapsible="accordion">' +
+                                                                                                    '<li>' +
+                                                                                                        '<div class="collapsible-header objective">Objetivo</div>' +
+                                                                                                        '<div class="collapsible-body"><span>' + t.objetivo + '</span></div>' +
+                                                                                                    '</li>' +
+                                                                                                    '<li>' +
+                                                                                                        '<div class="collapsible-header methodology">Metodologia</div>' +
+                                                                                                        '<div class="collapsible-body"><span>' + t.metodologia + '</span></div>' +
+                                                                                                    '</li>' +
+                                                                                                    '<li>' +
+                                                                                                        '<div class="collapsible-header conclusion">Conclusão</div>' +
+                                                                                                        '<div class="collapsible-body"><span>' + t.resultado + '</span></div>' +
+                                                                                                    '</li>' +
+                                                                                                '</ul>' +
+                                                                                               "</div>";
+                                                                htmlao += "</div></span></div></li>";
                                                             });
+                                                            htmlao += "</ul>";
                                                             htmlao += "</div>" +
                                                             "<div id='Wordcloud" + v.numero + "' class='col s12'>";
                                                             htmlao += "<canvas id='myCanvas" + v.numero + "' width='640' height='480' style='border:1px solid #000000;'></canvas>";
@@ -515,7 +555,6 @@
                                                 "</li>";
                             });
                             htmlao += "</ul></div></div>";
-                            console.log(htmlao);
                             $('#analise').html(htmlao);
                             grupos.forEach(function(v, k) { <!--CONSTRUÇÃO WORDCLOUD-->
                                 var list = [["" , ""]];
