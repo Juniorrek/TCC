@@ -14,9 +14,18 @@ index2List = function(sentences, indexes, segment) {
 }
 
 
-findSegment = function (abstracts, segment) {
+findSegment = function (abstracts, segment, customKeys = c(), useDefault = TRUE) {
   library(dplyr)
-  synonymsString <- paste(get(segment, synonyms),collapse="|") 
+  
+  if (length(customKeys) > 0)
+    if (useDefault)
+      usedSynonyms <- c(get(segment, synonyms), customKeys)
+    else
+      usedSynonyms <- customKeys
+  else 
+    usedSynonyms <- get(segment, synonyms)
+  
+  synonymsString <- paste(usedSynonyms,collapse="|") 
   
   sentences <- strsplit(unlist(abstracts), "\\. ") 
   

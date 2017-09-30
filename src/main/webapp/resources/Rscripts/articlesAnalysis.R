@@ -17,7 +17,7 @@ articlesAnalysis = function (txt_folder) {
   
   abstracts <- lapply(mytxtfiles, function(i) {
     j <- paste0(scan(i, what = character()), collapse = " ")
-    abstract <- paste( unlist(regmatches(j, gregexpr("(?i)(?<=abstract)([\\S\\s]*?)(?=introduction|introdu??o|keyword|resumo)", j, perl=TRUE))), collapse = '')
+    abstract <- paste( unlist(regmatches(j, gregexpr("(?i)(?<=abstract)([\\S\\s]*?)(?=introduction|introdução|keyword|resumo)", j, perl=TRUE))), collapse = '')
     ifelse(stri_length(abstract) > 0, abstract, "Abstract not found")
   })
   
