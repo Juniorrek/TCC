@@ -203,7 +203,6 @@ public class ProjetoController {
     public @ResponseBody String projetosOrdenar(@RequestParam("projeto") Integer id,
                                                 HttpSession session,
                                                 @RequestParam("segment") String segment,
-                                                @RequestParam("token") String token,
                                                 @RequestParam("keywords") String keywords) {
         Gson g = new Gson();
         Call call = new Call();

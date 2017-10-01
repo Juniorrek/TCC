@@ -17,7 +17,7 @@ public final class Singleton {
     \***********/
     public static final String DB_URL = "jdbc:mysql://localhost:3306/TCC?useSSL=false";
     public static final String DB_USER = "root";
-    public static final String DB_PASSWORD = "";
+    public static final String DB_PASSWORD = "admin";
     
     /****************************************************************************\
     * SCRIPTS R *

@@ -128,7 +128,7 @@
                                 <div class='row'>
                                     <div class='col s12'>
                                         <ul class="collapsible" data-collapsible="accordion">
-                                            <c:forEach items="${segmentos_artigos}" var="artigo">
+                                            <c:forEach items="${segmentos_artigos}" var="artigo" varStatus="status">
                                                 <li>
                                                     <div class="collapsible-header article-header"><i class="material-icons right more">expand_more</i>${artigo.nome}</div>
                                                     
@@ -137,12 +137,12 @@
                                                             <div class="row">
                                                                 <div class="col s12">
                                                                     <ul class="tabs tabs-fixed-width">
-                                                                        <li class="tab col s3"><a class="active" href="#Segmentos">Segmentos</a></li>
-                                                                        <li class="tab col s3"><a href="#TF">TF</a></li>
-                                                                        <li class="tab col s3"><a href="#WORDCLOUD">WORDCLOUD</a></li>
+                                                                        <li class="tab col s3"><a class="active" href="#Segmentos${status.count}">Segmentos</a></li>
+                                                                        <li class="tab col s3"><a href="#TF${status.count}">TF</a></li>
+                                                                        <li class="tab col s3"><a href="#WORDCLOUD${status.count}">WORDCLOUD</a></li>
                                                                     </ul>
                                                                 </div>
-                                                                <div id="Segmentos" class="col s12">
+                                                                <div id="Segmentos${status.count}" class="col s12">
                                                                     <h6>Resumo</h6>
                                                                     <ul class='collapsible' data-collapsible='accordion'>
                                                                         <li>
@@ -166,8 +166,8 @@
                                                                         </li>
                                                                     </ul>
                                                                 </div>
-                                                                <div id="TF" class="col s12">aqui um twisted fate</div>
-                                                                <div id="WORDCLOUD" class="col s12">Aqui é para ter uma wordcloud</div>
+                                                                <div id="TF${status.count}" class="col s12">aqui um twisted fate</div>
+                                                                <div id="WORDCLOUD${status.count}" class="col s12">Aqui é para ter uma wordcloud</div>
                                                             </div>
                                                         </span>
                                                     </div>
@@ -231,21 +231,6 @@
                                                     <option value="conclusion">Resultado</option>
                                                 </select>
                                                 <label>Por</label>
-                                            </div>
-                                            <br/>
-                                            <div class="hmdogs">
-                                                <p>
-                                                    <input name="group" type="radio" id="radioPalavra" value="palavra" />
-                                                    <label for="radioPalavra">Palavra</label>
-                                                </p>
-                                                <p>
-                                                    <input name="group" type="radio" id="radioBigram" value="bigram" />
-                                                    <label for="radioBigram">Bigram</label>
-                                                </p>
-                                                <p>
-                                                    <input name="group" type="radio" id="radioTrigram" value="trigam" />
-                                                    <label for="radioTrigram">Trigram</label>
-                                                </p>
                                             </div>
                                             <br/>
                                             <div class="input-field">
@@ -374,6 +359,24 @@
                 nofilter = $('#analise').html();
             });
             
+            function resetTabs() {
+                $('#tabMaster').tabs({
+                    onShow: function(e) {
+                        var tab = e[0].id;
+                        
+                        if (tab === 'analise') {
+                            //$('#containao').addClass('vaiprolado');
+                            $('#containao').removeClass("offset-s2");
+                            $('#configs').show();
+                        } else {
+                            //$('#containao').removeClass('vaiprolado');
+                            $('#containao').addClass("offset-s2");
+                            $('#configs').hide();
+                        }
+                    } 
+                });
+            }
+            
             function reload() {
                 location = window.location.href;
             }
@@ -398,7 +401,6 @@
             
             $('#btnOrdenar').click(function () {
                 var segment = $('#selectPorOrdenacao').val();
-                var token = $('input[name="group"]:checked').val();
                 var keywords = $('.chips').material_chip('data');
                 
                 $.ajax({
@@ -408,7 +410,6 @@
                     data: {
                         "projeto": ${projeto.id},
                         "segment": segment,
-                        "token": token,
                         "keywords": JSON.stringify(keywords)
                     },
                     success: function(artigos) {
@@ -425,16 +426,16 @@
                                                 '<div class="row">' +
                                                     '<div class="col s12">' +
                                                         '<ul class="tabs tabs-fixed-width">' +
-                                                            '<li class="tab col s3"><a class="active" href="#Segmentos">Segmentos</a></li>' +
-                                                            '<li class="tab col s3"><a href="#TF">TF</a></li>' +
-                                                            '<li class="tab col s3"><a href="#WORDCLOUD">WORDCLOUD</a></li>' +
+                                                            '<li class="tab col s3"><a class="active" href="#Segmentos' + idx + '">Segmentos</a></li>' +
+                                                            '<li class="tab col s3"><a href="#TF' + idx + '">TF</a></li>' +
+                                                            '<li class="tab col s3"><a href="#WORDCLOUD' + idx + '">WORDCLOUD</a></li>' +
                                                         '</ul>' +
                                                     '</div>' +
-                                                    '<div id="Segmentos" class="col s12">' +
+                                                    '<div id="Segmentos' + idx + '" class="col s12">' +
                                                         '<h6>Resumo</h6>' +
                                                         '<ul class="collapsible" data-collapsible="accordion">' +
                                                             '<li>' +
-                                                                '<div class="collapsible-header abstract"> Abstract <div>' +
+                                                                '<div class="collapsible-header abstract"> Abstract </div>' +
                                                                 '<div class="collapsible-body"><span>' + v.resumo + '</span></div>' +
                                                             '</li>' +
                                                         '</ul>' +
@@ -449,13 +450,13 @@
                                                                 '<div class="collapsible-body"><span>' + v.metodologia + '</span></div>' +
                                                             '</li>' +
                                                             '<li>' +
-                                                                '<div class="collapsible-header conclusion>Resultado</div>' +
+                                                                '<div class="collapsible-header conclusion">Resultado</div>' +
                                                                 '<div class="collapsible-body"><span>' + v.resultado + '</span></div>' +
                                                             '</li>' +
                                                         '</ul>' +
                                                     '</div>' +
-                                                    '<div id="TF" class="col s12">aqui um twisted fate</div>' +
-                                                    '<div id="WORDCLOUD" class="col s12">Aqui é para ter uma wordcloud</div>' +
+                                                    '<div id="TF' + idx + '" class="col s12">aqui um twisted fate</div>' +
+                                                    '<div id="WORDCLOUD' + idx + '" class="col s12">Aqui é para ter uma wordcloud</div>' +
                                                 '</div>' +
                                             '</span>' +
                                         '</div>' +
@@ -465,6 +466,7 @@
                         $('#analise').html(htmlao);
                         $('ul.tabs').tabs();
                         $('.collapsible').collapsible();
+                        resetTabs();//Pensar numa funçãozinha melhor pra reloadar tudo ja q essa merda buga
                     },
                     error: function(erro) {
                         console.log(erro);
@@ -539,7 +541,7 @@
                                                                                                         '<div class="collapsible-body"><span>' + t.metodologia + '</span></div>' +
                                                                                                     '</li>' +
                                                                                                     '<li>' +
-                                                                                                        '<div class="collapsible-header conclusion">Conclusão</div>' +
+                                                                                                        '<div class="collapsible-header conclusion">Resultado</div>' +
                                                                                                         '<div class="collapsible-body"><span>' + t.resultado + '</span></div>' +
                                                                                                     '</li>' +
                                                                                                 '</ul>' +
