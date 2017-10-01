@@ -60,15 +60,21 @@
                         </div>
                         <div class="card-content white">
                             <div id="dados">
-                                <form action="${pageContext.request.contextPath}/projetos/editar" method="post">
-                                    <input name="id" type="hidden" value="${projeto.id}">
+                                <form id="formEditarProjeto" action="${pageContext.request.contextPath}/projetos/editar" method="post">
+                                    <input name="id" type="hidden" value="${projeto.id}" />
                                     <div class="input-field">
-                                        <input id="nomeProjeto" name="nome" type="text" value="${projeto.nome}">
+                                        <input id="nomeProjeto" name="nome" type="text" value="${projeto.nome}" />
                                         <label for="nomeProjeto">Nome</label>
                                     </div>
                                     <div class="input-field">
                                         <textarea id="descricaoProjeto" name="descricao" class="materialize-textarea"  data-length="200">${projeto.descricao}</textarea>
                                         <label for="descricaoProjeto">Descrição</label>
+                                    </div>
+                                    <div style="margin-bottom: 50px;">
+                                        <p style="color: #9e9e9e;">Sinônimos</p>
+                                        <a class="btn waves-effect waves-light modal-trigger" href="#modalSinonimosObjetivo">Objetivo</a>
+                                        <a class="btn waves-effect waves-light modal-trigger" href="#modalSinonimosMetodologia">Metodologia</a>
+                                        <a class="btn waves-effect waves-light modal-trigger" href="#modalSinonimosResultado">Resultado</a>
                                     </div>
                                     <button type="submit" class="btn-floating halfway-fab waves-effect waves-light blue left"><i class="material-icons">mode_edit</i></button>
                                 </form>
@@ -183,7 +189,7 @@
                         </div>
                 </div>
                 </div>
-                <div id="configs" class="col s4" style="display: none">
+                <div id="configs" class="col s4" style="display: none;">
                     <div class="card grey lighten-4">
                         <div class="card-content">
                             <span class="card-title">Filtros</span>
@@ -234,7 +240,7 @@
                                             </div>
                                             <br/>
                                             <div class="input-field">
-                                                <div class="chips"></div>
+                                                <div class="chips keywords"></div>
                                                 <label>Keywords</label>
                                             </div>
                                              <div class="row">
@@ -304,6 +310,42 @@
                 <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
             </div>
         </div>
+        
+        <div id="modalSinonimosObjetivo" class="modal">
+            <div class="modal-content">
+                <h4>Sinônimos objetivo</h4>
+                <div class="input-field">
+                    <div class="chips sinonimosObjetivo"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
+            </div>
+        </div>
+        
+        <div id="modalSinonimosMetodologia" class="modal">
+            <div class="modal-content">
+                <h4>Sinônimos metodologia</h4>
+                <div class="input-field">
+                    <div class="chips sinonimosMetodologia"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
+            </div>
+        </div>
+        
+        <div id="modalSinonimosResultado" class="modal">
+            <div class="modal-content">
+                <h4>Sinônimos resultado</h4>
+                <div class="input-field">
+                    <div class="chips sinonimosResultado"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
+            </div>
+        </div>
 
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/jquery/dist/jquery.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/datatables.net/js/jquery.dataTables.js"></script>
@@ -326,6 +368,35 @@
                 $('.collapsible').collapsible();
                 
                 $('.chips').material_chip();
+                
+                //SINONIMOS
+                var sinonimosObjetivo = JSON.parse('${sinonimosObjetivoJson}');
+                var sinonimosMetodologia = JSON.parse('${sinonimosMetodologiaJson}');
+                var sinonimosResultado = JSON.parse('${sinonimosResultadoJson}');
+                
+                var data = new Object({data:[]});
+                sinonimosObjetivo.forEach(function (v, k) {
+                    data.data.push({
+                        tag: v
+                    });
+                });
+                $('.chips.sinonimosObjetivo').material_chip(data);
+                
+                data = new Object({data:[]});
+                sinonimosMetodologia.forEach(function (v, k) {
+                    data.data.push({
+                        tag: v
+                    });
+                });
+                $('.chips.sinonimosMetodologia').material_chip(data);
+                
+                data = new Object({data:[]});
+                sinonimosResultado.forEach(function (v, k) {
+                    data.data.push({
+                        tag: v
+                    });
+                });
+                $('.chips.sinonimosResultado').material_chip(data);
                 
                 $('#tabMaster').tabs({
                     onShow: function(e) {
@@ -357,6 +428,41 @@
                 });
                 
                 nofilter = $('#analise').html();
+                
+                $('#formEditarProjeto').submit(function (e) {
+                    var form = this;
+                    
+                    var sinObj = $('.chips.sinonimosObjetivo').material_chip('data');
+                    var sinMet = $('.chips.sinonimosMetodologia').material_chip('data');
+                    var sinRes = $('.chips.sinonimosResultado').material_chip('data');
+                    
+                    sinObj.forEach(function (v, k) {
+                        $(form).append(
+                            $('<input>')
+                                .attr('type', 'hidden')
+                                .attr('name', 'sinonimosObjetivo')
+                                .val(v.tag)
+                        );
+                    });
+                    
+                    sinMet.forEach(function (v, k) {
+                        $(form).append(
+                            $('<input>')
+                                .attr('type', 'hidden')
+                                .attr('name', 'sinonimosMetodologia')
+                                .val(v.tag)
+                        );
+                    });
+                    
+                    sinRes.forEach(function (v, k) {
+                        $(form).append(
+                            $('<input>')
+                                .attr('type', 'hidden')
+                                .attr('name', 'sinonimosResultado')
+                                .val(v.tag)
+                        );
+                    });
+                });
             });
             
             function resetTabs() {
@@ -401,7 +507,7 @@
             
             $('#btnOrdenar').click(function () {
                 var segment = $('#selectPorOrdenacao').val();
-                var keywords = $('.chips').material_chip('data');
+                var keywords = $('.chips.keywords').material_chip('data');
                 
                 $.ajax({
                     url: "${pageContext.request.contextPath}/projetos/ordenar",
@@ -476,6 +582,24 @@
             
             $("#grupos").keypress(function (evt) {
                     evt.preventDefault();
+            });
+            
+            //SCROLL/FOLLOW
+            var $sidebar   = $("#configs"), 
+                $window    = $(window),
+                offset     = $sidebar.offset(),
+                topPadding = 15;
+
+            $window.scroll(function() {
+                if ($window.scrollTop() > offset.top + 75) {
+                    $sidebar.stop().animate({
+                        marginTop: $window.scrollTop() - 75// - offset.top + topPadding
+                    });
+                } else {
+                    $sidebar.stop().animate({
+                        marginTop: 0
+                    });
+                }
             });
                         
             function agrupar() {

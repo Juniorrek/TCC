@@ -103,6 +103,8 @@ public class ProjetoController {
     
     @RequestMapping(value = "/projetos/vizualizar", method= RequestMethod.GET)    
     public String projetosVizualizarGet(Projeto projeto, Model model, HttpSession session, HttpServletRequest request) {
+        Gson g = new Gson();
+        
         try {
             projeto = ProjetoDao.carregar(projeto.getId());
         } catch (SQLException ex) {
@@ -110,6 +112,9 @@ public class ProjetoController {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }
         model.addAttribute("projeto", projeto);
+        model.addAttribute("sinonimosObjetivoJson", g.toJson(projeto.getSinonimosObjetivo()));
+        model.addAttribute("sinonimosMetodologiaJson", g.toJson(projeto.getSinonimosMetodologia()));
+        model.addAttribute("sinonimosResultadoJson", g.toJson(projeto.getSinonimosResultado()));
         
         Usuario logado = (Usuario) session.getAttribute("logado");
         String folderPath = Singleton.UPLOAD_DIR + "/"
@@ -208,6 +213,7 @@ public class ProjetoController {
         Call call = new Call();
         Type listType = new TypeToken<ArrayList<Tag>>(){}.getType();
         List<Tag> tags = g.fromJson(keywords, listType);
+        System.out.println(tags.size());
         List<Artigo> artigos = null;
         
         try {

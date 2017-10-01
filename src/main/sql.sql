@@ -27,3 +27,11 @@ CREATE TABLE Rel_Arq_Pro (
 
     FOREIGN KEY (pro_id) REFERENCES Projeto (id)
 );
+
+CREATE TABLE Rel_Sin_Pro (
+    pro_id INT,
+    sinonimo VARCHAR(50),
+    segmento INT,
+
+    FOREIGN KEY (pro_id) REFERENCES Projeto (id)
+);

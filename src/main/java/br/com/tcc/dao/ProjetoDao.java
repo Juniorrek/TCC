@@ -76,6 +76,9 @@ public class ProjetoDao {
     public static Projeto carregar(Integer id) throws SQLException {
         Connection connection = new ConnectionFactory().getConnection();
         PreparedStatement stmt = null;
+        List<String> sinonimosObjetivo = new ArrayList<String>();
+        List<String> sinonimosMetodologia = new ArrayList<String>();
+        List<String> sinonimosResultado = new ArrayList<String>();
         
         try {
             stmt = connection.prepareStatement("SELECT * FROM Projeto "
@@ -89,6 +92,33 @@ public class ProjetoDao {
                 projeto.setId(rs.getInt("id"));
                 projeto.setNome(rs.getString("nome"));
                 projeto.setDescricao(rs.getString("descricao"));
+                
+                //SEGMENTOS
+                stmt = connection.prepareStatement("SELECT * FROM Rel_Sin_Pro WHERE pro_id = ? AND segmento = ?");
+                
+                stmt.setInt(1, projeto.getId());
+                stmt.setInt(2, 1);
+                rs = stmt.executeQuery();
+                while (rs.next()) {
+                    sinonimosObjetivo.add(rs.getString("sinonimo"));
+                }
+                projeto.setSinonimosObjetivo(sinonimosObjetivo);
+                
+                stmt.setInt(1, projeto.getId());
+                stmt.setInt(2, 2);
+                rs = stmt.executeQuery();
+                while (rs.next()) {
+                    sinonimosMetodologia.add(rs.getString("sinonimo"));
+                }
+                projeto.setSinonimosMetodologia(sinonimosMetodologia);
+                
+                stmt.setInt(1, projeto.getId());
+                stmt.setInt(2, 3);
+                rs = stmt.executeQuery();
+                while (rs.next()) {
+                    sinonimosResultado.add(rs.getString("sinonimo"));
+                }
+                projeto.setSinonimosResultado(sinonimosResultado);
                 
                 return projeto;
             } else {
@@ -112,15 +142,50 @@ public class ProjetoDao {
         PreparedStatement stmt = null;
         
         try {
+            connection.setAutoCommit(false);
             stmt = connection.prepareStatement("UPDATE Projeto "
                                                 + "SET nome = ?, descricao = ? "
                                                 + "WHERE id = ?");
             stmt.setString(1, projeto.getNome());
             stmt.setString(2, projeto.getDescricao());
             stmt.setInt(3, projeto.getId());
-            
             stmt.executeUpdate();
+            
+            //SINONIMOS
+            stmt = connection.prepareStatement("DELETE FROM Rel_Sin_Pro WHERE pro_id = ?");
+            stmt.setInt(1, projeto.getId());
+            stmt.executeUpdate();
+            
+            if (projeto.getSinonimosObjetivo() != null || projeto.getSinonimosMetodologia() != null || projeto.getSinonimosResultado() != null) {
+                stmt = connection.prepareStatement("INSERT INTO Rel_Sin_Pro (pro_id, sinonimo, segmento) VALUES (?, ?, ?)");
+                stmt.setInt(1, projeto.getId());
+                if (projeto.getSinonimosObjetivo() != null) {
+                    for (String s : projeto.getSinonimosObjetivo()) {
+                        stmt.setString(2, s);
+                        stmt.setInt(3, 1);
+                        stmt.addBatch();
+                    }
+                }
+                if (projeto.getSinonimosMetodologia() != null) {
+                    for (String s : projeto.getSinonimosMetodologia()) {
+                        stmt.setString(2, s);
+                        stmt.setInt(3, 2);
+                        stmt.addBatch();
+                    }
+                }
+                if (projeto.getSinonimosResultado() != null) {
+                    for (String s : projeto.getSinonimosResultado()) {
+                        stmt.setString(2, s);
+                        stmt.setInt(3, 3);
+                        stmt.addBatch();
+                    }
+                }
+                stmt.executeBatch();
+            }
+            
+            connection.commit();
         } catch (SQLException ex) {
+            connection.rollback();
             Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
         } finally {
