@@ -1,9 +1,26 @@
 package br.com.tcc.model;
 
 public class Artigo implements java.io.Serializable{
-    private String objetivo, metodologia, resultado, resumo, nome;
+    private String objetivo, metodologia, resultado, resumo, nome, img, wordcloud;
 
+   
     public Artigo() {
+    }
+
+    public String getWordcloud() {
+        return wordcloud;
+    }
+
+    public void setWordcloud(String wordcloud) {
+        this.wordcloud = wordcloud;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 
     public String getObjetivo() {

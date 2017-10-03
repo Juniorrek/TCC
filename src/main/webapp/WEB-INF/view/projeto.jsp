@@ -172,13 +172,21 @@
                                                                         </li>
                                                                     </ul>
                                                                 </div>
-                                                                <div id="TF${status.count}" class="col s12">aqui um twisted fate</div>
-                                                                <div id="WORDCLOUD${status.count}" class="col s12">Aqui é para ter uma wordcloud</div>
+                                                                            <div id="TF${status.count}" class="col s12"><img src="data:image/jpg;base64,${artigo.img}" width="100%"/></div>
+                                                                <div id="WORDCLOUD${status.count}" class="col s12">
+                                                                    <canvas id="beginCanvas${status.count}" width='640' height='480' style='border:1px solid #000000;'></canvas>
+                                                                </div>
                                                             </div>
                                                         </span>
                                                     </div>
                                                 </li>
                                             </c:forEach>
+                                            <li>
+                                                <div class="collapsible-header article-header"><i class="material-icons right more">expand_more</i>Termos relevantes</div>  
+                                                    <div class="collapsible-body">
+                                                        <img src="data:image/jpg;base64,${tfidf}" width="100%"/>
+                                                    </div>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -561,7 +569,7 @@
                                                             '</li>' +
                                                         '</ul>' +
                                                     '</div>' +
-                                                    '<div id="TF' + idx + '" class="col s12">aqui um twisted fate</div>' +
+                                                    "<div id='TF" + idx + "' class='col s12'><img src='data:image/jpg;base64," + v.img + "'/></div>" +
                                                     '<div id="WORDCLOUD' + idx + '" class="col s12">Aqui é para ter uma wordcloud</div>' +
                                                 '</div>' +
                                             '</span>' +
@@ -620,6 +628,7 @@
                                                     "<ul class='collapsible' data-collapsible='accordion'>";                                    
                         grupos = JSON.parse(grupos);
                         console.log(grupos);
+                        cont = 500;
                         grupos.forEach(function(v, k) {
                             htmlao += "<li>" +
                                             "<div class='collapsible-header'><h5>GRUPO " + v.numero + "</h5></div>" +
@@ -642,11 +651,11 @@
                                                                                     "<div class='row'>" + 
                                                                                         "<div class='col s12'>";
                                                                                             htmlao += "<ul class='tabs tabs-fixed-width'>" +
-                                                                                                "<li class='tab col s3'><a class='active' href='#Segmentos'>Segmentos</a></li>" +
-                                                                                                "<li class='tab col s3'><a href='#TF'>TF</a></li>" +
-                                                                                                "<li class='tab col s3'><a href='#WORDCLOUD'>WORDCLOUD</a></li>" +
+                                                                                                "<li class='tab col s3'><a class='active' href='#Segmentos" + cont + "'>Segmentos</a></li>" +
+                                                                                                "<li class='tab col s3'><a href='#TF" + cont + "'>TF</a></li>" +
+                                                                                                "<li class='tab col s3'><a href='#WORDCLOUD" + cont + "'>WORDCLOUD</a></li>" +
                                                                                             "</ul></div>";
-                                                                                            htmlao += "<div id='Segmentos' class='col s12'>" +
+                                                                                            htmlao += "<div id='Segmentos" + cont + "' class='col s12'>" +
                                                                                                 '<h6>Resumo</h6>' +
                                                                                                 '<ul class="collapsible" data-collapsible="accordion">' +
                                                                                                     '<li>' +
@@ -670,7 +679,10 @@
                                                                                                     '</li>' +
                                                                                                 '</ul>' +
                                                                                                "</div>";
+                                                                                       htmlao += "<div id='TF" + cont + "' class='col s12'><img src='data:image/jpg;base64," + t.img + "'/></div>" +
+                                                                                               "<div id='WORDCLOUD" + cont + "' class='col s12'>Aqui é para ter uma wordcloud</div>";
                                                                 htmlao += "</div></span></div></li>";
+                                                                cont++;
                                                             });
                                                             htmlao += "</ul>";
                                                             htmlao += "</div>" +
