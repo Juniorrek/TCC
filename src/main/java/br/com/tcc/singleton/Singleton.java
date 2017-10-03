@@ -5,19 +5,19 @@ import br.com.tcc.context.ServletContextProvider;
 public final class Singleton {
     public static final String CONTEXT = ServletContextProvider.getServletContext().getRealPath("/").replace("\\", "/");
     
-    public static final String PDF_TO_TEXT_PATH = "C:/Program Files/pdftotext/bin64/pdftotext.exe";
+    public static final String PDF_TO_TEXT_PATH = "C:/Users/Orestes/Desktop/TCC/pdftotext.exe";
    
     /***********\
     *  UPLOADS  *
     \***********/
-    public static final String UPLOAD_DIR = "C:/Sistema_TCC/arquivos/artigos";
+    public static final String UPLOAD_DIR = "C:/Users/Orestes/Desktop/TCC/SobAnalise";
     
     /***********\
     *  DATABASE *
     \***********/
     public static final String DB_URL = "jdbc:mysql://localhost:3306/TCC?useSSL=false";
     public static final String DB_USER = "root";
-    public static final String DB_PASSWORD = "";
+    public static final String DB_PASSWORD = "jrjr";
     
     /****************************************************************************\
     * SCRIPTS R *

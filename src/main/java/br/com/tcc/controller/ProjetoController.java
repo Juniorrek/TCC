@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.io.FileUtils;
 import org.rosuda.REngine.REXPMismatchException;
+import org.rosuda.REngine.REngineException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -102,7 +103,7 @@ public class ProjetoController {
     }
     
     @RequestMapping(value = "/projetos/vizualizar", method= RequestMethod.GET)    
-    public String projetosVizualizarGet(Projeto projeto, Model model, HttpSession session, HttpServletRequest request) {
+    public String projetosVizualizarGet(Projeto projeto, Model model, HttpSession session, HttpServletRequest request) throws REngineException, IOException {
         Gson g = new Gson();
         
         try {
@@ -130,12 +131,15 @@ public class ProjetoController {
         String path = Singleton.UPLOAD_DIR + "/" + logado.getEmail() + "/" + projeto.getId() + "/";
         Call c = new Call();
         List<Artigo> segmentos_artigos = null;
+        String tfidf = "";
         try {
             segmentos_artigos = c.articlesAnalysis(path);
+            tfidf = c.graphicTfIdf(path);
         } catch (REXPMismatchException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }
         model.addAttribute("segmentos_artigos", segmentos_artigos);
+        model.addAttribute("tfidf", tfidf);
         
         return "projeto";
     }
@@ -208,7 +212,7 @@ public class ProjetoController {
     public @ResponseBody String projetosOrdenar(@RequestParam("projeto") Integer id,
                                                 HttpSession session,
                                                 @RequestParam("segment") String segment,
-                                                @RequestParam("keywords") String keywords) {
+                                                @RequestParam("keywords") String keywords) throws IOException, REngineException {
         Gson g = new Gson();
         Call call = new Call();
         Type listType = new TypeToken<ArrayList<Tag>>(){}.getType();
@@ -252,7 +256,7 @@ public class ProjetoController {
     }*/
     
     @RequestMapping(value = "/projetos/artigos/agrupar", method = RequestMethod.GET)    
-    public @ResponseBody String projetosAgrupar(@RequestParam("grupos") int quant, @RequestParam("forma") String forma, @RequestParam("id") int id, HttpSession session) {
+    public @ResponseBody String projetosAgrupar(@RequestParam("grupos") int quant, @RequestParam("forma") String forma, @RequestParam("id") int id, HttpSession session) throws IOException, REngineException {
         Projeto projeto=null;
         Gson g = new Gson();
         try {
