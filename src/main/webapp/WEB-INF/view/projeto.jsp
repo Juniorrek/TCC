@@ -46,7 +46,7 @@
                     
         <!--<div id="containao" class="container">-->
             <div class="row">
-                <div id="containao" class="col s8 offset-s2">
+                <div id="containao" class="col s12 l8 offset-l2">
                     <div class="card grey lighten-4">
                         <div class="card-content">
                             <span class="card-title">Projeto ${projeto.nome}</span>
@@ -72,9 +72,9 @@
                                     </div>
                                     <div style="margin-bottom: 50px;">
                                         <p style="color: #9e9e9e;">Sinônimos</p>
-                                        <a class="btn waves-effect waves-light modal-trigger" href="#modalSinonimosObjetivo">Objetivo</a>
-                                        <a class="btn waves-effect waves-light modal-trigger" href="#modalSinonimosMetodologia">Metodologia</a>
-                                        <a class="btn waves-effect waves-light modal-trigger" href="#modalSinonimosResultado">Resultado</a>
+                                        <a class="btn waves-effect waves-light modal-trigger segment-button" href="#modalSinonimosObjetivo">Objetivo</a>
+                                        <a class="btn waves-effect waves-light modal-trigger segment-button" href="#modalSinonimosMetodologia">Metodologia</a>
+                                        <a class="btn waves-effect waves-light modal-trigger segment-button" href="#modalSinonimosResultado">Resultado</a>
                                     </div>
                                     <button type="submit" class="btn-floating halfway-fab waves-effect waves-light blue left"><i class="material-icons">mode_edit</i></button>
                                 </form>
@@ -101,7 +101,7 @@
                                            <div class="card white">
                                                <div class="card-content">
                                                    <span class="card-title">Artigos</span>
-                                                   <table id="tableArtigos" class="striped centered responsive">
+                                                   <table id="tableArtigos" class="striped centered">
                                                        <a data-target="modalAdicionarArtigo" class="waves-effect waves-light btn modal-trigger orange-button"><i class="material-icons left">add</i>adicionar artigos</a>
                                                        <thead>
                                                            <tr>
@@ -136,7 +136,7 @@
                                         <ul class="collapsible" data-collapsible="accordion">
                                             <c:forEach items="${segmentos_artigos}" var="artigo" varStatus="status">
                                                 <li>
-                                                    <div class="collapsible-header article-header"><i class="material-icons right more">expand_more</i>${artigo.nome}</div>
+                                                    <div class="collapsible-header article-header"><i class="material-icons right more">expand_more</i>${artigo.nome.replace("_", " ").replace(".pdf", "")}</div>
                                                     
                                                     <div class="collapsible-body">
                                                         <span>
@@ -404,11 +404,11 @@
                         
                         if (tab === 'analise') {
                             //$('#containao').addClass('vaiprolado');
-                            $('#containao').removeClass("offset-s2");
+                            $('#containao').removeClass("offset-l2");
                             $('#configs').show();
                         } else {
                             //$('#containao').removeClass('vaiprolado');
-                            $('#containao').addClass("offset-s2");
+                            $('#containao').addClass("offset-l2");
                             $('#configs').hide();
                         }
                     } 
