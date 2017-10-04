@@ -32,7 +32,7 @@ public class Call {
                     connection.eval("source('" + Singleton.TIDYNATOR + "')");
                     connection.eval("source('" + Singleton.FIND_TF_IDF + "')");
                     List<String> nomes = arquivos(pathorigem);
-                    for(String arq: nomes) { //PASSANDO ARQUIVOS PARA PASTA DE ANÃ�LISE
+                    for(String arq: nomes) { //PASSANDO ARQUIVOS PARA PASTA DE ANÁLISE
                         connection.eval("flist = list.files(\"" + pathorigem + "\",\"" + arq + "\", full.names = TRUE)");
                         connection.eval("file.copy(flist,\"" + path + "\")");
                     }
@@ -68,8 +68,8 @@ public class Call {
                         
                         String lista = "";
                         for(int aa=1;aa<=10;aa++){
-                            lista+=(connection.eval("rankN[" + aa + ",3]").asList().at(0).asString());
-                            lista+= " " + (connection.eval("rankN[" + aa + ",1]").asList().at(0).asString()) + " ";
+                            lista+=(connection.eval("rankN[" + aa + ",2]").asList().at(0).asString());
+                            lista+= " " + (connection.eval("rankN[" + aa + ",3]").asList().at(0).asString()) + " ";
                         }
                         artigo.setWordcloud(lista);
                         artigos.add(artigo);
@@ -99,7 +99,7 @@ public class Call {
                     connection.eval("source('" + Singleton.TIDYNATOR + "')");
                     connection.eval("source('" + Singleton.FIND_TF_IDF + "')");
                     List<String> nomes = arquivos(pathorigem);
-                    for(String arq: nomes) { //PASSANDO ARQUIVOS PARA PASTA DE ANÃ�LISE
+                    for(String arq: nomes) { //PASSANDO ARQUIVOS PARA PASTA DE ANÃƒï¿½LISE
                         connection.eval("flist = list.files(\"" + pathorigem + "\",\"" + arq + "\", full.names = TRUE)");
                         connection.eval("file.copy(flist,\"" + path + "\")");
                     }
@@ -115,14 +115,13 @@ public class Call {
                     String imagem = path + "/tfidf.png";
                     connection.eval("png(\"" + imagem + "\")");
                     connection.eval("ranking <- ranking %>% arrange(desc(tf_idf)) %>% mutate(word = factor(word, levels = rev(unique(word)))) %>% top_n(20)");
-                    connection.eval("print(ggplot(data=ranking, aes(word, tf_idf, fill = id)) + geom_col() + labs(x = NULL, y = \"tf-idf\") + coord_flip())");
+                    connection.eval("grafico <- ggplot(data=ranking, aes(word, tf_idf, fill = id)) + geom_col() + labs(x = NULL, y = \"tf-idf\") + coord_flip()");
+                    connection.eval("print(grafico + scale_fill_discrete(name = \"Artigos\"))");
                     connection.eval("dev.off()");
                     java.nio.file.Path arquivo = Paths.get(imagem);
                     byte[] bytes = Files.readAllBytes(arquivo);
                     byte[] encodeBase64 = Base64.getEncoder().encode(bytes);
                     String base64Encoded = new String(encodeBase64, "UTF-8");
-                    //connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+png\", full.names = TRUE)");
-                    //connection.eval("file.remove(junk)");
                     return base64Encoded;
             } catch (RserveException e) {
                 e.printStackTrace();
@@ -151,8 +150,11 @@ public class Call {
                     connection.eval("source('" + Singleton.FIND_SEGMENT + "')");
                     connection.eval("source('" + Singleton.ARTICLES_ANALYSIS + "')");
                     connection.eval("source('" + Singleton.ARRANGE_BY_RELEVANCY + "')");
+                    connection.eval("source('" + Singleton.TIDYNATOR + "')");
+                    connection.eval("source('" + Singleton.FIND_TF_IDF + "')");
                     connection.eval("a <- 2 + 3");
                     connection.eval("meanVal <- articlesAnalysis(\"" + path + "\")");
+                    connection.eval("ranking = find_tf_idf(\"" + path + "\")");
                     System.out.println("ordenado <- arrangeByRelevancy(meanVal, \"" + segment + "\", " + keywords + ")");
                     connection.eval("ordenado <- arrangeByRelevancy(meanVal, \"" + segment + "\", " + keywords + ")");
                     List<Artigo> artigos = new ArrayList();
@@ -168,23 +170,29 @@ public class Call {
                         
                         //talvez puxar o numero e ordenar para garantir
                         
+                        List<String> nomesOrigem = arquivos(pathorigem);   
+                            for(String b: nomesOrigem){
+                                String a = b.replace("_", " ");
+                                if(a.length()>=artigo.getNome().length()){
+                                    a = a.substring(0, artigo.getNome().length());
+                                    if(artigo.getNome().substring(0, artigo.getNome().length()-4).equals(a.substring(0, a.length()-4))){
+                                        s = b;
+                                        break;
+                                    }
+                                }
+                            }
                         String imagem = path + "/" + s.substring(0,s.length()-4) + ".png";
-                        /*connection.eval("png(\"" + imagem + "\")");
-                        connection.eval("rankN <- ranking[which(ranking$id=='" + artigo.getNome() + "'),][1:10,] %>% mutate(word = reorder(word, n))");
-                        connection.eval("print(ggplot(data=rankN, aes(word, n)) + geom_col() + xlab(NULL) + coord_flip())");
-                        connection.eval("dev.off()");*/
                         java.nio.file.Path arquivo = Paths.get(imagem);
                         byte[] bytes = Files.readAllBytes(arquivo);
                         byte[] encodeBase64 = Base64.getEncoder().encode(bytes);
                         String base64Encoded = new String(encodeBase64, "UTF-8");
                         artigo.setImg(base64Encoded);
-                        //connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+png\", full.names = TRUE)");
-                        //connection.eval("file.remove(junk)");
                         
+                        connection.eval("rankN <- ranking[which(ranking$id=='" + artigo.getNome() + "'),][1:10,] %>% mutate(word = reorder(word, n))");
                         String lista = "";
                         for(int aa=1;aa<=10;aa++){
-                            lista+=(connection.eval("rankN[" + aa + ",3]").asList().at(0).asString());
-                            lista+= " " + (connection.eval("rankN[" + aa + ",1]").asList().at(0).asString()) + " ";
+                            lista+=(connection.eval("rankN[" + aa + ",2]").asList().at(0).asString());
+                            lista+= " " + (connection.eval("rankN[" + aa + ",3]").asList().at(0).asString()) + " ";
                         }
                         artigo.setWordcloud(lista);
                         artigos.add(artigo);
@@ -229,12 +237,15 @@ public class Call {
                     connection.eval("source('" + Singleton.FIND_SEGMENT + "')");
                     connection.eval("source('" + Singleton.ARTICLES_ANALYSIS + "')");
                     connection.eval("source('" + Singleton.TO_GROUPS + "')");
+                    connection.eval("source('" + Singleton.FIND_TF_IDF + "')");
+                    connection.eval("source('" + Singleton.TIDYNATOR + "')");
                     List<String> nomes = arquivos(pathorigem);
-                    for(String arq: nomes) { //PASSANDO ARQUIVOS PARA PASTA DE ANÃ�LISE
+                    for(String arq: nomes) { //PASSANDO ARQUIVOS PARA PASTA DE ANÁLISE
                         connection.eval("flist = list.files(\"" + pathorigem + "\",\"" + arq + "\", full.names = TRUE)");
                         connection.eval("file.copy(flist,\"" + path + "\")");
                     }
                     connection.eval("xx = extractAbstract(\"" + path + "\",\'\"" + pdftotext + "\"\')");
+                    connection.eval("ranking = find_tf_idf(\"" + path + "\")");
                     
                     //limpando os pdf e o txt abstract
                     connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+pdf\", full.names = TRUE)");
@@ -263,28 +274,29 @@ public class Call {
                             
                             List<String> nomesOrigem = arquivos(pathorigem);   
                             String s="";
-                            for(String a: nomesOrigem){
-                                a = a.replace("_", " ");
+                            for(String b: nomesOrigem){
+                                String a = b.replace("_", " ");
                                 if(a.length()>=artigo.getNome().length()){
                                     a = a.substring(0, artigo.getNome().length());
                                     if(artigo.getNome().substring(0, artigo.getNome().length()-4).equals(a.substring(0, a.length()-4))){
-                                        s = a;
+                                        s = b;
                                         break;
                                     }
                                 }
                             }
                             String imagem = path + "/" + s.substring(0,s.length()-4) + ".png";
-                            /*connection.eval("png(\"" + imagem + "\")");
-                            connection.eval("rankN <- ranking[which(ranking$id=='" + artigo.getNome() + "'),][1:10,] %>% mutate(word = reorder(word, n))");
-                            connection.eval("print(ggplot(data=rankN, aes(word, n)) + geom_col() + xlab(NULL) + coord_flip())");
-                            connection.eval("dev.off()");*/
                             java.nio.file.Path arquivo = Paths.get(imagem);
                             byte[] bytes = Files.readAllBytes(arquivo);
                             byte[] encodeBase64 = Base64.getEncoder().encode(bytes);
                             String base64Encoded = new String(encodeBase64, "UTF-8");
                             artigo.setImg(base64Encoded);
-                            //connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+png\", full.names = TRUE)");
-                            //connection.eval("file.remove(junk)");
+                            connection.eval("rankN <- ranking[which(ranking$id=='" + artigo.getNome() + "'),][1:10,] %>% mutate(word = reorder(word, n))");
+                            String lista = "";
+                            for(int aa=1;aa<=10;aa++){
+                                lista+=(connection.eval("rankN[" + aa + ",2]").asList().at(0).asString());
+                                lista+= " " + (connection.eval("rankN[" + aa + ",3]").asList().at(0).asString()) + " ";
+                            }
+                            artigo.setWordcloud(lista);
                             artigos.add(artigo);
                         }
                         int palavra = Integer.parseInt(connection.eval("length(aux[[1,9]])").asString());

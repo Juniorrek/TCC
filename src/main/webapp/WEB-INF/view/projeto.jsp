@@ -136,19 +136,18 @@
                                         <ul class="collapsible" data-collapsible="accordion">
                                             <c:forEach items="${segmentos_artigos}" var="artigo" varStatus="status">
                                                 <li>
-                                                    <div class="collapsible-header article-header"><i class="material-icons right more">expand_more</i>${artigo.nome.replace("_", " ").replace(".pdf", "")}</div>
-                                                    
+                                                    <div class="collapsible-header article-header" onclick="nuvem('${artigo.wordcloud}', '${status.count}')"><i class="material-icons right more">expand_more</i>${artigo.nome.replace("_", " ").replace(".pdf", "")}</div>
                                                     <div class="collapsible-body">
                                                         <span>
                                                             <div class="row">
                                                                 <div class="col s12">
                                                                     <ul class="tabs tabs-fixed-width">
-                                                                        <li class="tab col s3"><a class="active" href="#Segmentos${status.count}">Segmentos</a></li>
-                                                                        <li class="tab col s3"><a href="#TF${status.count}">TF</a></li>
-                                                                        <li class="tab col s3"><a href="#WORDCLOUD${status.count}">WORDCLOUD</a></li>
+                                                                        <li class="tab col s3"><a class="active" href="#beginSegmentos${status.count}">Segmentos</a></li>
+                                                                        <li class="tab col s3"><a href="#beginTF${status.count}">TF</a></li>
+                                                                        <li class="tab col s3"><a href="#beginWORDCLOUD${status.count}">WORDCLOUD</a></li>
                                                                     </ul>
                                                                 </div>
-                                                                <div id="Segmentos${status.count}" class="col s12">
+                                                                <div id="beginSegmentos${status.count}" class="col s12">
                                                                     <h6>Resumo</h6>
                                                                     <ul class='collapsible' data-collapsible='accordion'>
                                                                         <li>
@@ -172,9 +171,10 @@
                                                                         </li>
                                                                     </ul>
                                                                 </div>
-                                                                            <div id="TF${status.count}" class="col s12"><img src="data:image/jpg;base64,${artigo.img}" width="100%"/></div>
-                                                                <div id="WORDCLOUD${status.count}" class="col s12">
+                                                                            <div id="beginTF${status.count}" class="col s12"><img src="data:image/jpg;base64,${artigo.img}" width="100%"/></div>
+                                                                <div id="beginWORDCLOUD${status.count}" class="col s12">
                                                                     <canvas id="beginCanvas${status.count}" width='640' height='480' style='border:1px solid #000000;'></canvas>
+                                                                    
                                                                 </div>
                                                             </div>
                                                         </span>
@@ -363,6 +363,8 @@
         <script type="text/javascript">
             var nofilter = "";
             $(document).ready(function(){
+                
+                
                 $(".button-collapse").sideNav();
                 
                 $(".dropdown-button").dropdown({
@@ -507,6 +509,16 @@
                 $('#modalVizualizarArtigo').modal('open');
             }
             
+            function nuvem(words, num){ 
+                var lista = words.split(" ");
+                var list = [["" , ""]];
+                for(i=0;i<lista.length;i+=2){       
+                    list.push([lista[i], lista[i+1]]);
+                }
+                list.splice(0,1);
+                WordCloud(document.getElementById("beginCanvas" + num), { list: list } );
+            }
+            
             function limparFiltros() {
                 $('#analise').html(nofilter);
                 $('ul.tabs').tabs();
@@ -542,7 +554,7 @@
                                                         '<ul class="tabs tabs-fixed-width">' +
                                                             '<li class="tab col s3"><a class="active" href="#Segmentos' + idx + '">Segmentos</a></li>' +
                                                             '<li class="tab col s3"><a href="#TF' + idx + '">TF</a></li>' +
-                                                            '<li class="tab col s3"><a href="#WORDCLOUD' + idx + '">WORDCLOUD</a></li>' +
+                                                            '<li class="tab col s3"><a href="#ordWORDCLOUD' + idx + '">WORDCLOUD</a></li>' +
                                                         '</ul>' +
                                                     '</div>' +
                                                     '<div id="Segmentos' + idx + '" class="col s12">' +
@@ -570,7 +582,8 @@
                                                         '</ul>' +
                                                     '</div>' +
                                                     "<div id='TF" + idx + "' class='col s12'><img src='data:image/jpg;base64," + v.img + "'/></div>" +
-                                                    '<div id="WORDCLOUD' + idx + '" class="col s12">Aqui é para ter uma wordcloud</div>' +
+                                                    '<div id="ordWORDCLOUD' + idx + '" class="col s12">';
+                                                    htmlao += "<canvas id='ordCanvas" + idx + "' width='640' height='480' style='border:1px solid #000000;'></canvas></div>" +
                                                 '</div>' +
                                             '</span>' +
                                         '</div>' +
@@ -578,6 +591,16 @@
                         });
                         htmlao += "</ul></div></div>";
                         $('#analise').html(htmlao);
+                        artigos.forEach(function(v, k) {
+                            var num = k+1;
+                            var lista = (v.wordcloud).split(" ");
+                            var list = [["" , ""]];
+                            for(i=0; i<lista.length; i+=2){    
+                                list.push([lista[i], lista[i+1]]);
+                            }
+                            list.splice(0,1);
+                            WordCloud(document.getElementById("ordCanvas" + num), { list: list } );
+                        });
                         $('ul.tabs').tabs();
                         $('.collapsible').collapsible();
                         resetTabs();//Pensar numa funçãozinha melhor pra reloadar tudo ja q essa merda buga
@@ -628,7 +651,7 @@
                                                     "<ul class='collapsible' data-collapsible='accordion'>";                                    
                         grupos = JSON.parse(grupos);
                         console.log(grupos);
-                        cont = 500;
+                        cont = 1;
                         grupos.forEach(function(v, k) {
                             htmlao += "<li>" +
                                             "<div class='collapsible-header'><h5>GRUPO " + v.numero + "</h5></div>" +
@@ -653,7 +676,7 @@
                                                                                             htmlao += "<ul class='tabs tabs-fixed-width'>" +
                                                                                                 "<li class='tab col s3'><a class='active' href='#Segmentos" + cont + "'>Segmentos</a></li>" +
                                                                                                 "<li class='tab col s3'><a href='#TF" + cont + "'>TF</a></li>" +
-                                                                                                "<li class='tab col s3'><a href='#WORDCLOUD" + cont + "'>WORDCLOUD</a></li>" +
+                                                                                                "<li class='tab col s3'><a href='#groupWORDCLOUD" + cont + "'>WORDCLOUD</a></li>" +
                                                                                             "</ul></div>";
                                                                                             htmlao += "<div id='Segmentos" + cont + "' class='col s12'>" +
                                                                                                 '<h6>Resumo</h6>' +
@@ -680,7 +703,7 @@
                                                                                                 '</ul>' +
                                                                                                "</div>";
                                                                                        htmlao += "<div id='TF" + cont + "' class='col s12'><img src='data:image/jpg;base64," + t.img + "'/></div>" +
-                                                                                               "<div id='WORDCLOUD" + cont + "' class='col s12'>Aqui é para ter uma wordcloud</div>";
+                                                                                               "<div id='groupWORDCLOUD" + cont + "' class='col s12'><canvas id='groupCanvas" + cont + "' width='640' height='480' style='border:1px solid #000000;'></canvas></div>";
                                                                 htmlao += "</div></span></div></li>";
                                                                 cont++;
                                                             });
@@ -694,6 +717,7 @@
                             });
                             htmlao += "</ul></div></div>";
                             $('#analise').html(htmlao);
+                            var num = 1;
                             grupos.forEach(function(v, k) { <!--CONSTRUÇÃO WORDCLOUD-->
                                 var list = [["" , ""]];
                                 (v.keywords).forEach(function(t, l) {
@@ -701,6 +725,16 @@
                                 });
                                 list.splice(0,1);
                                 WordCloud(document.getElementById("myCanvas" + v.numero), { list: list } );
+                                (v.artigos).forEach(function(g, h) {
+                                    var lista = (g.wordcloud).split(" ");
+                                    var list2 = [["" , ""]];
+                                    for(i=0; i<lista.length; i+=2){    
+                                        list2.push([lista[i], lista[i+1]]);
+                                    }
+                                    list2.splice(0,1);
+                                    WordCloud(document.getElementById("groupCanvas" + num), { list: list2 } );
+                                    num++;
+                                });
                             });
                             $('ul.tabs').tabs();
                             $('.collapsible').collapsible();
