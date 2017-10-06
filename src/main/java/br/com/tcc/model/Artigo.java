@@ -1,7 +1,7 @@
 package br.com.tcc.model;
 
 public class Artigo implements java.io.Serializable{
-    private String objetivo, metodologia, resultado, resumo, nome, img, wordcloud;
+    private String objetivo, metodologia, resultado, resumo, nome, imgWord, imgBigram, imgTrigram, wordcloud;
 
    
     public Artigo() {
@@ -15,12 +15,28 @@ public class Artigo implements java.io.Serializable{
         this.wordcloud = wordcloud;
     }
 
-    public String getImg() {
-        return img;
+    public String getImgWord() {
+        return imgWord;
     }
 
-    public void setImg(String img) {
-        this.img = img;
+    public void setImgWord(String imgWord) {
+        this.imgWord = imgWord;
+    }
+    
+    public String getImgBigram() {
+        return imgBigram;
+    }
+
+    public void setImgBigram(String imgBigram) {
+        this.imgBigram = imgBigram;
+    }
+    
+    public String getImgTrigram() {
+        return imgTrigram;
+    }
+
+    public void setImgTrigram(String imgTrigram) {
+        this.imgTrigram = imgTrigram;
     }
 
     public String getObjetivo() {

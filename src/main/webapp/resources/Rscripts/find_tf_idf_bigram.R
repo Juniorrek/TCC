@@ -1,4 +1,4 @@
-find_tf_idf_bigram = function (txt_folder) {
+find_tf_idf_bigram = function (aa) {
   library(readr)
   library(dplyr)
   library(tidyr)
@@ -6,19 +6,18 @@ find_tf_idf_bigram = function (txt_folder) {
   library(tidytext)
   library(ggplot2)
   
-  file_names <- list.files(path = txt_folder, pattern = ".txt")
-  file_names <- substr(file_names, 1, 50)
+  aa$abstract <- NULL
+  aa$objective <- NULL
+  aa$methodology <- NULL
+  aa$conclusion <- NULL
   
-  bigrams <- data_frame(file = dir(path = txt_folder, pattern = ".txt", full.names = TRUE)) %>%
-    mutate(text = gsub('[0-9]+', '', map(file, read_lines))) %>%
-    mutate(id = as.factor(file_names), text) %>%
-    unnest(text)  %>%
+  bigrams <- aa %>%
+    unnest(text) %>%
     unnest_tokens(bigram, text, token = "ngrams", n = 2) %>%
     separate(bigram, c("word1", "word2"), sep = " ") %>%
     filter(!word1 %in% stop_words$word,
            !word2 %in% stop_words$word) %>%
     unite(bigram, word1, word2, sep = " ") %>%
-    select(-file) %>%
     count(id, bigram, sort = TRUE)
   
   bigram_tf_idf <- bigrams %>%

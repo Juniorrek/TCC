@@ -1,4 +1,4 @@
-find_tf_idf = function (txt_folder, aa) {
+find_tf_idf = function (aa) {
   library(ggplot2)
   
   aa$abstract <- NULL

@@ -143,7 +143,7 @@
                                                                 <div class="col s12">
                                                                     <ul class="tabs tabs-fixed-width">
                                                                         <li class="tab col s3"><a class="active" href="#beginSegmentos${status.count}">Segmentos</a></li>
-                                                                        <li class="tab col s3"><a href="#beginTF${status.count}">TF</a></li>
+                                                                        <li class="tab col s3"><a href="#beginTFs${status.count}">TF</a></li>
                                                                         <li class="tab col s3"><a href="#beginWORDCLOUD${status.count}">WORDCLOUD</a></li>
                                                                     </ul>
                                                                 </div>
@@ -171,10 +171,25 @@
                                                                         </li>
                                                                     </ul>
                                                                 </div>
-                                                                            <div id="beginTF${status.count}" class="col s12"><img src="data:image/jpg;base64,${artigo.img}" width="100%"/></div>
+                                                                <div id="beginTFs${status.count}" class="col s12">
+                                                                    <ul class="tabs tabs-fixed-width">
+                                                                        <li class="tab col s3"><a href="#word${status.count}">Palavra</a></li>
+                                                                        <li class="tab col s3"><a href="#bigram${status.count}">Bigrama</a></li>
+                                                                        <li class="tab col s3"><a href="#trigram${status.count}">Trigrama</a></li>
+                                                                    </ul>
+                                                                    <div id="word${status.count}">
+                                                                        <img src="data:image/jpg;base64,${artigo.imgWord}" width="100%"/>
+                                                                        
+                                                                    </div>
+                                                                    <div id="bigram${status.count}">
+                                                                        <img src="data:image/jpg;base64,${artigo.imgBigram}" width="100%"/>
+                                                                    </div>
+                                                                    <div id="trigram${status.count}">
+                                                                        <img src="data:image/jpg;base64,${artigo.imgTrigram}" width="100%"/>
+                                                                    </div>
+                                                                </div>
                                                                 <div id="beginWORDCLOUD${status.count}" class="col s12">
-                                                                    <canvas id="beginCanvas${status.count}" width='640' height='480' style='border:1px solid #000000;'></canvas>
-                                                                    
+                                                                    <canvas id="beginCanvas${status.count}" width='640' height='480' style='border:1px solid #000000;'></canvas>   
                                                                 </div>
                                                             </div>
                                                         </span>
@@ -581,7 +596,7 @@
                                                             '</li>' +
                                                         '</ul>' +
                                                     '</div>' +
-                                                    "<div id='TF" + idx + "' class='col s12'><img src='data:image/jpg;base64," + v.img + "'/></div>" +
+                                                    "<div id='TF" + idx + "' class='col s12'><img src='data:image/jpg;base64," + v.imgWord + "'/></div>" +
                                                     '<div id="ordWORDCLOUD' + idx + '" class="col s12">';
                                                     htmlao += "<canvas id='ordCanvas" + idx + "' width='640' height='480' style='border:1px solid #000000;'></canvas></div>" +
                                                 '</div>' +
@@ -702,7 +717,7 @@
                                                                                                     '</li>' +
                                                                                                 '</ul>' +
                                                                                                "</div>";
-                                                                                       htmlao += "<div id='TF" + cont + "' class='col s12'><img src='data:image/jpg;base64," + t.img + "'/></div>" +
+                                                                                       htmlao += "<div id='TF" + cont + "' class='col s12'><img src='data:image/jpg;base64," + t.imgWord + "'/></div>" +
                                                                                                "<div id='groupWORDCLOUD" + cont + "' class='col s12'><canvas id='groupCanvas" + cont + "' width='640' height='480' style='border:1px solid #000000;'></canvas></div>";
                                                                 htmlao += "</div></span></div></li>";
                                                                 cont++;
