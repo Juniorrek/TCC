@@ -19,7 +19,7 @@ extractAbstract = function (pdfFolder, pdfToText) {
   
   abstracts <- lapply(mytxtfiles, function(i) {
     j <- paste0(scan(i, what = character()), collapse = " ")
-    regmatches(j, gregexpr("(?i)(?<=abstract)([\\S\\s]*?)(?=introduction|introdução|keyword|resumo)", j, perl=TRUE))
+    regmatches(j, gregexpr("(?i)(?<=abstract)([\\S\\s]*?)(?=introduction|introdução|keyword|resumo|©)", j, perl=TRUE))
   })
   
   

@@ -31,8 +31,7 @@
         #btnAdicionarProjeto {
             visibility: visible;
         }
-}
-
-#tableProjetos {
+}#tableProjetos {
     width: 100% !important;
 }
+

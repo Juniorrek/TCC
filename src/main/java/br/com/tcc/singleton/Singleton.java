@@ -6,18 +6,20 @@ public final class Singleton {
     public static final String CONTEXT = ServletContextProvider.getServletContext().getRealPath("/").replace("\\", "/");
     
     public static final String PDF_TO_TEXT_PATH = "C:/Users/Orestes/Desktop/TCC/pdftotext.exe";
-   
+    //public static final String PDF_TO_TEXT_PATH = "C:/Program Files/pdftotext/bin64/pdftotext.exe";
+    
     /***********\
     *  UPLOADS  *
     \***********/
     public static final String UPLOAD_DIR = "C:/Users/Orestes/Desktop/TCC/SobAnalise";
+    //public static final String UPLOAD_DIR = "C:/Users/bruno/Documents/up";
     
     /***********\
     *  DATABASE *
     \***********/
     public static final String DB_URL = "jdbc:mysql://localhost:3306/TCC?useSSL=false";
     public static final String DB_USER = "root";
-    public static final String DB_PASSWORD = "jrjr";
+    public static final String DB_PASSWORD = "";
     
     /****************************************************************************\
     * SCRIPTS R *

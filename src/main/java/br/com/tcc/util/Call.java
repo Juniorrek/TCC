@@ -36,15 +36,16 @@ public class Call {
                         connection.eval("flist = list.files(\"" + pathorigem + "\",\"" + arq + "\", full.names = TRUE)");
                         connection.eval("file.copy(flist,\"" + path + "\")");
                     }
-                    connection.eval("xx = extractAbstract(\"" + path + "\",\'\"" + pdftotext + "\"\')");
-                    connection.eval("ranking = find_tf_idf(\"" + path + "\")");
+                    connection.eval("xx <- extractAbstract(\"" + path + "\",\'\"" + pdftotext + "\"\')");
+                    connection.eval("ret <- NULL");
                     
                     //limpando os pdf e o txt abstract
                     connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+pdf\", full.names = TRUE)");
                     connection.eval("file.remove(junk)");
                     connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+abstract.+\", full.names = TRUE)");
                     connection.eval("file.remove(junk)");
-                    connection.eval("meanVal = articlesAnalysis(\"" + path + "\")");
+                    connection.eval("meanVal <- articlesAnalysis(\"" + path + "\")");
+                    connection.eval("ranking <- find_tf_idf(\"" + path + "\",meanVal)");
                     List<Artigo> artigos = new ArrayList();
                     int i = 1;
                     for (String s : nomes) {
@@ -93,24 +94,32 @@ public class Call {
             f.mkdirs();
             try {
                     connection = new RConnection();
-                    connection.eval("library(dplyr)"); 
+                    connection.eval("library(dplyr)");
+                    connection.eval("library(readr)");
+                    connection.eval("library(dplyr)");
+                    connection.eval("library(tidyr)");
+                    connection.eval("library(purrr)");
+                    connection.eval("library(tidytext)");
                     connection.eval("library(ggplot2)"); 
+                    connection.eval("source('" + Singleton.FIND_SEGMENT + "')");
+                    connection.eval("source('" + Singleton.ARTICLES_ANALYSIS + "')");
                     connection.eval("source('" + Singleton.EXTRACT_ABSTRACT + "')");
-                    connection.eval("source('" + Singleton.TIDYNATOR + "')");
                     connection.eval("source('" + Singleton.FIND_TF_IDF + "')");
                     List<String> nomes = arquivos(pathorigem);
-                    for(String arq: nomes) { //PASSANDO ARQUIVOS PARA PASTA DE ANÃƒï¿½LISE
-                        connection.eval("flist = list.files(\"" + pathorigem + "\",\"" + arq + "\", full.names = TRUE)");
+                    for(String arq: nomes) { //PASSANDO ARQUIVOS PARA PASTA DE ANÁLISE
+                        connection.eval("flist <- list.files(\"" + pathorigem + "\",\"" + arq + "\", full.names = TRUE)");
                         connection.eval("file.copy(flist,\"" + path + "\")");
                     }
-                    connection.eval("xx = extractAbstract(\"" + path + "\",\'\"" + pdftotext + "\"\')");
-                    connection.eval("ranking = find_tf_idf(\"" + path + "\")");
+                    connection.eval("xx <- extractAbstract(\"" + path + "\",\'\"" + pdftotext + "\"\')");
+                    connection.eval("ret <- NULL");
                     
                     //limpando os pdf e o txt abstract
                     connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+pdf\", full.names = TRUE)");
                     connection.eval("file.remove(junk)");
                     connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+abstract.+\", full.names = TRUE)");
                     connection.eval("file.remove(junk)");
+                    connection.eval("meanVal <- articlesAnalysis(\"" + path + "\")");
+                    connection.eval("ranking <- find_tf_idf(\"" + path + "\",meanVal)");
                     
                     String imagem = path + "/tfidf.png";
                     connection.eval("png(\"" + imagem + "\")");
@@ -145,17 +154,20 @@ public class Call {
             
             try {
                     connection = new RConnection();
-                    connection.eval("library(dplyr)");                       
+                    connection.eval("library(dplyr)");
+                    connection.eval("library(readr)");
+                    connection.eval("library(tidyr)");
+                    connection.eval("library(purrr)");
+                    connection.eval("library(tidytext)");
+                    connection.eval("library(ggplot2)");                   
                     connection.eval("source('" + Singleton.EXTRACT_ABSTRACT + "')");
                     connection.eval("source('" + Singleton.FIND_SEGMENT + "')");
                     connection.eval("source('" + Singleton.ARTICLES_ANALYSIS + "')");
                     connection.eval("source('" + Singleton.ARRANGE_BY_RELEVANCY + "')");
                     connection.eval("source('" + Singleton.TIDYNATOR + "')");
                     connection.eval("source('" + Singleton.FIND_TF_IDF + "')");
-                    connection.eval("a <- 2 + 3");
                     connection.eval("meanVal <- articlesAnalysis(\"" + path + "\")");
-                    connection.eval("ranking = find_tf_idf(\"" + path + "\")");
-                    System.out.println("ordenado <- arrangeByRelevancy(meanVal, \"" + segment + "\", " + keywords + ")");
+                    connection.eval("ranking <- find_tf_idf(\"" + path + "\",meanVal)");
                     connection.eval("ordenado <- arrangeByRelevancy(meanVal, \"" + segment + "\", " + keywords + ")");
                     List<Artigo> artigos = new ArrayList();
                     List<String> nomes = arquivos(pathorigem);
