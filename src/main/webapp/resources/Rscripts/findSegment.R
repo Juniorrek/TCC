@@ -14,14 +14,11 @@ index2List = function(sentences, indexes, segment) {
 }
 
 
-findSegment = function (abstracts, segment, customKeys = c(), useDefault = TRUE) {
+findSegment = function (abstracts, segment, customKeys = NULL) {
   library(dplyr)
-  
-  if (length(customKeys) > 0)
-    if (useDefault)
-      usedSynonyms <- c(get(segment, synonyms), customKeys)
-    else
-      usedSynonyms <- customKeys
+
+  if (!is.null(customKeys))
+    usedSynonyms <- customKeys
   else 
     usedSynonyms <- get(segment, synonyms)
   

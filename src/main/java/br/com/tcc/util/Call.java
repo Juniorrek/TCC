@@ -113,7 +113,7 @@ public class Call {
             return null;
         }
         
-        public String graphicTfIdf(String pathorigem) throws REXPMismatchException, REngineException, IOException {
+        public ArrayList<String> graphicTfIdf(String pathorigem) throws REXPMismatchException, REngineException, IOException {
             RConnection connection = null;
             String path = pathorigem + "temp";
             File f = new File(path);
@@ -130,7 +130,11 @@ public class Call {
                     connection.eval("source('" + Singleton.FIND_SEGMENT + "')");
                     connection.eval("source('" + Singleton.ARTICLES_ANALYSIS + "')");
                     connection.eval("source('" + Singleton.EXTRACT_ABSTRACT + "')");
+                    connection.eval("source('" + Singleton.FIND_SEGMENT + "')");
+                    connection.eval("source('" + Singleton.ARTICLES_ANALYSIS + "')");
                     connection.eval("source('" + Singleton.FIND_TF_IDF + "')");
+                    connection.eval("source('" + Singleton.FIND_TF_IDF_BIGRAM + "')");
+                    connection.eval("source('" + Singleton.FIND_TF_IDF_TRIGRAM + "')");
                     List<String> nomes = arquivos(pathorigem);
                     for(String arq: nomes) { //PASSANDO ARQUIVOS PARA PASTA DE ANÁLISE
                         connection.eval("flist <- list.files(\"" + pathorigem + "\",\"" + arq + "\", full.names = TRUE)");
@@ -145,19 +149,48 @@ public class Call {
                     connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+abstract.+\", full.names = TRUE)");
                     connection.eval("file.remove(junk)");
                     connection.eval("meanVal <- articlesAnalysis(\"" + path + "\")");
-                    connection.eval("ranking <- find_tf_idf(meanVal)");
+                    connection.eval("TFWord <- find_tf_idf(meanVal)");
+                    connection.eval("TFBigram <- find_tf_idf_bigram(meanVal)");
+                    connection.eval("TFTrigram <- find_tf_idf_trigram(meanVal)");
                     
-                    String imagem = path + "/tfidf.png";
-                    connection.eval("png(\"" + imagem + "\")");
-                    connection.eval("ranking <- ranking %>% arrange(desc(tf_idf)) %>% mutate(word = factor(word, levels = rev(unique(word)))) %>% top_n(20)");
-                    connection.eval("grafico <- ggplot(data=ranking, aes(word, tf_idf, fill = id)) + geom_col() + labs(x = NULL, y = \"tf-idf\") + coord_flip()");
-                    connection.eval("print(grafico + scale_fill_discrete(name = \"Artigos\"))");
+                    ArrayList<String> images = new ArrayList<String>();
+                    String imagemWord = path + "/tfidfword.png";
+                    connection.eval("png(\"" + imagemWord + "\")");
+                    connection.eval("TFWord <- TFWord %>% arrange(desc(tf_idf)) %>% mutate(word = factor(word, levels = rev(unique(word)))) %>% top_n(20)");
+                    connection.eval("graficoWord <- ggplot(data=TFWord, aes(word, tf_idf, fill = id)) + geom_col() + labs(x = NULL, y = \"tf-idf\") + coord_flip()");
+                    connection.eval("print(graficoWord + scale_fill_discrete(name = \"Artigos\"))");
                     connection.eval("dev.off()");
-                    java.nio.file.Path arquivo = Paths.get(imagem);
-                    byte[] bytes = Files.readAllBytes(arquivo);
-                    byte[] encodeBase64 = Base64.getEncoder().encode(bytes);
-                    String base64Encoded = new String(encodeBase64, "UTF-8");
-                    return base64Encoded;
+                    java.nio.file.Path arquivoWord = Paths.get(imagemWord);
+                    byte[] bytesWord = Files.readAllBytes(arquivoWord);
+                    byte[] encodeBase64Word = Base64.getEncoder().encode(bytesWord);
+                    String base64EncodedWord = new String(encodeBase64Word, "UTF-8");             
+                    images.add(base64EncodedWord);
+                    
+                    String imagemBigram = path + "/tfidfbigram.png";
+                    connection.eval("png(\"" + imagemBigram + "\")");
+                    connection.eval("TFBigram <- TFBigram %>% arrange(desc(tf_idf)) %>% mutate(bigram = factor(bigram, levels = rev(unique(bigram)))) %>% top_n(20)");
+                    connection.eval("graficoBigram <- ggplot(data=TFBigram, aes(bigram, tf_idf, fill = id)) + geom_col() + labs(x = NULL, y = \"tf-idf\") + coord_flip()");
+                    connection.eval("print(graficoBigram + scale_fill_discrete(name = \"Artigos\"))");
+                    connection.eval("dev.off()");
+                    java.nio.file.Path arquivoBigram = Paths.get(imagemBigram);
+                    byte[] bytesBigram = Files.readAllBytes(arquivoBigram);
+                    byte[] encodeBase64Bigram = Base64.getEncoder().encode(bytesBigram);
+                    String base64EncodedBigram = new String(encodeBase64Bigram, "UTF-8");
+                    images.add(base64EncodedBigram);
+                    
+                    String imagemTrigram = path + "/tfidftrigram.png";
+                    connection.eval("png(\"" + imagemTrigram + "\")");
+                    connection.eval("TFTrigram <- TFTrigram %>% arrange(desc(tf_idf)) %>% mutate(trigram = factor(trigram, levels = rev(unique(trigram)))) %>% top_n(20)");
+                    connection.eval("graficoTrigram <- ggplot(data=TFTrigram, aes(trigram, tf_idf, fill = id)) + geom_col() + labs(x = NULL, y = \"tf-idf\") + coord_flip()");
+                    connection.eval("print(graficoTrigram + scale_fill_discrete(name = \"Artigos\"))");
+                    connection.eval("dev.off()");
+                    java.nio.file.Path arquivoTrigram = Paths.get(imagemTrigram);
+                    byte[] bytesTrigram = Files.readAllBytes(arquivoTrigram);
+                    byte[] encodeBase64Trigram = Base64.getEncoder().encode(bytesTrigram);
+                    String base64EncodedTrigram = new String(encodeBase64Trigram, "UTF-8");
+                    images.add(base64EncodedTrigram);
+                    
+                    return images;
             } catch (RserveException e) {
                 e.printStackTrace();
             }finally{

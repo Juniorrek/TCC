@@ -197,10 +197,23 @@
                                                 </li>
                                             </c:forEach>
                                             <li>
-                                                <div class="collapsible-header article-header"><i class="material-icons right more">expand_more</i>Termos relevantes</div>  
-                                                    <div class="collapsible-body">
-                                                        <img src="data:image/jpg;base64,${tfidf}" width="100%"/>
+                                                <div class="collapsible-header article-header"><i class="material-icons right more">expand_more</i>Termos Relevantes</div>  
+                                                <div class="collapsible-body">
+                                                    <ul class="tabs tabs-fixed-width">
+                                                        <li class="tab col s3"><a href="#word${status.count}">Palavra</a></li>
+                                                        <li class="tab col s3"><a href="#bigram${status.count}">Bigrama</a></li>
+                                                        <li class="tab col s3"><a href="#trigram${status.count}">Trigrama</a></li>
+                                                    </ul>
+                                                    <div id="word${status.count}">
+                                                         <img src="data:image/jpg;base64,${tfidfWord}" width="100%"/>                     
                                                     </div>
+                                                    <div id="bigram${status.count}">
+                                                        <img src="data:image/jpg;base64,${tfidfBigram}" width="100%"/>
+                                                    </div>
+                                                    <div id="trigram${status.count}">
+                                                        <img src="data:image/jpg;base64,${tfidfTrigram}" width="100%"/>
+                                                    </div>                       
+                                                </div>
                                             </li>
                                         </ul>
                                     </div>

@@ -1,4 +1,5 @@
-articlesAnalysis = function (txt_folder) {
+
+articlesAnalysis = function (txt_folder, synonyms = NULL) {
   library(dplyr)
   library(purrr)
   library(readr)
@@ -24,9 +25,10 @@ articlesAnalysis = function (txt_folder) {
   
   
   articles$abstract <- abstracts
-  articles$objective <- findSegment(abstracts, "objective")
-  articles$methodology <- findSegment(abstracts, "methodology")
-  articles$conclusion <- findSegment(abstracts, "conclusion")
+  articles$objective <- findSegment(abstracts, "objective", synonyms$objective)
+  articles$methodology <- findSegment(abstracts, "methodology", synonyms$methodology)
+  articles$conclusion <- findSegment(abstracts, "conclusion", synonyms$conclusion)
+
 
   return (articles)
 }

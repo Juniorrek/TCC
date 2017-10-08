@@ -122,7 +122,7 @@ public class ProjetoController {
         String path = Singleton.UPLOAD_DIR + "/" + logado.getEmail() + "/" + projeto.getId() + "/";
         Call c = new Call();
         List<Artigo> segmentos_artigos = null;
-        String tfidf = "";
+        ArrayList<String> tfidf = new ArrayList<String>();
         try {
             segmentos_artigos = c.articlesAnalysis(path);
             tfidf = c.graphicTfIdf(path);
@@ -130,8 +130,10 @@ public class ProjetoController {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }
         model.addAttribute("segmentos_artigos", segmentos_artigos);
-        model.addAttribute("tfidf", tfidf);
-        
+        model.addAttribute("tfidfWord", tfidf.get(0));
+        model.addAttribute("tfidfBigram", tfidf.get(1));
+        model.addAttribute("tfidfTrigram", tfidf.get(2));
+                
         return "projeto";
     }
     
