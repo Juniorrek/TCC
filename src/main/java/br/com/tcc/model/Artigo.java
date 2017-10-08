@@ -1,12 +1,21 @@
 package br.com.tcc.model;
 
-public class Artigo implements java.io.Serializable{
-    private String objetivo, metodologia, resultado, resumo, nome, imgWord, imgBigram, imgTrigram, wordcloud;
+public class Artigo implements java.io.Serializable {
+    private int id;
+    private String objetivo, metodologia, resultado, resumo, nome, imgWord, imgBigram, imgTrigram, wordcloud, filepath;
 
    
     public Artigo() {
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     public String getWordcloud() {
         return wordcloud;
     }
@@ -78,6 +87,12 @@ public class Artigo implements java.io.Serializable{
     public void setNome(String nome) {
         this.nome = nome;
     }
-        
-        
+
+    public String getFilepath() {
+        return filepath;
+    }
+
+    public void setFilepath(String filepath) {
+        this.filepath = filepath;
+    }
 }

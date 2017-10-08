@@ -6,6 +6,7 @@ public class Projeto implements java.io.Serializable {
     private Integer id;
     private String nome;
     private String descricao;
+    private List<Artigo> artigos;
     private List<String> sinonimosObjetivo;
     private List<String> sinonimosMetodologia;
     private List<String> sinonimosResultado;
@@ -34,6 +35,14 @@ public class Projeto implements java.io.Serializable {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public List<Artigo> getArtigos() {
+        return artigos;
+    }
+
+    public void setArtigos(List<Artigo> artigos) {
+        this.artigos = artigos;
     }
 
     public List<String> getSinonimosObjetivo() {

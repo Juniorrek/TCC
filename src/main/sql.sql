@@ -35,3 +35,6 @@ CREATE TABLE Rel_Sin_Pro (
 
     FOREIGN KEY (pro_id) REFERENCES Projeto (id)
 );
+
+ALTER TABLE Rel_Arq_Pro ADD id INT AUTO_INCREMENT PRIMARY KEY;
+ALTER TABLE Rel_Arq_Pro ADD arq_nome VARCHAR(250);

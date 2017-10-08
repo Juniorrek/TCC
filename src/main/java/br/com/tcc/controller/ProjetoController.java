@@ -118,15 +118,6 @@ public class ProjetoController {
         model.addAttribute("sinonimosResultadoJson", g.toJson(projeto.getSinonimosResultado()));
         
         Usuario logado = (Usuario) session.getAttribute("logado");
-        String folderPath = Singleton.UPLOAD_DIR + "/"
-                                + logado.getEmail() + "/"
-                                + projeto.getId().toString();
-        //List<String> arq_nomes = ArquivoDao.carregar(folderPath);
-        //model.addAttribute("arq_nomes", arq_nomes);
-        File folder = new File(folderPath);
-        File[] listOfFiles = folder.listFiles();
-        
-        model.addAttribute("artigos", listOfFiles);
         
         String path = Singleton.UPLOAD_DIR + "/" + logado.getEmail() + "/" + projeto.getId() + "/";
         Call c = new Call();
@@ -163,12 +154,13 @@ public class ProjetoController {
     }
     
     @RequestMapping("/projetos/artigos/deletar")
-    public String projetosArtigosDeletar(@RequestParam("id") int id, @RequestParam("caminho") String caminho, RedirectAttributes ra) {
+    public String projetosArtigosDeletar(@RequestParam("id") Integer id, @RequestParam("projeto_id") Integer projeto_id, RedirectAttributes ra) {
         Projeto projeto = new Projeto();
-        projeto.setId(id);
+        projeto.setId(projeto_id);
         
         try {
-            ArquivoDao.deletar(projeto, caminho);
+            String filePath = ArquivoDao.carregarFilePath(id);
+            ArquivoDao.deletar(filePath, id);
         } catch (SQLException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -182,13 +174,10 @@ public class ProjetoController {
         return "redirect:/projetos/vizualizar";
     }
     
-    @RequestMapping("/projetos/artigos/vizualizar")    
-    public void projetosArtigosVizualizar(@RequestParam("artigo") String nome, @RequestParam("projeto") Integer id, HttpServletResponse response) {
+    @RequestMapping("/projetos/artigos/visualizar")    
+    public void projetosArtigosVisualizar(@RequestParam("id") Integer id, HttpServletResponse response) {
         try {
-            Projeto projeto = ProjetoDao.carregar(id);
-            Usuario usuario = UsuarioDao.carregar(projeto);
-            
-            String filePath = Singleton.UPLOAD_DIR + "/" + usuario.getEmail() + "/" + projeto.getId() + "/" + nome;
+            String filePath = ArquivoDao.carregarFilePath(id);
             
             try {
                 File file = new File(filePath);

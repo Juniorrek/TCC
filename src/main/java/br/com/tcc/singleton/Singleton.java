@@ -12,14 +12,14 @@ public final class Singleton {
     *  UPLOADS  *
     \***********/
     //public static final String UPLOAD_DIR = "C:/Users/Orestes/Desktop/TCC/SobAnalise";
-    public static final String UPLOAD_DIR = "C:/Users/bruno/Documents/up";
+    public static final String UPLOAD_DIR = "C:/Sistema_TCC/arquivos/artigos";
     
     /***********\
     *  DATABASE *
     \***********/
     public static final String DB_URL = "jdbc:mysql://localhost:3306/TCC?useSSL=false";
     public static final String DB_USER = "root";
-    public static final String DB_PASSWORD = "";
+    public static final String DB_PASSWORD = "admin";
     
     /****************************************************************************\
     * SCRIPTS R *

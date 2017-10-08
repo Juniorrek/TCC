@@ -22,10 +22,11 @@ public class ArquivoDao {
         PreparedStatement stmt = null;
         
         try {
-            stmt = connection.prepareStatement("INSERT INTO Rel_Arq_Pro (pro_id, arq_caminho) "
-                                                + "VALUES (?, ?)");
+            stmt = connection.prepareStatement("INSERT INTO Rel_Arq_Pro (pro_id, arq_caminho, arq_nome) "
+                                                + "VALUES (?, ?, ?)");
             stmt.setInt(1, projeto.getId());
             stmt.setString(2, filePath);
+            stmt.setString(3, file.getOriginalFilename());
             
             stmt.executeUpdate();
             
@@ -45,15 +46,15 @@ public class ArquivoDao {
         }
     }
     
-    public static void deletar(Projeto projeto, String filePath) throws SQLException, IOException {
+    public static void deletar(String filePath, Integer id) throws SQLException, IOException {
         Connection connection = new ConnectionFactory().getConnection();
         PreparedStatement stmt = null;
+        ResultSet rs = null;
         
         try {
             stmt = connection.prepareStatement("DELETE FROM Rel_Arq_Pro "
-                                                + "WHERE pro_id = ? AND arq_caminho = ?");
-            stmt.setInt(1, projeto.getId());
-            stmt.setString(2, filePath);
+                                                + "WHERE id = ?");
+            stmt.setInt(1, id);
             
             int retorno = stmt.executeUpdate();
             if (retorno == 1) {
@@ -64,6 +65,9 @@ public class ArquivoDao {
             Logger.getLogger(ArquivoDao.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
         } finally {
+            if (rs != null)
+                try { rs.close(); }
+                catch (SQLException ex) { Logger.getLogger(ArquivoDao.class.getName()).log(Level.SEVERE, null, ex); }
             if (stmt != null)
                 try { stmt.close(); }
                 catch (SQLException ex) { Logger.getLogger(ArquivoDao.class.getName()).log(Level.SEVERE, null, ex); }
@@ -84,5 +88,36 @@ public class ArquivoDao {
         }
         
         return arq_nomes;
+    }
+    
+    public static String carregarFilePath(Integer id) throws SQLException {
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            stmt = connection.prepareStatement("SELECT arq_caminho FROM Rel_Arq_Pro WHERE id = ?");
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getString("arq_caminho");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ArquivoDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (rs != null)
+                try { rs.close(); }
+                catch (SQLException ex) { Logger.getLogger(ArquivoDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(ArquivoDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(ArquivoDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
+        
+        return null;
     }
 }

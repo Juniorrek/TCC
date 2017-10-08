@@ -1,6 +1,7 @@
 package br.com.tcc.dao;
 
 import br.com.tcc.factory.ConnectionFactory;
+import br.com.tcc.model.Artigo;
 import br.com.tcc.model.Projeto;
 import br.com.tcc.model.Usuario;
 import java.sql.Connection;
@@ -41,6 +42,7 @@ public class ProjetoDao {
     public static List<Projeto> carregar(Usuario usuario) throws SQLException {
         Connection connection = new ConnectionFactory().getConnection();
         PreparedStatement stmt = null;
+        ResultSet rs = null;
         List<Projeto> projetos = new ArrayList<Projeto>();
         
         try {
@@ -48,7 +50,7 @@ public class ProjetoDao {
                                                 + "WHERE email = ?");
             stmt.setString(1, usuario.getEmail());
             
-            ResultSet rs = stmt.executeQuery();
+            rs = stmt.executeQuery();
             
             while (rs.next()) {
                 Projeto projeto = new Projeto();
@@ -62,6 +64,9 @@ public class ProjetoDao {
             Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
         } finally {
+            if (rs != null)
+                try { rs.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
             if (stmt != null)
                 try { stmt.close(); }
                 catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
@@ -76,6 +81,7 @@ public class ProjetoDao {
     public static Projeto carregar(Integer id) throws SQLException {
         Connection connection = new ConnectionFactory().getConnection();
         PreparedStatement stmt = null;
+        ResultSet rs = null;
         List<String> sinonimosObjetivo = new ArrayList<String>();
         List<String> sinonimosMetodologia = new ArrayList<String>();
         List<String> sinonimosResultado = new ArrayList<String>();
@@ -85,13 +91,26 @@ public class ProjetoDao {
                                                 + "WHERE id = ?");
             stmt.setInt(1, id);
             
-            ResultSet rs = stmt.executeQuery();
+            rs = stmt.executeQuery();
             
             if (rs.next()) {
                 Projeto projeto = new Projeto();
                 projeto.setId(rs.getInt("id"));
                 projeto.setNome(rs.getString("nome"));
                 projeto.setDescricao(rs.getString("descricao"));
+                
+                //ARTIGOS
+                stmt = connection.prepareStatement("SELECT * FROM Rel_Arq_Pro WHERE pro_id = ?");
+                stmt.setInt(1, projeto.getId());
+                rs = stmt.executeQuery();
+                List<Artigo> artigos = new ArrayList<Artigo>();
+                while (rs.next()) {
+                    Artigo artigo = new Artigo();
+                    artigo.setId(rs.getInt("id"));
+                    artigo.setNome(rs.getString("arq_nome"));
+                    artigos.add(artigo);
+                }
+                projeto.setArtigos(artigos);
                 
                 //SEGMENTOS
                 stmt = connection.prepareStatement("SELECT * FROM Rel_Sin_Pro WHERE pro_id = ? AND segmento = ?");
@@ -128,6 +147,9 @@ public class ProjetoDao {
             Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
         } finally {
+            if (rs != null)
+                try { rs.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
             if (stmt != null)
                 try { stmt.close(); }
                 catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }

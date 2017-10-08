@@ -111,14 +111,14 @@
                                                            </tr>
                                                        </thead>
                                                        <tbody id="tableBody">
-                                                           <c:forEach items="${artigos}" var="artigo">
+                                                           <c:forEach items="${projeto.artigos}" var="artigo">
                                                                <tr>
                                                                    <td hidden></td>
-                                                                   <td>${artigo.getName().replace("_", " ").replace(".pdf", "")}</td>
+                                                                   <td>${artigo.nome.replace(".pdf", "")}</td>
                                                                    <td>
-                                                                       <c:set var="absolutePath" value='${artigo.path.replace("\\", "/")}' />
-                                                                       <button class="btn-floating wavesartigo-effect waves-light blue" onclick="vizualizarArtigo('${artigo.getName()}')"><i class="material-icons">visibility</i></button>
-                                                                       <button class="btn-floating waves-effect waves-light red" onclick="deletarArtigo('${absolutePath}')"><i class="material-icons">delete</i></button>
+                                                                       <button class="btn-floating wavesartigo-effect waves-light blue" onclick="visualizarArtigo(${artigo.id})"><i class="material-icons">visibility</i></button>
+                                                                       <button class="btn-floating waves-effect waves-light red" onclick="deletarArtigo('${artigo.id}')"><i class="material-icons">delete</i></button>
+                                                                       <button class="btn-floating waves-effect waves-light cyan"><i class="material-icons">people</i></button>
                                                                    </td>
                                                                </tr>
                                                            </c:forEach>
@@ -313,8 +313,8 @@
             <div id="modalDeletarArtigo" class="modal">
                 <div class="modal-content">
                     <h4>Deletar artigo</h4>
-                    <input type="hidden" name="id" value="${projeto.id}" />
-                    <input type="hidden" name="caminho" />
+                    <input type="hidden" name="id" />
+                    <input type="hidden" name="projeto_id" value="${projeto.id}" />
                     <p>Tem certeza que deseja deletar este artigo?</p>
                 </div>
                 <div class="modal-footer">
@@ -511,17 +511,17 @@
             function reload() {
                 location = window.location.href;
             }
-            function deletarArtigo(caminho) {
-                $('#modalDeletarArtigo input[name="caminho"]').val(caminho);
-                $('#modalDeletarArtigo').modal('open');
-                $('#tableArtigos').load(document.URL +  ' #tableArtigos');
+            
+            function visualizarArtigo(id) {
+                var contextPath = '${pageContext.request.contextPath}';
+                $('#modalVizualizarArtigo iframe').attr('src', contextPath + "/projetos/artigos/visualizar?id=" + id); 
+                $('#modalVizualizarArtigo').modal('open');
             }
             
-            function vizualizarArtigo(artigo) {
-                var contextPath = '${pageContext.request.contextPath}';
-                var projeto_id = ${projeto.id}
-                $('#modalVizualizarArtigo iframe').attr('src', contextPath + "/projetos/artigos/vizualizar?projeto=" + projeto_id + "&artigo=" + artigo); 
-                $('#modalVizualizarArtigo').modal('open');
+            function deletarArtigo(id) {
+                $('#modalDeletarArtigo input[name="id"]').val(id);
+                $('#modalDeletarArtigo').modal('open');
+                $('#tableArtigos').load(document.URL +  ' #tableArtigos');
             }
             
             function nuvem(words, num){ 
