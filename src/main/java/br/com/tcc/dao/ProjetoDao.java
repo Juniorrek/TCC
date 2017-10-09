@@ -8,24 +8,61 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ProjetoDao {
+    public static String[] defaultSinonimosObjetivo = new String[]{"ambition", "aspiration", "intent", "purpose", "propose", "mission", "target", "desing", "mission", "object", "end in view", "ground zero", "wish", "goal", " aim ", " mind ", "meaning", " mark ", " gaol ", "final ", "reach"};
+    public static String[] defaultSinonimosMetodologia = new String[]{" mode ", "procedure", "technique", "approach", "channels", "design", "manner", " plan ", "practice", "process", "program", " way ", "method", "conduct", "measure", "operation", "proceeding", "scheme", "strategy", "step", " form ", "arrangement"};
+    public static String[] defaultSinonimosResultado = new String[]{"closure", "complet", "consequen", "denouement", "development", "ending", "result", "culmination", "finaliz", "fulfillment", "windup", "outcome", "conclu", "reaction", "achievement", "attainment", "realization", "succes"};
+    
     public static void adicionar(Projeto projeto, Usuario usuario) throws SQLException {
         Connection connection = new ConnectionFactory().getConnection();
         PreparedStatement stmt = null;
         
         try {
             stmt = connection.prepareStatement("INSERT INTO Projeto (nome, descricao, email) "
-                                                + "VALUES (?, ?, ?)");
+                                                + "VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, projeto.getNome());
             stmt.setString(2, projeto.getDescricao());
             stmt.setString(3, usuario.getEmail());
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating user failed, no rows affected.");
+            }
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    projeto.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
             
-            stmt.executeUpdate();
+            //SINONIMOS DEFAULT
+            stmt = connection.prepareStatement("INSERT INTO Rel_Sin_Pro (pro_id, sinonimo, segmento) "
+                                                + "VALUES (?, ?, ?)");
+            for (String s : defaultSinonimosObjetivo) {
+                stmt.setInt(1, projeto.getId());
+                stmt.setString(2, s);
+                stmt.setInt(3, 1);
+                stmt.addBatch();
+            }
+            for (String s : defaultSinonimosMetodologia) {
+                stmt.setInt(1, projeto.getId());
+                stmt.setString(2, s);
+                stmt.setInt(3, 2);
+                stmt.addBatch();
+            }
+            for (String s : defaultSinonimosResultado) {
+                stmt.setInt(1, projeto.getId());
+                stmt.setString(2, s);
+                stmt.setInt(3, 3);
+                stmt.addBatch();
+            }
+            stmt.executeBatch();
         } catch (SQLException ex) {
             Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
@@ -225,10 +262,15 @@ public class ProjetoDao {
         PreparedStatement stmt = null;
         
         try {
+            
+            stmt = connection.prepareStatement("DELETE FROM Rel_Sin_Pro "
+                                                + "WHERE pro_id = ?");
+            stmt.setInt(1, projeto.getId());
+            stmt.executeUpdate();
+            
             stmt = connection.prepareStatement("DELETE FROM Projeto "
                                                 + "WHERE id = ?");
             stmt.setInt(1, projeto.getId());
-            
             stmt.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex);

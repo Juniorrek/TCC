@@ -116,7 +116,6 @@ public class ProjetoController {
         model.addAttribute("sinonimosObjetivoJson", g.toJson(projeto.getSinonimosObjetivo()));
         model.addAttribute("sinonimosMetodologiaJson", g.toJson(projeto.getSinonimosMetodologia()));
         model.addAttribute("sinonimosResultadoJson", g.toJson(projeto.getSinonimosResultado()));
-        
         Usuario logado = (Usuario) session.getAttribute("logado");
         
         String path = Singleton.UPLOAD_DIR + "/" + logado.getEmail() + "/" + projeto.getId() + "/";
@@ -124,15 +123,17 @@ public class ProjetoController {
         List<Artigo> segmentos_artigos = null;
         ArrayList<String> tfidf = new ArrayList<String>();
         try {
-            segmentos_artigos = c.articlesAnalysis(path);
+            segmentos_artigos = c.articlesAnalysis(path, projeto);
             tfidf = c.graphicTfIdf(path);
         } catch (REXPMismatchException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }
         model.addAttribute("segmentos_artigos", segmentos_artigos);
-        model.addAttribute("tfidfWord", tfidf.get(0));
-        model.addAttribute("tfidfBigram", tfidf.get(1));
-        model.addAttribute("tfidfTrigram", tfidf.get(2));
+        if (tfidf != null) {
+            model.addAttribute("tfidfWord", tfidf.get(0));
+            model.addAttribute("tfidfBigram", tfidf.get(1));
+            model.addAttribute("tfidfTrigram", tfidf.get(2));
+        }
                 
         return "projeto";
     }

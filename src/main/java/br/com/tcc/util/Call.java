@@ -17,7 +17,26 @@ import org.rosuda.REngine.Rserve.RserveException;
 public class Call {
         private final String pdftotext = Singleton.PDF_TO_TEXT_PATH; //caminho pro pdftotext
         
-        public List<Artigo> articlesAnalysis(String pathorigem) throws REXPMismatchException, REngineException, IOException {
+        public List<Artigo> articlesAnalysis(String pathorigem, Projeto projeto) throws REXPMismatchException, REngineException, IOException {
+            //SINONIMOS
+            String sinonimosObjetivo = "";
+            for (String s : projeto.getSinonimosObjetivo()) {
+                sinonimosObjetivo += "\"" + s + "\",";
+            }
+            if (!"".equals(sinonimosObjetivo)) sinonimosObjetivo = sinonimosObjetivo.substring(0, sinonimosObjetivo.length() - 1);
+            
+            String sinonimosMetodologia = "";
+            for (String s : projeto.getSinonimosMetodologia()) {
+                sinonimosMetodologia += "\"" + s + "\",";
+            }
+            if (!"".equals(sinonimosMetodologia)) sinonimosMetodologia = sinonimosMetodologia.substring(0, sinonimosMetodologia.length() - 1);
+            
+            String sinonimosResultado = "";
+            for (String s : projeto.getSinonimosResultado()) {
+                sinonimosResultado += "\"" + s + "\",";
+            }
+            if (!"".equals(sinonimosResultado)) sinonimosResultado = sinonimosResultado.substring(0, sinonimosResultado.length() - 1);
+            
             RConnection connection = null;
             String path = pathorigem + "temp";
             File f = new File(path);
@@ -46,7 +65,11 @@ public class Call {
                     connection.eval("file.remove(junk)");
                     connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+abstract.+\", full.names = TRUE)");
                     connection.eval("file.remove(junk)");
-                    connection.eval("meanVal <- articlesAnalysis(\"" + path + "\")");
+                    connection.eval("synonyms <- list()");
+                    connection.eval("synonyms$objective <- c(" + sinonimosObjetivo + ")");
+                    connection.eval("synonyms$methodology <- c(" + sinonimosMetodologia + ")");
+                    connection.eval("synonyms$conclusion <- c(" + sinonimosResultado + ")");
+                    connection.eval("meanVal <- articlesAnalysis(\"" + path + "\", synonyms)");
                     connection.eval("TFWord <- find_tf_idf(meanVal)");
                     connection.eval("TFBigram <- find_tf_idf_bigram(meanVal)");
                     connection.eval("TFTrigram <- find_tf_idf_trigram(meanVal)");

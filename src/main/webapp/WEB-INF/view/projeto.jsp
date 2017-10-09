@@ -355,6 +355,7 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <a href="#!" class="waves-effect waves-light btn-flat" onclick="sinonimosPadroes(1)">Padrões</a>
                 <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
             </div>
         </div>
@@ -367,6 +368,7 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <a href="#!" class="waves-effect waves-light btn-flat" onclick="sinonimosPadroes(2)">Padrões</a>
                 <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
             </div>
         </div>
@@ -379,6 +381,7 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <a href="#!" class="waves-effect waves-light btn-flat" onclick="sinonimosPadroes(3)">Padrões</a>
                 <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
             </div>
         </div>
@@ -551,6 +554,38 @@
                 $('#analise').html(nofilter);
                 $('ul.tabs').tabs();
                 $('.collapsible').collapsible();
+            }
+            
+            function sinonimosPadroes(segmento) {
+                var defaultSinonimosObjetivo = ["ambition", "aspiration", "intent", "purpose", "propose", "mission", "target", "desing", "object", "end in view", "ground zero", "wish", "goal", " aim ", " mind ", "meaning", " mark ", " gaol ", "final ", "reach"];
+                var defaultSinonimosMetodologia = [" mode ", "procedure", "technique", "approach", "channels", "design", "manner", " plan ", "practice", "process", "program", " way ", "method", "conduct", "measure", "operation", "proceeding", "scheme", "strategy", "step", " form ", "arrangement"];
+                var defaultSinonimosResultado = ["closure", "complet", "consequen", "denouement", "development", "ending", "result", "culmination", "finaliz", "fulfillment", "windup", "outcome", "conclu", "reaction", "achievement", "attainment", "realization", "succes"];
+
+                if (segmento === 1) {
+                    var data = new Object({data:[]});
+                    defaultSinonimosObjetivo.forEach(function (v, k) {
+                        data.data.push({
+                            tag: v
+                        });
+                    });
+                    $('.chips.sinonimosObjetivo').material_chip(data);
+                } else if (segmento === 2) {
+                    var data = new Object({data:[]});
+                    defaultSinonimosMetodologia.forEach(function (v, k) {
+                        data.data.push({
+                            tag: v
+                        });
+                    });
+                    $('.chips.sinonimosMetodologia').material_chip(data);
+                } else if (segmento === 3 ) {
+                    var data = new Object({data:[]});
+                    defaultSinonimosResultado.forEach(function (v, k) {
+                        data.data.push({
+                            tag: v
+                        });
+                    });
+                    $('.chips.sinonimosResultado').material_chip(data);
+                }
             }
             
             $('#btnOrdenar').click(function () {
