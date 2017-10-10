@@ -94,9 +94,8 @@
                                         </div>
                                     <%--</c:forEach>--%>
                                 </div>-->
-
-                                <button data-target="modalAdicionarArtigo" class="btn-floating halfway-fab waves-effect waves-light green center-btn modal-trigger orange-button-small"><i class="material-icons">add</i></button>                                
-                                <div class="row">
+                                <button data-target="modalAdicionarArtigo" class="btn-floating halfway-fab waves-effect waves-light green center-btn modal-trigger orange-button-small"><i class="material-icons">add</i></button>
+                                 <div class="row">
                                     <div class="col s12">
                                         <div class="card white">
                                             <div class="card-content">
@@ -118,7 +117,7 @@
                                                                 <td>
                                                                     <button class="btn-floating wavesartigo-effect waves-light blue" onclick="visualizarArtigo(${artigo.id})"><i class="material-icons">visibility</i></button>
                                                                     <button class="btn-floating waves-effect waves-light red" onclick="deletarArtigo('${artigo.id}')"><i class="material-icons">delete</i></button>
-                                                                    <button class="btn-floating waves-effect waves-light cyan"><i class="material-icons">people</i></button>
+                                                                    <button class="btn-floating waves-effect waves-light cyan" onclick="usuariosArtigo('${artigo.id}')"><i class="material-icons">people</i></button>
                                                                 </td>
                                                             </tr>
                                                         </c:forEach>
@@ -296,7 +295,7 @@
             </div>
         <!--</div>-->
             
-        <div id="loadando" class="loadando" style="display: none;">
+        <div id="loadando" class="loadando" style="display: none; z-index: 9999;">
             <div class="preloader-wrapper big active" style="position: absolute; left: 50%; top: 50%;">
                 <div class="spinner-layer spinner-blue-only">
                     <div class="circle-clipper left">
