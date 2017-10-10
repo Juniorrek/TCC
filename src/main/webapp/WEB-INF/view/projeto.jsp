@@ -94,41 +94,40 @@
                                         </div>
                                     <%--</c:forEach>--%>
                                 </div>-->
-                                <button data-target="modalAdicionarArtigo" class="btn-floating halfway-fab waves-effect waves-light green center-btn modal-trigger orange-button-small"><i class="material-icons">add</i></button>
-                                 <div class="container">
-                                   <div class="row">
-                                       <div class="col s12">
-                                           <div class="card white">
-                                               <div class="card-content">
-                                                   <span class="card-title">Artigos</span>
-                                                   <table id="tableArtigos" class="striped centered">
-                                                       <a data-target="modalAdicionarArtigo" class="waves-effect waves-light btn modal-trigger orange-button"><i class="material-icons left">add</i>adicionar artigos</a>
-                                                       <thead>
-                                                           <tr>
-                                                               <th hidden>Id</th>
-                                                               <th>Nome</th>
-                                                               <th>Ação</th>
-                                                           </tr>
-                                                       </thead>
-                                                       <tbody id="tableBody">
-                                                           <c:forEach items="${projeto.artigos}" var="artigo">
-                                                               <tr>
-                                                                   <td hidden></td>
-                                                                   <td>${artigo.nome.replace(".pdf", "")}</td>
-                                                                   <td>
-                                                                       <button class="btn-floating wavesartigo-effect waves-light blue" onclick="visualizarArtigo(${artigo.id})"><i class="material-icons">visibility</i></button>
-                                                                       <button class="btn-floating waves-effect waves-light red" onclick="deletarArtigo('${artigo.id}')"><i class="material-icons">delete</i></button>
-                                                                       <button class="btn-floating waves-effect waves-light cyan" onclick="usuariosArtigo('${artigo.id}')"><i class="material-icons">people</i></button>
-                                                                   </td>
-                                                               </tr>
-                                                           </c:forEach>
-                                                       </tbody>
-                                                   </table>
-                                               </div>
-                                           </div>
-                                       </div>
-                                   </div>
-                                 </div>
+
+                                <button data-target="modalAdicionarArtigo" class="btn-floating halfway-fab waves-effect waves-light green center-btn modal-trigger orange-button-small"><i class="material-icons">add</i></button>                                
+                                <div class="row">
+                                    <div class="col s12">
+                                        <div class="card white">
+                                            <div class="card-content">
+                                                <span class="card-title">Artigos</span>
+                                                <table id="tableArtigos" class="striped centered">
+                                                    <a data-target="modalAdicionarArtigo" class="waves-effect waves-light btn modal-trigger orange-button"><i class="material-icons left">add</i>adicionar artigos</a>
+                                                    <thead>
+                                                        <tr>
+                                                            <th hidden>Id</th>
+                                                            <th>Nome</th>
+                                                            <th>Ação</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tableBody">
+                                                        <c:forEach items="${projeto.artigos}" var="artigo">
+                                                            <tr>
+                                                                <td hidden></td>
+                                                                <td>${artigo.nome.replace(".pdf", "")}</td>
+                                                                <td>
+                                                                    <button class="btn-floating wavesartigo-effect waves-light blue" onclick="visualizarArtigo(${artigo.id})"><i class="material-icons">visibility</i></button>
+                                                                    <button class="btn-floating waves-effect waves-light red" onclick="deletarArtigo('${artigo.id}')"><i class="material-icons">delete</i></button>
+                                                                    <button class="btn-floating waves-effect waves-light cyan"><i class="material-icons">people</i></button>
+                                                                </td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div id="analise">
                                 <div class='row'>
