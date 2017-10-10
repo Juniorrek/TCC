@@ -118,7 +118,7 @@
                                                                    <td>
                                                                        <button class="btn-floating wavesartigo-effect waves-light blue" onclick="visualizarArtigo(${artigo.id})"><i class="material-icons">visibility</i></button>
                                                                        <button class="btn-floating waves-effect waves-light red" onclick="deletarArtigo('${artigo.id}')"><i class="material-icons">delete</i></button>
-                                                                       <button class="btn-floating waves-effect waves-light cyan"><i class="material-icons">people</i></button>
+                                                                       <button class="btn-floating waves-effect waves-light cyan" onclick="usuariosArtigo('${artigo.id}')"><i class="material-icons">people</i></button>
                                                                    </td>
                                                                </tr>
                                                            </c:forEach>
@@ -385,6 +385,53 @@
                 <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
             </div>
         </div>
+        
+        <div id="modalUsuariosArtigo" class="modal">
+            <div class="modal-content">
+                <h4>Usuários</h4>
+                <div class="input-field">
+                    <div class="row" style="text-align: center;">
+                        <input id="emailUsuario" type="text" />
+                        <input id="idArtigo" type="hidden" />
+                        <button class="btn-floating waves-effect waves-light green" onclick="showAddUserArticle()"><i class="material-icons">add</i></button>
+                    </div>
+                    <br/>
+                    <table id="tableUsuariosArtigo" class="striped centered" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>Nome</th>
+                                <th>Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
+            </div>
+        </div>
+        
+        <div id="modalObservacoes" class="modal">
+            <div class="modal-content">
+                <h4>Observações</h4>
+                <div class="input-field">
+                    <input type="hidden" id="idArtigoObservacoes" />
+                    <input type="hidden" id="emailUsuarioObservacoes" />
+                    <br/>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <textarea id="observacoes" class="materialize-textarea" data-length="120"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
+            </div>
+        </div>
 
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/jquery/dist/jquery.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/datatables.net/js/jquery.dataTables.js"></script>
@@ -468,6 +515,21 @@
                     ]
                 });
                 
+                $('#tableUsuariosArtigo').DataTable({
+                    "language": lang,
+                    "dom": 'Brtip',
+                    "columnDefs": [
+                        { 
+                            "width": "1%",
+                            "targets": 2,
+                            "orderable": false,
+                            "searchable": false
+                        }
+                    ]
+                });
+                
+                $('textarea#observacoes').characterCounter();
+                
                 nofilter = $('#analise').html();
                 
                 $('#formEditarProjeto').submit(function (e) {
@@ -539,6 +601,78 @@
                 $('#modalDeletarArtigo').modal('open');
                 $('#tableArtigos').load(document.URL +  ' #tableArtigos');
             }
+            
+            function usuariosArtigo(id) {
+                $('#tableUsuariosArtigo').DataTable().clear().draw();
+                $.ajax({
+                    url: "${pageContext.request.contextPath}/artigos/usuarios",
+                    type:'get',
+                    dataType: 'json',
+                    data: {
+                        "art_id": id
+                    },
+                    success: function(usuarios) {
+                        usuarios.forEach(function (v, k) {
+                            $('#tableUsuariosArtigo').DataTable().row.add({
+                                "0": v.email,
+                                "1": v.nome,
+                                "2": '<button class="deleteUserArticle btn-floating waves-effect waves-light red"><i class="material-icons">delete</i></button>'
+                            }).draw();
+                        });
+                        $('#idArtigo').val(id);
+                        $('#modalUsuariosArtigo').modal('open');
+                    }
+                });
+            }
+            
+            function showAddUserArticle() {
+                /*if ($('#emailUsuario').css('display') === "none") {
+                    console.log("a");
+                    $('#emailUsuario').show();
+                }*/
+                var email = $('#emailUsuario').val();
+                var id = $('#idArtigo').val();
+                $.ajax({
+                    url: "${pageContext.request.contextPath}/artigos/usuarios/adicionar",
+                    type:'get',
+                    dataType: 'json',
+                    data: {
+                        "art_id": id,
+                        "usu_email": email
+                    },
+                    success: function(retorno) {
+                        if (retorno !== "false") {
+                            $('#tableUsuariosArtigo').DataTable().row.add({
+                                "0": retorno.email,
+                                "1": retorno.nome,
+                                "2": '<button class="deleteUserArticle btn-floating waves-effect waves-light red"><i class="material-icons">delete</i></button>'
+                            }).draw();
+                        }
+                    }
+                });
+            }
+            
+            $('#tableUsuariosArtigo tbody').on('click', '.deleteUserArticle', function () {
+                var current_row = $(this).parents('tr');
+                if (current_row.hasClass('child')) {//Check if the current row is a child row
+                    current_row = current_row.prev();//If it is, then point to the row before it (its 'parent')
+                }
+                var data = $('#tableUsuariosArtigo').DataTable().row(current_row).data();
+
+                var id = $('#idArtigo').val();
+                $.ajax({
+                    url: "${pageContext.request.contextPath}/artigos/usuarios/deletar",
+                    type:'get',
+                    dataType: 'json',
+                    data: {
+                        "art_id": id,
+                        "usu_email": data[0]
+                    },
+                    success: function(retorno) {
+                        $('#tableUsuariosArtigo').DataTable().row( current_row ).remove().draw();
+                    }
+                });
+            } );
             
             function nuvem(words, num){ 
                 var lista = words.split(" ");

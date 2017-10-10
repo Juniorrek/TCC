@@ -46,6 +46,30 @@ public class ArquivoDao {
         }
     }
     
+    public static void adicionarUsuario(String email, Integer id) throws SQLException {
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
+        
+        try {
+            stmt = connection.prepareStatement("INSERT INTO Rel_Usu_Art (usu_email, art_id) "
+                                                + "VALUES (?, ?)");
+            stmt.setString(1, email);
+            stmt.setInt(2, id);
+            
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ArquivoDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(ArquivoDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(ArquivoDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
+    }
+    
     public static void deletar(String filePath, Integer id) throws SQLException, IOException {
         Connection connection = new ConnectionFactory().getConnection();
         PreparedStatement stmt = null;
@@ -119,5 +143,63 @@ public class ArquivoDao {
         }
         
         return null;
+    }
+    
+    public static List<Usuario> carregarUsuarios(Integer id) throws SQLException {
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<Usuario> usuarios = new ArrayList<Usuario>();
+        
+        try {
+            stmt = connection.prepareStatement("SELECT usu_email FROM Rel_Usu_Art WHERE art_id = ?");
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                Usuario usuario = new Usuario();
+                usuario = UsuarioDao.carregar(rs.getString("usu_email"));
+                usuarios.add(usuario);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ArquivoDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (rs != null)
+                try { rs.close(); }
+                catch (SQLException ex) { Logger.getLogger(ArquivoDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(ArquivoDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(ArquivoDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
+        
+        return usuarios;
+    }
+    
+    public static void deletarUsuario(String email, Integer id) throws SQLException {
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
+        
+        try {
+            stmt = connection.prepareStatement("DELETE FROM Rel_Usu_Art "
+                                                + "WHERE usu_email = ? AND art_id = ?");
+            stmt.setString(1, email);
+            stmt.setInt(2, id);
+            
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ArquivoDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(ArquivoDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(ArquivoDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
     }
 }
