@@ -196,7 +196,7 @@
                                                 </li>
                                             </c:forEach>
                                             <li>
-                                                <div class="collapsible-header article-header"><i class="material-icons right more">expand_more</i>Termos Relevantes</div>  
+                                                <div class="collapsible-header article-header relevantTerms"><i class="material-icons right more">expand_more</i>Termos Relevantes</div>  
                                                 <div class="collapsible-body">
                                                     <ul class="tabs tabs-fixed-width">
                                                         <li class="tab col s3"><a href="#word${status.count}">Palavra</a></li>

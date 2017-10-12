@@ -24,7 +24,7 @@ public class Call {
                 sinonimosObjetivo += "\"" + s + "\",";
             }
             if (!"".equals(sinonimosObjetivo)) sinonimosObjetivo = sinonimosObjetivo.substring(0, sinonimosObjetivo.length() - 1);
-            
+
             String sinonimosMetodologia = "";
             for (String s : projeto.getSinonimosMetodologia()) {
                 sinonimosMetodologia += "\"" + s + "\",";
