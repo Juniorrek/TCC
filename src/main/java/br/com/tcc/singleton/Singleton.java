@@ -6,7 +6,7 @@ public final class Singleton {
     public static final String CONTEXT = ServletContextProvider.getServletContext().getRealPath("/").replace("\\", "/");
     
     //public static final String PDF_TO_TEXT_PATH = "C:/Users/Orestes/Desktop/TCC/pdftotext.exe";
-    public static final String PDF_TO_TEXT_PATH = "C:/Program Files/xpdfbin-win-3.04/bin64/pdftotext.exe";
+    public static final String PDF_TO_TEXT_PATH = "C:/Program Files/pdftotext/bin64/pdftotext.exe";
     
     /***********\
     *  UPLOADS  *

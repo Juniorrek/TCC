@@ -134,14 +134,18 @@
                                         <ul class="collapsible" data-collapsible="accordion">
                                             <c:forEach items="${segmentos_artigos}" var="artigo" varStatus="status">
                                                 <li>
-                                                    <div class="collapsible-header article-header" onclick="nuvem('${artigo.wordcloud}', '${status.count}')"><i class="material-icons right more">expand_more</i>${artigo.nome.replace("_", " ").replace(".pdf", "")}</div>
+                                                    <div class="collapsible-header article-header" 
+                                                         onclick="nuvem('${artigo.mainWords}','${status.count}')">
+                                                         <i class="material-icons right more">expand_more</i>
+                                                         ${artigo.nome.replace("_", " ").replace(".pdf", "")}
+                                                    </div>
                                                     <div class="collapsible-body">
                                                         <span>
                                                             <div class="row">
                                                                 <div class="col s12">
                                                                     <ul class="tabs tabs-fixed-width">
                                                                         <li class="tab col s3"><a class="active" href="#beginSegmentos${status.count}">Segmentos</a></li>
-                                                                        <li class="tab col s3"><a href="#beginTFs${status.count}">TF</a></li>
+                                                                        <li class="tab col s3" onclick="mainWordsChart('${artigo.mainWords}','wordChart${status.count}')"><a href="#beginTFs${status.count}">TF</a></li>
                                                                         <li class="tab col s3"><a href="#beginWORDCLOUD${status.count}">WORDCLOUD</a></li>
                                                                     </ul>
                                                                 </div>
@@ -171,19 +175,22 @@
                                                                 </div>
                                                                 <div id="beginTFs${status.count}" class="col s12">
                                                                     <ul class="tabs tabs-fixed-width">
-                                                                        <li class="tab col s3"><a href="#word${status.count}">Palavra</a></li>
-                                                                        <li class="tab col s3"><a href="#bigram${status.count}">Bigrama</a></li>
-                                                                        <li class="tab col s3"><a href="#trigram${status.count}">Trigrama</a></li>
+                                                                        <li class="tab col s3">
+                                                                            <a href="#word${status.count}">Palavra</a>
+                                                                        </li>
+                                                                        <li class="tab col s3">
+                                                                            <a href="#bigram${status.count}" onclick="mainWordsChart('${artigo.mainBigrams}','bigramChart${status.count}')">Bigrama</a>
+                                                                        </li>
+                                                                        <li class="tab col s3"><a href="#trigram${status.count}" onclick="mainWordsChart('${artigo.mainTrigrams}','trigramChart${status.count}')">Trigrama</a></li>
                                                                     </ul>
-                                                                    <div id="word${status.count}">
-                                                                        <img src="data:image/jpg;base64,${artigo.imgWord}" width="100%"/>
-                                                                        
+                                                                        <div id="word${status.count}">
+                                                                         <canvas id="wordChart${status.count}" width="400" height="400"></canvas>                                                                
                                                                     </div>
                                                                     <div id="bigram${status.count}">
-                                                                        <img src="data:image/jpg;base64,${artigo.imgBigram}" width="100%"/>
+                                                                        <canvas id="bigramChart${status.count}" width="400" height="400"></canvas>
                                                                     </div>
                                                                     <div id="trigram${status.count}">
-                                                                        <img src="data:image/jpg;base64,${artigo.imgTrigram}" width="100%"/>
+                                                                        <canvas id="trigramChart${status.count}" width="400" height="400"></canvas>
                                                                     </div>
                                                                 </div>
                                                                 <div id="beginWORDCLOUD${status.count}" class="col s12">
@@ -411,7 +418,7 @@
                 <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
             </div>
         </div>
-        
+       
         <div id="modalObservacoes" class="modal">
             <div class="modal-content">
                 <h4>Observações</h4>
@@ -430,12 +437,13 @@
                 <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
             </div>
         </div>
-
+        
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/jquery/dist/jquery.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/datatables.net/js/jquery.dataTables.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/materialize-css/dist/js/materialize.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/loading.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/wordcloud/src/wordcloud2.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/chart.js/dist/Chart.bundle.min.js"></script>
         <script type="text/javascript">
             var nofilter = "";
             $(document).ready(function(){
@@ -459,7 +467,6 @@
                 var sinonimosObjetivo = JSON.parse('${sinonimosObjetivoJson}');
                 var sinonimosMetodologia = JSON.parse('${sinonimosMetodologiaJson}');
                 var sinonimosResultado = JSON.parse('${sinonimosResultadoJson}');
-                
                 var data = new Object({data:[]});
                 sinonimosObjetivo.forEach(function (v, k) {
                     data.data.push({
@@ -672,14 +679,70 @@
                 });
             } );
             
-            function nuvem(words, num){ 
-                var lista = words.split(" ");
+            function nuvem(words, num) {
+                var lista = words.split(";");
                 var list = [["" , ""]];
                 for(i=0;i<lista.length;i+=2){       
                     list.push([lista[i], lista[i+1]]);
                 }
                 list.splice(0,1);
                 WordCloud(document.getElementById("beginCanvas" + num), { list: list } );
+            }
+            
+            function mainWordsChart(words, id) {
+                var list = words.split(";");
+                var word = new Array();
+                var count = new Array();
+                for(i = 0; i < list.length - 1; i+=2) {
+                    word.push(list[i]);
+                    count.push(parseInt(list[i+1]));
+                }
+                
+                var ctx = document.getElementById(id).getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: word,
+                        datasets: [{
+                            label: 'Contador',
+                            data: count,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)',
+                                'rgba(150, 200, 50, 0.2)',
+                                'rgba(150, 50, 250, 0.2)',
+                                'rgba(100, 150, 200, 0.2)',
+                                'rgba(50, 150, 250, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255,99,132,1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)',
+                                'rgba(150, 200, 50, 1)',
+                                'rgba(150, 50, 250, 1)',
+                                'rgba(100, 150, 200, 1)',
+                                'rgba(50, 150, 250, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero:true
+                                }
+                            }]
+                        }
+                    }
+                });
             }
             
             function limparFiltros() {
@@ -788,7 +851,7 @@
                         $('#analise').html(htmlao);
                         artigos.forEach(function(v, k) {
                             var num = k+1;
-                            var lista = (v.wordcloud).split(" ");
+                            var lista = (v.mainWords).split(" ");
                             var list = [["" , ""]];
                             for(i=0; i<lista.length; i+=2){    
                                 list.push([lista[i], lista[i+1]]);
@@ -921,7 +984,7 @@
                                 list.splice(0,1);
                                 WordCloud(document.getElementById("myCanvas" + v.numero), { list: list } );
                                 (v.artigos).forEach(function(g, h) {
-                                    var lista = (g.wordcloud).split(" ");
+                                    var lista = (g.mainWords).split(" ");
                                     var list2 = [["" , ""]];
                                     for(i=0; i<lista.length; i+=2){    
                                         list2.push([lista[i], lista[i+1]]);
@@ -939,7 +1002,7 @@
                     }
                 });
             }
-            
+                       
              var lang = {
                 "sEmptyTable": "Nenhum registro encontrado",
                 "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",

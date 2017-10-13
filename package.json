@@ -6,6 +6,7 @@
   "author": "Juniorrek <juniorrek@hotmail.com>",
   "license": "MIT",
   "dependencies": {
+    "chart.js": "^2.7.0",
     "datatables.net": "^1.10.15",
     "datatables.net-dt": "^1.10.16",
     "fine-uploader": "^5.15.0",
