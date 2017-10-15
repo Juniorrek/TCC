@@ -209,14 +209,16 @@ public class ProjetoController {
         Call call = new Call();
         Type listType = new TypeToken<ArrayList<Tag>>(){}.getType();
         List<Tag> tags = g.fromJson(keywords, listType);
-        System.out.println(tags.size());
         List<Artigo> artigos = null;
         
         try {
+            Projeto projeto = ProjetoDao.carregar(id);
             Usuario logado = (Usuario) session.getAttribute("logado");
             String path = Singleton.UPLOAD_DIR + "/" + logado.getEmail() + "/" + id + "/";
-            artigos = call.ordenar(path, segment, tags);
+            artigos = call.ordenar(path, segment, tags, projeto);
         } catch (REXPMismatchException ex) {
+            Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }
         
@@ -262,7 +264,7 @@ public class ProjetoController {
         List<Grupo> grupos = null;
         Call c = new Call();
         try {
-            grupos = c.toGroups(path, forma, quant);
+            grupos = c.toGroups(path, forma, quant, projeto);
         } catch (REXPMismatchException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }
