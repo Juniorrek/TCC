@@ -24,7 +24,7 @@ public class Call {
                 sinonimosObjetivo += "\"" + s + "\",";
             }
             if (!"".equals(sinonimosObjetivo)) sinonimosObjetivo = sinonimosObjetivo.substring(0, sinonimosObjetivo.length() - 1);
-            
+
             String sinonimosMetodologia = "";
             for (String s : projeto.getSinonimosMetodologia()) {
                 sinonimosMetodologia += "\"" + s + "\",";
@@ -69,7 +69,7 @@ public class Call {
                     connection.eval("synonyms$objective <- c(" + sinonimosObjetivo + ")");
                     connection.eval("synonyms$methodology <- c(" + sinonimosMetodologia + ")");
                     connection.eval("synonyms$conclusion <- c(" + sinonimosResultado + ")");
-                    connection.eval("meanVal <- articlesAnalysis(\"" + path + "\", synonyms)");
+                    connection.eval("meanVal <- articlesAnalysis(\"" + path + "\")");
                     connection.eval("TFWord <- find_tf_idf(meanVal)");
                     connection.eval("TFBigram <- find_tf_idf_bigram(meanVal)");
                     connection.eval("TFTrigram <- find_tf_idf_trigram(meanVal)");
@@ -78,50 +78,32 @@ public class Call {
                     for (String s : nomes) {
                         Artigo artigo = new Artigo();
                         artigo.setNome(connection.eval("meanVal[" + i + ", 2]").asList().at(0).asString());
-                        artigo.setResumo(connection.eval("meanVal[" + i + ", 3]").asList().at(0).asList().at(0).asString());
+                        artigo.setResumo(connection.eval("meanVal[" + i + ", 3]").asList().at(0).asString());
                         artigo.setObjetivo(connection.eval("meanVal[" + i + ", 4]").asList().at(0).asString());
                         artigo.setMetodologia(connection.eval("meanVal[" + i + ", 5]").asList().at(0).asString());
                         artigo.setResultado(connection.eval("meanVal[" + i + ", 6]").asList().at(0).asString());
                         
-                        String imagemWord = path + "/" + s.substring(0,s.length()-4) + ".png";
-                        connection.eval("png(\"" + imagemWord + "\")");
-                        connection.eval("rankWord <- TFWord[which(TFWord$id=='" + artigo.getNome() + "'),][1:10,] %>% mutate(word = reorder(word, n))");
-                        connection.eval("print(ggplot(data=rankWord, aes(word, n)) + geom_col() + xlab(NULL) + coord_flip())");
-                        connection.eval("dev.off()");
-                        java.nio.file.Path arquivo = Paths.get(imagemWord);
-                        byte[] bytes = Files.readAllBytes(arquivo);
-                        byte[] encodeBase64 = Base64.getEncoder().encode(bytes);
-                        String base64Encoded = new String(encodeBase64, "UTF-8");
-                        artigo.setImgWord(base64Encoded);
+                        connection.eval("rankWord <- TFWord[which(TFWord$id=='" + artigo.getNome() + "'),][1:10,] %>% arrange(desc(n))");
+                        connection.eval("rankBigram <- TFBigram[which(TFBigram$id=='" + artigo.getNome() + "'),][1:10,] %>% arrange(desc(n))");
+                        connection.eval("rankTrigram <- TFTrigram[which(TFTrigram$id=='" + artigo.getNome() + "'),][1:10,] %>% arrange(desc(n))");
                         
-                        String imagemBigram = path + "/" + s.substring(0,s.length()-4) + "Bigram.png";
-                        connection.eval("png(\"" + imagemBigram + "\")");
-                        connection.eval("rankBigram <- TFBigram[which(TFBigram$id=='" + artigo.getNome() + "'),][1:10,] %>% mutate(bigram = reorder(bigram, n))");
-                        connection.eval("print(ggplot(data=rankBigram, aes(bigram, n)) + geom_col() + xlab(NULL) + coord_flip())");
-                        connection.eval("dev.off()");
-                        java.nio.file.Path arquivoBigram = Paths.get(imagemBigram);
-                        byte[] bytesBigram = Files.readAllBytes(arquivoBigram);
-                        byte[] encodeBase64Bigram = Base64.getEncoder().encode(bytesBigram);
-                        String base64EncodedBigram = new String(encodeBase64Bigram, "UTF-8");
-                        artigo.setImgBigram(base64EncodedBigram);
-                        
-                        String imagemTrigram = path + "/" + s.substring(0,s.length()-4) + "Trigram.png";
-                        connection.eval("png(\"" + imagemTrigram + "\")");
-                        connection.eval("rankTrigram <- TFTrigram[which(TFTrigram$id=='" + artigo.getNome() + "'),][1:10,] %>% mutate(trigram = reorder(trigram, n))");
-                        connection.eval("print(ggplot(data=rankTrigram, aes(trigram, n)) + geom_col() + xlab(NULL) + coord_flip())");
-                        connection.eval("dev.off()");
-                        java.nio.file.Path arquivoTrigram = Paths.get(imagemTrigram);
-                        byte[] bytesTrigram = Files.readAllBytes(arquivoTrigram);
-                        byte[] encodeBase64Trigram = Base64.getEncoder().encode(bytesTrigram);
-                        String base64EncodedTrigram = new String(encodeBase64Trigram, "UTF-8");
-                        artigo.setImgTrigram(base64EncodedTrigram);
-                        
-                        String lista = "";
-                        for(int aa=1;aa<=10;aa++){
-                            lista+=(connection.eval("rankWord[" + aa + ",2]").asList().at(0).asString());
-                            lista+= " " + (connection.eval("rankWord[" + aa + ",3]").asList().at(0).asString()) + " ";
+                        String mainWords = "";
+                        String mainBigrams = "";
+                        String mainTrigrams = "";
+                        for(int aa=1;aa<11;aa++) {
+                            mainWords+=(connection.eval("rankWord[" + aa + ",2]").asList().at(0).asString());
+                            mainWords+= ";" + (connection.eval("rankWord[" + aa + ",3]").asList().at(0).asString()) + ";";
+                            
+                            mainBigrams+=(connection.eval("rankBigram[" + aa + ",2]").asList().at(0).asString());
+                            mainBigrams+= ";" + (connection.eval("rankBigram[" + aa + ",3]").asList().at(0).asString()) + ";";
+
+                            mainTrigrams+=(connection.eval("rankTrigram[" + aa + ",2]").asList().at(0).asString());
+                            mainTrigrams+= ";" + (connection.eval("rankTrigram[" + aa + ",3]").asList().at(0).asString()) + ";";
                         }
-                        artigo.setWordcloud(lista);
+                        
+                        artigo.setMainWords(mainWords);
+                        artigo.setMainBigrams(mainBigrams);
+                        artigo.setMainTrigrams(mainTrigrams);
                         artigos.add(artigo);
                         i++;
                     }
@@ -338,8 +320,8 @@ public class Call {
                         connection.eval("flist = list.files(\"" + pathorigem + "\",\"" + arq + "\", full.names = TRUE)");
                         connection.eval("file.copy(flist,\"" + path + "\")");
                     }
-                    connection.eval("xx = extractAbstract(\"" + path + "\",\'\"" + pdftotext + "\"\')");
-                    connection.eval("ranking = find_tf_idf(\"" + path + "\")");
+                    connection.eval("xx <- extractAbstract(\"" + path + "\",\'\"" + pdftotext + "\"\')");
+                    connection.eval("ranking <- find_tf_idf(\"" + path + "\")");
                     
                     //limpando os pdf e o txt abstract
                     connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+pdf\", full.names = TRUE)");

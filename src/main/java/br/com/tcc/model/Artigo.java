@@ -2,26 +2,12 @@ package br.com.tcc.model;
 
 public class Artigo implements java.io.Serializable {
     private int id;
-    private String objetivo, metodologia, resultado, resumo, nome, imgWord, imgBigram, imgTrigram, wordcloud, filepath;
+    private String objetivo, metodologia, resultado, resumo, nome, filepath, mainWords, mainBigrams, mainTrigrams, imgWord, wordcloud;
 
-   
-    public Artigo() {
-    }
+    public Artigo() {}
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-    
-    public String getWordcloud() {
-        return wordcloud;
-    }
-
-    public void setWordcloud(String wordcloud) {
-        this.wordcloud = wordcloud;
     }
 
     public String getImgWord() {
@@ -31,21 +17,17 @@ public class Artigo implements java.io.Serializable {
     public void setImgWord(String imgWord) {
         this.imgWord = imgWord;
     }
-    
-    public String getImgBigram() {
-        return imgBigram;
+
+    public String getWordcloud() {
+        return wordcloud;
     }
 
-    public void setImgBigram(String imgBigram) {
-        this.imgBigram = imgBigram;
-    }
-    
-    public String getImgTrigram() {
-        return imgTrigram;
+    public void setWordcloud(String wordcloud) {
+        this.wordcloud = wordcloud;
     }
 
-    public void setImgTrigram(String imgTrigram) {
-        this.imgTrigram = imgTrigram;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getObjetivo() {
@@ -95,4 +77,30 @@ public class Artigo implements java.io.Serializable {
     public void setFilepath(String filepath) {
         this.filepath = filepath;
     }
+
+    public String getMainWords() {
+        return mainWords;
+    }
+
+    public void setMainWords(String mainWords) {
+        this.mainWords = mainWords;
+    }
+
+    public String getMainBigrams() {
+        return mainBigrams;
+    }
+
+    public void setMainBigrams(String mainBigrams) {
+        this.mainBigrams = mainBigrams;
+    }
+
+    public String getMainTrigrams() {
+        return mainTrigrams;
+    }
+
+    public void setMainTrigrams(String mainTrigrams) {
+        this.mainTrigrams = mainTrigrams;
+    }
+
+    
 }
