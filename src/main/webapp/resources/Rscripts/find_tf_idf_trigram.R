@@ -20,6 +20,12 @@ find_tf_idf_trigram = function (aa) {
            !word3 %in% stop_words$word) %>%
     unite(trigram, word1, word2, word3, sep = " ") %>%
     count(id, trigram, sort = TRUE)
+
+  total_trigrams <- trigrams %>% 
+    group_by(id) %>% 
+    summarize(total = sum(n))
+  
+  trigrams <- left_join(trigrams, total_trigrams)
   
   trigram_tf_idf <- trigrams %>%
     bind_tf_idf(trigram, id, n) %>%

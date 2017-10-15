@@ -11,6 +11,7 @@ find_tf_idf_bigram = function (aa) {
   aa$methodology <- NULL
   aa$conclusion <- NULL
   
+  
   bigrams <- aa %>%
     unnest(text) %>%
     unnest_tokens(bigram, text, token = "ngrams", n = 2) %>%
@@ -19,6 +20,12 @@ find_tf_idf_bigram = function (aa) {
            !word2 %in% stop_words$word) %>%
     unite(bigram, word1, word2, sep = " ") %>%
     count(id, bigram, sort = TRUE)
+  
+  total_bigrams <- bigrams %>% 
+    group_by(id) %>% 
+    summarize(total = sum(n))
+  
+  bigrams <- left_join(bigrams, total_bigrams)
   
   bigram_tf_idf <- bigrams %>%
     bind_tf_idf(bigram, id, n) %>%

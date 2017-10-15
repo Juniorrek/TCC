@@ -183,7 +183,7 @@
                                                                         </li>
                                                                         <li class="tab col s3"><a href="#trigram${status.count}" onclick="mainWordsChart('${artigo.mainTrigrams}','trigramChart${status.count}')">Trigrama</a></li>
                                                                     </ul>
-                                                                        <div id="word${status.count}">
+                                                                    <div id="word${status.count}">
                                                                          <canvas id="wordChart${status.count}" width="400" height="400"></canvas>                                                                
                                                                     </div>
                                                                     <div id="bigram${status.count}">
@@ -201,22 +201,49 @@
                                                     </div>
                                                 </li>
                                             </c:forEach>
-                                            <li>
+                                            <li onclick="tfIdfCharts('${tfidfWord}', 'tfWord', 'Palavras')">
                                                 <div class="collapsible-header article-header relevantTerms"><i class="material-icons right more">expand_more</i>Termos Relevantes</div>  
                                                 <div class="collapsible-body">
                                                     <ul class="tabs tabs-fixed-width">
                                                         <li class="tab col s3"><a href="#word${status.count}">Palavra</a></li>
-                                                        <li class="tab col s3"><a href="#bigram${status.count}">Bigrama</a></li>
-                                                        <li class="tab col s3"><a href="#trigram${status.count}">Trigrama</a></li>
+                                                        <li class="tab col s3" onclick="tfIdfCharts('${tfidfBigram}', 'tfBigram', 'Bigramas')"><a href="#bigram${status.count}">Bigrama</a></li>
+                                                        <li class="tab col s3" onclick="tfIdfCharts('${tfidfTrigram}', 'tfTrigram', 'Trigramas')"><a href="#trigram${status.count}">Trigrama</a></li>
                                                     </ul>
                                                     <div id="word${status.count}">
-                                                         <img src="data:image/jpg;base64,${tfidfWord}" width="100%"/>                     
+                                                        <div class="row">
+                                                            <div class="col s12">
+                                                                <canvas id="tfWord" width="400" height="400"></canvas>
+                                                             </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col s12">
+                                                                <div class="chartjs-legend" id="chartjs-legend-tfWord" class="noselect"></div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div id="bigram${status.count}">
-                                                        <img src="data:image/jpg;base64,${tfidfBigram}" width="100%"/>
+                                                        <div class="row">
+                                                            <div class="col s12">
+                                                                <canvas id="tfBigram" width="400" height="400"></canvas>
+                                                             </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col s12">
+                                                                <div class="chartjs-legend" id="chartjs-legend-tfBigram" class="noselect"></div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div id="trigram${status.count}">
-                                                        <img src="data:image/jpg;base64,${tfidfTrigram}" width="100%"/>
+                                                        <div class="row">
+                                                            <div class="col s12">
+                                                                <canvas id="tfTrigram" width="400" height="400"></canvas>
+                                                             </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col s12">
+                                                                <div class="chartjs-legend" id="chartjs-legend-tfTrigram" class="noselect"></div>
+                                                            </div>
+                                                        </div> 
                                                     </div>                       
                                                 </div>
                                             </li>
@@ -447,7 +474,6 @@
         <script type="text/javascript">
             var nofilter = "";
             $(document).ready(function(){
-                
                 
                 $(".button-collapse").sideNav();
                 
@@ -687,6 +713,105 @@
                 }
                 list.splice(0,1);
                 WordCloud(document.getElementById("beginCanvas" + num), { list: list } );
+            }
+            
+            function tfIdfCharts(tfs, id, type) {
+                var list = tfs.split(";");
+                var tfObj = new Array();
+                for(i = 0; i < list.length - 1; i+=5) {
+                    var newObj = {
+                        "id": list[i],
+                        "word": list[i+1],
+                        "count": parseInt(list[i+2]),
+                        "total": parseInt(list[i+3]),
+                        "tfidf": parseFloat(list[i+4])
+                    };
+                    tfObj.push(newObj);
+                }
+                
+                var words = new Array();
+                tfObj.forEach((obj) => {
+                   words.push(obj.word); 
+                });
+                
+                var counts = new Array();
+                tfObj.forEach((obj) => {
+                   counts.push(obj.count); 
+                });
+
+                var ids = new Array();
+                tfObj.forEach((obj) => {
+                   ids.push(obj.id); 
+                });
+                
+                var idsUnique = [...new Set(ids)];
+                
+                var bgColors = [
+                                'rgba(255, 99, 132, 0.8)',
+                                'rgba(54, 162, 235, 0.8)',
+                                'rgba(255, 206, 86, 0.8)',
+                                'rgba(75, 192, 192, 0.8)',
+                                'rgba(153, 150, 255, 0.8)',
+                                'rgba(255, 159, 64, 0.8)',
+                                'rgba(150, 200, 50, 0.8)',
+                                'rgba(150, 50, 250, 0.8)',
+                                'rgba(100, 150, 200, 0.8)',
+                                'rgba(50, 150, 250, 0.8)'
+                            ];
+                
+                var legendColorsBase = {};
+                for (let i = 0; i < idsUnique.length; i++) {
+                    legendColorsBase[idsUnique[i]] = bgColors[i];
+                }
+
+                var legendColors = new Array();
+                for (let i = 0; i < ids.length; i++) {
+                    legendColors.push(legendColorsBase[ids[i]]);
+                }
+                       
+                var ctx = document.getElementById(id).getContext('2d');
+                window.myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: words,
+                        datasets: [{
+                            label: 'Contador',
+                            data: counts,
+                            backgroundColor: legendColors,
+                            borderColor: legendColors,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            fontSize: 24,
+                            text: 'Principais ' + type,
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero:true
+                                }
+                            }]
+                        },
+                        legend: false,
+                        legendCallback: function(chart) {
+                            var text = [];
+                            text.push('<ul class="' + chart.id + '-legend">');
+                            for (var i = 0; i < idsUnique.length; i++) {
+                              text.push('<li><span style="background-color:' + Object.values(legendColorsBase)[i] + '">');
+                              if (idsUnique[i]) {
+                                text.push(idsUnique[i]);
+                              }
+                              text.push('</span></li>');
+                            }
+                            text.push('</ul>');
+                            return text.join("");
+                        }
+                    }
+                });
+                $('#chartjs-legend-'+id).html(myChart.generateLegend());
             }
             
             function mainWordsChart(words, id) {
