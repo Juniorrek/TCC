@@ -68,4 +68,28 @@ public class Projeto implements java.io.Serializable {
     public void setSinonimosResultado(List<String> sinonimosResultado) {
         this.sinonimosResultado = sinonimosResultado;
     }
+    
+    public String getSinonimosToR(String segmento) {
+        String retorno = "";
+        
+        if ("objetivo".equals(segmento)) {
+            for (String s : this.sinonimosObjetivo) {
+                retorno += "\"" + s + "\",";
+            }
+            if (!"".equals(retorno)) retorno = retorno.substring(0, retorno.length() - 1);
+        } else if ("metodologia".equals(segmento)) {
+            for (String s : this.sinonimosMetodologia) {
+                retorno += "\"" + s + "\",";
+            }
+            if (!"".equals(retorno)) retorno = retorno.substring(0, retorno.length() - 1);
+            
+        } else if ("resultado".equals(segmento)) {
+            for (String s : sinonimosResultado) {
+                retorno += "\"" + s + "\",";
+            }
+            if (!"".equals(retorno)) retorno = retorno.substring(0, retorno.length() - 1);
+        }
+        
+        return retorno;
+    }
 }

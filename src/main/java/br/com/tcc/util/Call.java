@@ -18,25 +18,6 @@ public class Call {
         private final String pdftotext = Singleton.PDF_TO_TEXT_PATH; //caminho pro pdftotext
         
         public List<Artigo> articlesAnalysis(String pathorigem, Projeto projeto) throws REXPMismatchException, REngineException, IOException {
-            //SINONIMOS
-            String sinonimosObjetivo = "";
-            for (String s : projeto.getSinonimosObjetivo()) {
-                sinonimosObjetivo += "\"" + s + "\",";
-            }
-            if (!"".equals(sinonimosObjetivo)) sinonimosObjetivo = sinonimosObjetivo.substring(0, sinonimosObjetivo.length() - 1);
-
-            String sinonimosMetodologia = "";
-            for (String s : projeto.getSinonimosMetodologia()) {
-                sinonimosMetodologia += "\"" + s + "\",";
-            }
-            if (!"".equals(sinonimosMetodologia)) sinonimosMetodologia = sinonimosMetodologia.substring(0, sinonimosMetodologia.length() - 1);
-            
-            String sinonimosResultado = "";
-            for (String s : projeto.getSinonimosResultado()) {
-                sinonimosResultado += "\"" + s + "\",";
-            }
-            if (!"".equals(sinonimosResultado)) sinonimosResultado = sinonimosResultado.substring(0, sinonimosResultado.length() - 1);
-            
             RConnection connection = null;
             String path = pathorigem + "temp";
             File f = new File(path);
@@ -66,10 +47,10 @@ public class Call {
                     connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+abstract.+\", full.names = TRUE)");
                     connection.eval("file.remove(junk)");
                     connection.eval("synonyms <- list()");
-                    connection.eval("synonyms$objective <- c(" + sinonimosObjetivo + ")");
-                    connection.eval("synonyms$methodology <- c(" + sinonimosMetodologia + ")");
-                    connection.eval("synonyms$conclusion <- c(" + sinonimosResultado + ")");
-                    connection.eval("meanVal <- articlesAnalysis(\"" + path + "\")");
+                    connection.eval("synonyms$objective <- c(" + projeto.getSinonimosToR("objetivo") + ")");
+                    connection.eval("synonyms$methodology <- c(" + projeto.getSinonimosToR("metodologia") + ")");
+                    connection.eval("synonyms$conclusion <- c(" + projeto.getSinonimosToR("resultado") + ")");
+                    connection.eval("meanVal <- articlesAnalysis(\"" + path + "\", synonyms)");
                     connection.eval("TFWord <- find_tf_idf(meanVal)");
                     connection.eval("TFBigram <- find_tf_idf_bigram(meanVal)");
                     connection.eval("TFTrigram <- find_tf_idf_trigram(meanVal)");
@@ -195,7 +176,7 @@ public class Call {
             return null;
         }
         
-        public List<Artigo> ordenar(String pathorigem, String segment, List<Tag> tags) throws REXPMismatchException, IOException, REngineException {
+        public List<Artigo> ordenar(String pathorigem, String segment, List<Tag> tags, Projeto projeto) throws REXPMismatchException, IOException, REngineException {
             RConnection connection = null;
             String path = pathorigem + "/temp";
             File f = new File(path);
@@ -221,8 +202,12 @@ public class Call {
                     connection.eval("source('" + Singleton.ARRANGE_BY_RELEVANCY + "')");
                     connection.eval("source('" + Singleton.TIDYNATOR + "')");
                     connection.eval("source('" + Singleton.FIND_TF_IDF + "')");
-                    connection.eval("meanVal <- articlesAnalysis(\"" + path + "\")");
-                    connection.eval("ranking <- find_tf_idf(\"" + path + "\",meanVal)");
+                    connection.eval("synonyms <- list()");
+                    connection.eval("synonyms$objective <- c(" + projeto.getSinonimosToR("objetivo") + ")");
+                    connection.eval("synonyms$methodology <- c(" + projeto.getSinonimosToR("metodologia") + ")");
+                    connection.eval("synonyms$conclusion <- c(" + projeto.getSinonimosToR("resultado") + ")");
+                    connection.eval("meanVal <- articlesAnalysis(\"" + path + "\", synonyms)");
+                    connection.eval("ranking <- find_tf_idf(meanVal)");
                     connection.eval("ordenado <- arrangeByRelevancy(meanVal, \"" + segment + "\", " + keywords + ")");
                     List<Artigo> artigos = new ArrayList();
                     List<String> nomes = arquivos(pathorigem);
@@ -230,7 +215,7 @@ public class Call {
                     for (String s : nomes) {
                         Artigo artigo = new Artigo();
                         artigo.setNome(connection.eval("ordenado[" + i + ", 2]").asList().at(0).asString());
-                        artigo.setResumo(connection.eval("ordenado[" + i + ", 3]").asList().at(0).asList().at(0).asString());
+                        artigo.setResumo(connection.eval("ordenado[" + i + ", 3]").asList().at(0).asString());
                         artigo.setObjetivo(connection.eval("ordenado[" + i + ", 4]").asList().at(0).asString());
                         artigo.setMetodologia(connection.eval("ordenado[" + i + ", 5]").asList().at(0).asString());
                         artigo.setResultado(connection.eval("ordenado[" + i + ", 6]").asList().at(0).asString());
@@ -262,6 +247,29 @@ public class Call {
                             lista+= " " + (connection.eval("rankN[" + aa + ",3]").asList().at(0).asString()) + " ";
                         }
                         artigo.setWordcloud(lista);
+                        
+                        connection.eval("rankWord <- TFWord[which(TFWord$id=='" + artigo.getNome() + "'),][1:10,] %>% arrange(desc(n))");
+                        connection.eval("rankBigram <- TFBigram[which(TFBigram$id=='" + artigo.getNome() + "'),][1:10,] %>% arrange(desc(n))");
+                        connection.eval("rankTrigram <- TFTrigram[which(TFTrigram$id=='" + artigo.getNome() + "'),][1:10,] %>% arrange(desc(n))");
+                        
+                        String mainWords = "";
+                        String mainBigrams = "";
+                        String mainTrigrams = "";
+                        for(int aa=1;aa<11;aa++) {
+                            mainWords+=(connection.eval("rankWord[" + aa + ",2]").asList().at(0).asString());
+                            mainWords+= ";" + (connection.eval("rankWord[" + aa + ",3]").asList().at(0).asString()) + ";";
+                            
+                            mainBigrams+=(connection.eval("rankBigram[" + aa + ",2]").asList().at(0).asString());
+                            mainBigrams+= ";" + (connection.eval("rankBigram[" + aa + ",3]").asList().at(0).asString()) + ";";
+
+                            mainTrigrams+=(connection.eval("rankTrigram[" + aa + ",2]").asList().at(0).asString());
+                            mainTrigrams+= ";" + (connection.eval("rankTrigram[" + aa + ",3]").asList().at(0).asString()) + ";";
+                        }
+                        
+                        artigo.setMainWords(mainWords);
+                        artigo.setMainBigrams(mainBigrams);
+                        artigo.setMainTrigrams(mainTrigrams);
+                        
                         artigos.add(artigo);
                         i++;
                     }
@@ -287,7 +295,7 @@ public class Call {
         }
         
         
-        public List<Grupo> toGroups(String pathorigem, String segmento, int x) throws REXPMismatchException, IOException, REngineException {
+        public List<Grupo> toGroups(String pathorigem, String segmento, int x, Projeto projeto) throws REXPMismatchException, IOException, REngineException {
             RConnection connection = null;
             String path = pathorigem + "temp";
             File f = new File(path);
@@ -312,14 +320,18 @@ public class Call {
                         connection.eval("file.copy(flist,\"" + path + "\")");
                     }
                     connection.eval("xx <- extractAbstract(\"" + path + "\",\'\"" + pdftotext + "\"\')");
-                    connection.eval("ranking <- find_tf_idf(\"" + path + "\")");
+                    connection.eval("synonyms <- list()");
+                    connection.eval("synonyms$objective <- c(" + projeto.getSinonimosToR("objetivo") + ")");
+                    connection.eval("synonyms$methodology <- c(" + projeto.getSinonimosToR("metodologia") + ")");
+                    connection.eval("synonyms$conclusion <- c(" + projeto.getSinonimosToR("resultado") + ")");
+                    connection.eval("meanVal <- articlesAnalysis(\"" + path + "\", synonyms)");
+                    connection.eval("ranking <- find_tf_idf(meanVal)");
                     
                     //limpando os pdf e o txt abstract
                     connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+pdf\", full.names = TRUE)");
                     connection.eval("file.remove(junk)");
                     connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+abstract.+\", full.names = TRUE)");
                     connection.eval("file.remove(junk)");
-                    connection.eval("meanVal <- articlesAnalysis(\"" + path + "\")");
                     connection.eval("meanVal <- toGroups(meanVal, \"" + segmento + "\", " + x + ")");
                     connection.eval("ret <- NULL");
                     
