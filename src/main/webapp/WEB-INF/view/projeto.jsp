@@ -585,14 +585,14 @@
                 $('#tableArtigos').load(document.URL +  ' #tableArtigos');
             }
             
-            function nuvem(words, num) {
+            function nuvem(words, num, subtype = '') {
                 var lista = words.split(";");
                 var list = [["" , ""]];
                 for(i=0;i<lista.length;i+=2){       
                     list.push([lista[i], lista[i+1]]);
                 }
                 list.splice(0,1);
-                WordCloud(document.getElementById("beginCanvas" + num), { list: list } );
+                WordCloud(document.getElementById("beginCanvas" + subtype + num), { list: list } );
             }
             
             function tfIdfCharts(tfs, id, type) {
@@ -666,7 +666,7 @@
                         title: {
                             display: true,
                             fontSize: 24,
-                            text: 'Principais ' + type,
+                            text: 'Principais ' + type
                         },
                         scales: {
                             yAxes: [{
@@ -695,6 +695,8 @@
             }
             
             function mainWordsChart(words, id) {
+                console.log(words);
+                console.log(id);
                 var list = words.split(";");
                 var word = new Array();
                 var count = new Array();
@@ -807,17 +809,24 @@
                                                 "<div class='col s12'>" +
                                                     "<ul class='collapsible' data-collapsible='accordion'>";
                         artigos.forEach(function(v, k) {
+                            console.log(v);
                             var idx = k + 1;
                             htmlao += '<li>' +
-                                        '<div class="collapsible-header"><h5>' + idx + ' - ' + v.nome + '</h5></div>' +
+                                        '<div class="collapsible-header article-header"' +
+                                            `onclick="nuvem('` + v.mainWords + `','` + idx +  `', 'ord')">` +
+                                            idx + ' - ' + v.nome + 
+                                        '</div>' +
                                         '<div class="collapsible-body">' +
                                             '<span>' +
                                                 '<div class="row">' +
                                                     '<div class="col s12">' +
                                                         '<ul class="tabs tabs-fixed-width">' +
                                                             '<li class="tab col s3"><a class="active" href="#Segmentos' + idx + '">Segmentos</a></li>' +
-                                                            '<li class="tab col s3"><a href="#TF' + idx + '">TF</a></li>' +
-                                                            '<li class="tab col s3"><a href="#ordWORDCLOUD' + idx + '">WORDCLOUD</a></li>' +
+                                                            '<li class="tab col s3"' +
+                                                                ` onclick="mainWordsChart('` + v.mainWords + `','wordChart` + idx + `')">` +
+                                                                '<a href="#TF' + idx + '">TF</a>' + 
+                                                            '</li>' +
+                                                            '<li class="tab col s3"><a href="#beginWORDCLOUDord' + idx + '">WORDCLOUD</a></li>' +
                                                         '</ul>' +
                                                     '</div>' +
                                                     '<div id="Segmentos' + idx + '" class="col s12">' +
@@ -844,26 +853,54 @@
                                                             '</li>' +
                                                         '</ul>' +
                                                     '</div>' +
-                                                    "<div id='TF" + idx + "' class='col s12'><img src='data:image/jpg;base64," + v.imgWord + "'/></div>" +
-                                                    '<div id="ordWORDCLOUD' + idx + '" class="col s12">';
-                                                    htmlao += "<canvas id='ordCanvas" + idx + "' width='640' height='480' style='border:1px solid #000000;'></canvas></div>" +
+                                                    '<div id="TF' + idx + '" class="col s12">' +
+                                                        '<ul class="tabs tabs-fixed-width">' +
+                                                           '<li class="tab col s3">' + 
+                                                                '<a href="#word' + idx + '">Palavra</a>' + 
+                                                            '</li>' +
+                                                            '<li class="tab col s3">' +
+                                                                '<a href="#bigram' + idx + '"' + 
+                                                                ` onclick="mainWordsChart('` + v.mainBigrams + `','bigramChart` + idx + `')">Bigrama</a>` +
+                                                            '</li>' +
+                                                            '<li class="tab col s3">' +
+                                                                '<a href="#trigram' + idx + '"' + 
+                                                                ` onclick="mainWordsChart('` + v.mainTrigrams + `','trigramChart` + idx + `')">Trigrama</a>` +
+                                                            '</li>' +
+                                                        '</ul>' +
+                                                        '<div id="word' + idx + '">' +
+                                                            '<canvas id="wordChart' + idx + '" width="400" height="400"></canvas>' +                                                                
+                                                        '</div>' +
+                                                        '<div id="bigram' + idx + '">' +
+                                                            '<canvas id="bigramChart' + idx + '" width="400" height="400"></canvas>' +                                                                
+                                                        '</div>' +
+                                                        '<div id="trigram' + idx + '">' +
+                                                            '<canvas id="trigramChart' + idx + '" width="400" height="400"></canvas>' +                                                                
+                                                        '</div>' +
+                                                    '</div>' +
+                                                    '<div id="beginWORDCLOUDord' + idx + '" class="col s12">';
+                                                    htmlao += "<canvas id='beginCanvasord" + idx + "' width='640' height='480' style='border:1px solid #000000;'></canvas></div>" +
                                                 '</div>' +
                                             '</span>' +
                                         '</div>' +
                                     '</li>';
                         });
-                        htmlao += "</ul></div></div>";
+                        htmlao += '<li onclick="tfIdfCharts(\' + ${tfidfWord} + \', \'tfWord\', \'Palavras\')">' +
+                                        '<div class="collapsible-header article-header relevantTerms"><i class="material-icons right more">expand_more</i>Termos Relevantes</div>' +  
+                                        '<div class="collapsible-body">' +
+                                        '</div>' +
+                                  '</li>';
+                        htmlao += '</ul></div></div>';
                         $('#analise').html(htmlao);
-                        artigos.forEach(function(v, k) {
-                            var num = k+1;
-                            var lista = (v.mainWords).split(" ");
-                            var list = [["" , ""]];
-                            for(i=0; i<lista.length; i+=2){    
-                                list.push([lista[i], lista[i+1]]);
-                            }
-                            list.splice(0,1);
-                            WordCloud(document.getElementById("ordCanvas" + num), { list: list } );
-                        });
+//                        artigos.forEach(function(v, k) {
+//                            var num = k+1;
+//                            var lista = (v.mainWords).split(" ");
+//                            var list = [["" , ""]];
+//                            for(i=0; i<lista.length; i+=2){    
+//                                list.push([lista[i], lista[i+1]]);
+//                            }
+//                            list.splice(0,1);
+//                            WordCloud(document.getElementById("ordCanvas" + num), { list: list } );
+//                        });
                         $('ul.tabs').tabs();
                         $('.collapsible').collapsible();
                         resetTabs();//Pensar numa funçãozinha melhor pra reloadar tudo ja q essa merda buga
