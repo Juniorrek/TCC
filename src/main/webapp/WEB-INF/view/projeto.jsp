@@ -887,7 +887,48 @@
                         htmlao += '<li onclick="tfIdfCharts(\' + ${tfidfWord} + \', \'tfWord\', \'Palavras\')">' +
                                         '<div class="collapsible-header article-header relevantTerms"><i class="material-icons right more">expand_more</i>Termos Relevantes</div>' +  
                                         '<div class="collapsible-body">' +
+                                            '<ul class="tabs tabs-fixed-width">' +
+                                                '<li class="tab col s3"><a href="#mainWords">Palavra</a></li>' +
+                                                `<li class="tab col s3" onclick="tfIdfCharts('${tfidfBigram}', 'tfBigram', 'Bigramas')"><a href="#mainBigrams">Bigrama</a></li>` +
+                                                `<li class="tab col s3" onclick="tfIdfCharts('${tfidfTrigram}', 'tfTrigram', 'Trigramas')"><a href="#mainTrigrams">Trigrama</a></li>` +
+                                            '</ul>' + 
+                                            '<div id="mainWords">' +
+                                                '<div class="row">' +
+                                                    '<div class="col s12">' +
+                                                        '<canvas id="tfWord" width="400" height="400"></canvas>' +
+                                                     '</div>' +
+                                                '</div>' +
+                                                '<div class="row">' +
+                                                    '<div class="col s12">' +
+                                                        '<div class="chartjs-legend" id="chartjs-legend-tfWord" class="noselect"></div>' +
+                                                    '</div>' +
+                                                '</div>' +
+                                            '</div>' +
                                         '</div>' +
+                                        `<div id="mainBigrams"> 
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <canvas id="tfBigram" width="400" height="400"></canvas>
+                                                 </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <div class="chartjs-legend" id="chartjs-legend-tfBigram" class="noselect"></div>
+                                                </div>
+                                            </div>
+                                        </div>` +
+                                        `<div id="mainTrigrams"> 
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <canvas id="tfTrigram" width="400" height="400"></canvas>
+                                                 </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <div class="chartjs-legend" id="chartjs-legend-tfTrigram" class="noselect"></div>
+                                                </div>
+                                            </div>
+                                        </div>` +
                                   '</li>';
                         htmlao += '</ul></div></div>';
                         $('#analise').html(htmlao);
