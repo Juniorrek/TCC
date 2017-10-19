@@ -103,7 +103,7 @@ public class ProjetoController {
     }
     
     @RequestMapping(value = "/projetos/vizualizar", method= RequestMethod.GET)    
-    public String projetosVizualizarGet(Projeto projeto, Model model, HttpSession session, HttpServletRequest request) throws REngineException, IOException {
+    public String projetosVizualizarGet(Projeto projeto, Model model, HttpSession session, HttpServletRequest request) throws REngineException, IOException, FileNotFoundException, ClassNotFoundException, SQLException {
         Gson g = new Gson();
         
         try {
@@ -123,8 +123,13 @@ public class ProjetoController {
         List<Artigo> segmentos_artigos = null;
         ArrayList<String> tfidf = new ArrayList<String>();
         try {
-            segmentos_artigos = c.articlesAnalysis(path, projeto);
-            tfidf = c.graphicTfIdf(path);
+            /*segmentos_artigos = c.articlesAnalysis(path, projeto);
+            tfidf = c.graphicTfIdf(path);*/
+            Pesquisa p = new Pesquisa();
+            p.setUsuario(logado);
+            p.setProjeto(projeto);
+            segmentos_artigos = c.articlesAnalysis(path, p);
+            tfidf = c.graphicTfIdf(path, p);
         } catch (REXPMismatchException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -204,7 +209,7 @@ public class ProjetoController {
     public @ResponseBody String projetosOrdenar(@RequestParam("projeto") Integer id,
                                                 HttpSession session,
                                                 @RequestParam("segment") String segment,
-                                                @RequestParam("keywords") String keywords) throws IOException, REngineException {
+                                                @RequestParam("keywords") String keywords) throws IOException, REngineException, ClassNotFoundException {
         Gson g = new Gson();
         Call call = new Call();
         Type listType = new TypeToken<ArrayList<Tag>>(){}.getType();
@@ -215,7 +220,10 @@ public class ProjetoController {
             Projeto projeto = ProjetoDao.carregar(id);
             Usuario logado = (Usuario) session.getAttribute("logado");
             String path = Singleton.UPLOAD_DIR + "/" + logado.getEmail() + "/" + id + "/";
-            artigos = call.ordenar(path, segment, tags, projeto);
+            Pesquisa p = new Pesquisa();
+            p.setUsuario(logado);
+            p.setProjeto(projeto);
+            artigos = call.ordenar(segment, tags, p);
         } catch (REXPMismatchException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {

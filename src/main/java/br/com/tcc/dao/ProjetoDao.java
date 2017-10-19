@@ -2,8 +2,14 @@ package br.com.tcc.dao;
 
 import br.com.tcc.factory.ConnectionFactory;
 import br.com.tcc.model.Artigo;
+import br.com.tcc.model.Pesquisa;
 import br.com.tcc.model.Projeto;
 import br.com.tcc.model.Usuario;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.rosuda.REngine.REXPMismatchException;
 
 public class ProjetoDao {
     public static String[] defaultSinonimosObjetivo = new String[]{"ambition", "aspiration", "intent", "purpose", "propose", "mission", "target", "desing", "mission", "object", "end in view", "ground zero", "wish", "goal", " aim ", " mind ", "meaning", " mark ", " gaol ", "final ", "reach"};
@@ -271,6 +278,123 @@ public class ProjetoDao {
             stmt = connection.prepareStatement("DELETE FROM Projeto "
                                                 + "WHERE id = ?");
             stmt.setInt(1, projeto.getId());
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
+    }
+    
+    public static Pesquisa carregarPesquisa(Pesquisa p, int opcao) throws SQLException, IOException, ClassNotFoundException {
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            if(opcao==1){
+                stmt = connection.prepareStatement("SELECT * FROM Pesquisa WHERE usuario=? AND projeto=? AND sinonimo_objetivo=? AND sinonimo_metodologia=? AND sinonimo_resultado=?");
+                stmt.setString(3, p.getSinonimosObjetivo());
+                stmt.setString(4, p.getSinonimosMetodologia());
+                stmt.setString(5, p.getSinonimosResultado());
+            }
+            else{
+                stmt = connection.prepareStatement("SELECT * FROM Pesquisa WHERE usuario=? AND projeto=?");
+            }
+            stmt.setString(1, p.getUsuario().getEmail());
+            stmt.setInt(2, p.getProjeto().getId());
+            rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                ByteArrayInputStream bais = new ByteArrayInputStream(rs.getBytes("lista"));
+                ObjectInputStream ins = new ObjectInputStream(bais);
+                List<Artigo> lista =(List<Artigo>)ins.readObject();
+                p.setLista(lista);                
+                if(rs.getBytes("termos_relevantes")!=null){
+                    bais = new ByteArrayInputStream(rs.getBytes("termos_relevantes"));
+                    ins = new ObjectInputStream(bais);
+                    List<String> termos =(List<String>)ins.readObject();
+                    p.setTermosRelevantes(termos);
+                }
+                return p;
+            } else {
+                return null;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (rs != null)
+                try { rs.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
+    }
+    
+    public static void salvarPesquisa(Pesquisa p) throws SQLException, REXPMismatchException, IOException {
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
+        
+        try {
+            stmt = connection.prepareStatement("DELETE FROM Pesquisa WHERE usuario=? AND projeto=?");
+            stmt.setString(1, p.getUsuario().getEmail());
+            stmt.setInt(2, p.getProjeto().getId());
+            stmt.executeUpdate();
+            stmt = connection.prepareStatement("INSERT INTO Pesquisa (usuario, projeto, lista, sinonimo_objetivo, sinonimo_metodologia, sinonimo_resultado) VALUES (?, ?, ?, ?, ?, ?)");
+            stmt.setString(1, p.getUsuario().getEmail());
+            stmt.setInt(2, p.getProjeto().getId());
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(p.getLista());
+            oos.flush();
+            oos.close();
+            bos.close();
+            byte[] data = bos.toByteArray();
+            stmt.setObject(3, data);
+            stmt.setString(4,p.getSinonimosObjetivo());
+            stmt.setString(5,p.getSinonimosMetodologia());
+            stmt.setString(6,p.getSinonimosResultado());
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
+    }
+    
+    public static void editarPesquisa(Pesquisa p) throws SQLException, REXPMismatchException, IOException {
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
+        
+        try {
+            stmt = connection.prepareStatement("UPDATE Pesquisa SET termos_relevantes=? WHERE usuario=? AND projeto=?");
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(p.getTermosRelevantes());
+            oos.flush();
+            oos.close();
+            bos.close();
+            byte[] data = bos.toByteArray();
+            stmt.setObject(1, data);
+            stmt.setString(2, p.getUsuario().getEmail());
+            stmt.setInt(3, p.getProjeto().getId());
             stmt.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex);

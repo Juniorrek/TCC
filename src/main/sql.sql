@@ -48,3 +48,16 @@ CREATE TABLE Rel_Usu_Art (
     FOREIGN KEY (art_id) REFERENCES Rel_Arq_Pro (id),
     FOREIGN KEY (usu_email) REFERENCES Usuario (email)
 );
+
+CREATE TABLE Pesquisa (
+	usuario VARCHAR(100),
+    projeto INT,
+    lista LONGBLOB,
+    termos_relevantes LONGBLOB,
+    sinonimo_objetivo VARCHAR(500),
+    sinonimo_metodologia VARCHAR(500),
+    sinonimo_resultado VARCHAR(500),
+    
+    FOREIGN KEY (usuario) REFERENCES Usuario (email),
+    FOREIGN KEY (projeto) REFERENCES Projeto (id)
+);
