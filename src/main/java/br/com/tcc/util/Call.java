@@ -455,11 +455,8 @@ public class Call {
         }
         
         
-        public List<Grupo> toGroups(String pathorigem, String segmento, int x, Projeto projeto) throws REXPMismatchException, IOException, REngineException {
+        public List<Grupo> toGroups(String segmento, int x, Pesquisa p) throws REXPMismatchException, IOException, REngineException {
             RConnection connection = null;
-            String path = pathorigem + "temp";
-            File f = new File(path);
-            f.mkdirs();
             try {
                     connection = new RConnection();
                     connection.eval("library(tm)");
@@ -468,96 +465,42 @@ public class Call {
                     connection.eval("library(readr)");         
                     connection.eval("library(tidyr)");         
                     connection.eval("library(purrr)");                  
-                    connection.eval("source('" + Singleton.EXTRACT_ABSTRACT + "')");
-                    connection.eval("source('" + Singleton.FIND_SEGMENT + "')");
-                    connection.eval("source('" + Singleton.ARTICLES_ANALYSIS + "')");
                     connection.eval("source('" + Singleton.TO_GROUPS + "')");
-                    connection.eval("source('" + Singleton.FIND_TF_IDF + "')");
-                    connection.eval("source('" + Singleton.TIDYNATOR + "')");
-                    List<String> nomes = arquivos(pathorigem);
-                    for(String arq: nomes) { //PASSANDO ARQUIVOS PARA PASTA DE ANÁLISE
-                        connection.eval("flist = list.files(\"" + pathorigem + "\",\"" + arq + "\", full.names = TRUE)");
-                        connection.eval("file.copy(flist,\"" + path + "\")");
-                    }
-                    connection.eval("xx <- extractAbstract(\"" + path + "\",\'\"" + pdftotext + "\"\')");
-                    connection.eval("synonyms <- list()");
-                    connection.eval("synonyms$objective <- c(" + projeto.getSinonimosToR("objetivo") + ")");
-                    connection.eval("synonyms$methodology <- c(" + projeto.getSinonimosToR("metodologia") + ")");
-                    connection.eval("synonyms$conclusion <- c(" + projeto.getSinonimosToR("resultado") + ")");
-                    connection.eval("meanVal <- articlesAnalysis(\"" + path + "\", synonyms)");
-                    connection.eval("ranking <- find_tf_idf(meanVal)");
-                    
-                    //limpando os pdf e o txt abstract
-                    connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+pdf\", full.names = TRUE)");
-                    connection.eval("file.remove(junk)");
-                    connection.eval("junk <- dir(path = \"" + path + "\", pattern = \".+abstract.+\", full.names = TRUE)");
-                    connection.eval("file.remove(junk)");
-                    connection.eval("meanVal <- toGroups(meanVal, \"" + segmento + "\", " + x + ")");
+                    connection.eval("meanVal2 <- toGroups(meanVal, \"" + segmento + "\", " + x + ")");
+                    connection.eval("grupoOrd <- meanVal2[order(meanVal2$id),]");
                     connection.eval("ret <- NULL");
-                    
-                    int topicos = Integer.parseInt(connection.eval("paste(max(meanVal$topic))").asString());
+                  
                     List<Grupo> grupos = new ArrayList();
+                    List<List<Artigo>> listas = new ArrayList();
                     
-                    for (int i=1; i<=topicos; i++) {
-                        List<Artigo> artigos = new ArrayList();
+                    for (int i=1; i<=x; i++) {
                         List<String> palavras = new ArrayList();
-                        connection.eval("aux <- meanVal[which(meanVal$topic==" + i +"),]");
-                        int cont = Integer.parseInt(connection.eval("paste(count(aux))").asString());
-                        for(int j=1;j<=cont;j++) {
-                            Artigo artigo = new Artigo();
-                            artigo.setNome(connection.eval("aux[" + j + ", 2]").asList().at(0).asString());
-                            artigo.setResumo(connection.eval("aux[" + j + ", 3]").asList().at(0).asString());
-                            artigo.setObjetivo(connection.eval("aux[" + j + ", 4]").asList().at(0).asString());
-                            artigo.setMetodologia(connection.eval("aux[" + j + ", 5]").asList().at(0).asString());
-                            artigo.setResultado(connection.eval("aux[" + j + ", 6]").asList().at(0).asString());
-                            
-                            List<String> nomesOrigem = arquivos(pathorigem);   
-                            String s="";
-                            for(String b: nomesOrigem){
-                                String a = b.replace("_", " ");
-                                if(a.length()>=artigo.getNome().length()){
-                                    a = a.substring(0, artigo.getNome().length());
-                                    if(artigo.getNome().substring(0, artigo.getNome().length()-4).equals(a.substring(0, a.length()-4))){
-                                        s = b;
-                                        break;
-                                    }
-                                }
-                            }
-                            String imagem = path + "/" + s.substring(0,s.length()-4) + ".png";
-                            java.nio.file.Path arquivo = Paths.get(imagem);
-                            byte[] bytes = Files.readAllBytes(arquivo);
-                            byte[] encodeBase64 = Base64.getEncoder().encode(bytes);
-                            String base64Encoded = new String(encodeBase64, "UTF-8");
-                            artigo.setImgWord(base64Encoded);
-                            connection.eval("rankN <- ranking[which(ranking$id=='" + artigo.getNome() + "'),][1:10,] %>% mutate(word = reorder(word, n))");
-                            String lista = "";
-                            for(int aa=1;aa<=10;aa++){
-                                lista+=(connection.eval("rankN[" + aa + ",2]").asList().at(0).asString());
-                                lista+= " " + (connection.eval("rankN[" + aa + ",3]").asList().at(0).asString()) + " ";
-                            }
-                            artigo.setWordcloud(lista);
-                            artigos.add(artigo);
-                        }
+                        connection.eval("aux <- meanVal2[meanVal2$topic==" + i + ", ]");
                         int palavra = Integer.parseInt(connection.eval("length(aux[[1,9]])").asString());
-                        //System.out.println(palavra);
                         for(int j=1;j<=palavra;j++) {
-                            //System.out.println(connection.eval("aux[[1,9]][" + j + "]").asString());
                             palavras.add(connection.eval("aux[[1,9]][" + j + "]").asString());
                         }
                         Grupo grupo = new Grupo();
-                        grupo.setArtigos(artigos);
                         grupo.setKeywords(palavras);
                         grupo.setNumero(i);
                         grupos.add(grupo);
+                        listas.add(new ArrayList());
                     }
-                    f.delete();
+                  
+                    for(Artigo artigo: p.getLista()){
+                        connection.eval("grupo <- grupoOrd[grupoOrd$id==\"" + artigo.getNome() + "\",]");
+                        int num = Integer.parseInt(connection.eval("grupo$topic").asString());
+                        listas.get(num-1).add(artigo);
+                    }
+                    for(int i=0; i<x; i++){
+                        grupos.get(i).setArtigos(listas.get(i));
+                    }
                     return grupos;
             } catch (RserveException e) {
                 e.printStackTrace();
             }finally{
                 connection.close();
             }
-            f.delete();
             return null;
         }
 }

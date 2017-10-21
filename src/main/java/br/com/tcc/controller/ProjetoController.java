@@ -258,7 +258,7 @@ public class ProjetoController {
     }*/
     
     @RequestMapping(value = "/projetos/artigos/agrupar", method = RequestMethod.GET)    
-    public @ResponseBody String projetosAgrupar(@RequestParam("grupos") int quant, @RequestParam("forma") String forma, @RequestParam("id") int id, HttpSession session) throws IOException, REngineException {
+    public @ResponseBody String projetosAgrupar(@RequestParam("grupos") int quant, @RequestParam("forma") String forma, @RequestParam("id") int id, HttpSession session) throws IOException, REngineException, SQLException, ClassNotFoundException {
         Projeto projeto=null;
         Gson g = new Gson();
         try {
@@ -272,7 +272,11 @@ public class ProjetoController {
         List<Grupo> grupos = null;
         Call c = new Call();
         try {
-            grupos = c.toGroups(path, forma, quant, projeto);
+            Pesquisa p = new Pesquisa();
+            p.setUsuario(logado);
+            p.setProjeto(projeto);
+            p = ProjetoDao.carregarPesquisa(p, 2);
+            grupos = c.toGroups(forma, quant, p);
         } catch (REXPMismatchException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }
