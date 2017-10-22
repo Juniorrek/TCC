@@ -83,6 +83,83 @@ public class ProjetoDao {
         }
     }
     
+    public static void adicionar(Integer id, Usuario usuario) throws SQLException {
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
+        
+        try {
+            stmt = connection.prepareStatement("INSERT INTO Rel_Usu_Pro (pro_id, usu_email) "
+                                                + "VALUES (?, ?)");
+            stmt.setInt(1, id);
+            stmt.setString(2, usuario.getEmail());
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
+    }
+    
+    
+    
+    public static void deletar(Integer id, Usuario usuario) throws SQLException {
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
+        
+        try {
+            stmt = connection.prepareStatement("DELETE FROM Rel_Usu_Pro "
+                                                + "WHERE pro_id = ? AND usu_email = ?");
+            stmt.setInt(1, id);
+            stmt.setString(2, usuario.getEmail());
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
+    }
+    
+    public static boolean jaTem(Integer id, Usuario usuario) throws SQLException {
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            stmt = connection.prepareStatement("SELECT * FROM Rel_Usu_Pro "
+                                                + "WHERE pro_id = ? AND usu_email = ?");
+            stmt.setInt(1, id);
+            stmt.setString(2, usuario.getEmail());
+            rs = stmt.executeQuery();
+            
+            return rs.next();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (rs != null)
+                try { rs.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
+    }
+    
     public static List<Projeto> carregar(Usuario usuario) throws SQLException {
         Connection connection = new ConnectionFactory().getConnection();
         PreparedStatement stmt = null;
@@ -90,9 +167,16 @@ public class ProjetoDao {
         List<Projeto> projetos = new ArrayList<Projeto>();
         
         try {
-            stmt = connection.prepareStatement("SELECT * FROM Projeto "
-                                                + "WHERE email = ?");
+            stmt = connection.prepareStatement("SELECT *, 1 AS lider FROM Projeto "
+                                                + "WHERE email = ? "
+                                                + "UNION "
+                                                + "SELECT a.*, 0 AS lider FROM Projeto a "
+                                                + "JOIN ( "
+                                                + "SELECT a.pro_id AS id FROM Rel_Usu_Pro a "
+                                                + "LEFT JOIN Projeto b ON b.id = a.pro_id AND b.email LIKE a.usu_email "
+                                                + "WHERE b.id IS NULL AND a.usu_email = ?) b ON b.id = a.id");
             stmt.setString(1, usuario.getEmail());
+            stmt.setString(2, usuario.getEmail());
             
             rs = stmt.executeQuery();
             
@@ -101,6 +185,7 @@ public class ProjetoDao {
                 projeto.setId(rs.getInt("id"));
                 projeto.setNome(rs.getString("nome"));
                 projeto.setDescricao(rs.getString("descricao"));
+                projeto.setLider(rs.getInt("lider"));
                 
                 projetos.add(projeto);
             }

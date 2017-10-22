@@ -64,7 +64,10 @@
                                             <td>${projeto.nome}</td>
                                             <td>
                                                 <button class="btn-floating waves-effect waves-light blue" onclick="vizualizarProjeto(${projeto.id})"><i class="material-icons">visibility</i></button>
-                                                <button class="btn-floating waves-effect waves-light red" onclick="deletarProjeto(${projeto.id})"><i class="material-icons">delete</i></button>
+                                                <c:if test="${projeto.lider == 1}">
+                                                    <button class="btn-floating waves-effect waves-light red" onclick="deletarProjeto(${projeto.id})"><i class="material-icons">delete</i></button>
+                                                    <button class="btn-floating waves-effect waves-light cyan" onclick="usuariosProjeto(${projeto.id})"><i class="material-icons">people</i></button>
+                                                </c:if>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -117,16 +120,59 @@
         <form id="formVizualizarProjeto" action="${pageContext.request.contextPath}/projetos/vizualizar" method="post">
             <input type="hidden" name="id" />
         </form>
+            
+        <div id="modalUsuariosProjeto" class="modal">
+            <div class="modal-content">
+                <h4>Usuários do projeto</h4>
+                <div class="row">
+                    <div class="input-field">
+                      <input type="hidden" id="idAddProjeto" />
+                      <input type="text" id="emailAddUsuario" />
+                      <label for="grupos">Email</label>
+                    </div>
+                    <button class="btn-floating waves-effect waves-light green" onclick="addUsuarioProjeto()"><i class="material-icons">add</i></button>
+                </div>
+                <table id="tableUsuariosProjeto" class="striped centered" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
+            </div>
+        </div>
                     
         <div class="fixed-action-btn">
             <button id="btnAdicionarProjeto" data-target="modalAdicionarProjeto" class="btn-floating waves-effect waves-light btn-large green modal-trigger">
                 <i class="large material-icons">add</i>
             </button>
         </div>
+            
+        <div id="loadando" class="loadando" style="display: none; z-index: 9999;">
+            <div class="preloader-wrapper big active" style="position: absolute; left: 50%; top: 50%;">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div><div class="gap-patch">
+                        <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/jquery/dist/jquery.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/datatables.net/js/jquery.dataTables.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/materialize-css/dist/js/materialize.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/loading.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
                 $(".button-collapse").sideNav();
@@ -149,6 +195,19 @@
                         }
                     ]
                 });
+                
+                $('#tableUsuariosProjeto').DataTable({
+                    "language": lang,
+                    "dom": 'Brtip',
+                    "columnDefs": [
+                        { 
+                            "width": "1%",
+                            "targets": 2,
+                            "orderable": false,
+                            "searchable": false
+                        }
+                    ]
+                });
             });
             
             function deletarProjeto(id) {
@@ -159,6 +218,106 @@
             function vizualizarProjeto(id) {
                 $('#formVizualizarProjeto input[name="id"]').val(id);
                 $('#formVizualizarProjeto').submit();
+            }
+            
+            function usuariosProjeto(id) {
+                $('#idAddProjeto').val(id);
+                $('#tableUsuariosProjeto').DataTable().clear().draw();
+                $.ajax({
+                    url: "${pageContext.request.contextPath}/projetos/usuarios",
+                    type:'get',
+                    dataType: 'json',
+                    data: {
+                        "projeto": id
+                    },
+                    success: function(usuarios) {
+                        usuarios.forEach(function (v, k) {
+                            $('#tableUsuariosProjeto').DataTable().row.add([
+                                v.nome,
+                                v.email,
+                                '<button class="btn-floating waves-effect waves-light red delUsuarioProjeto"><i class="material-icons">delete</i></button>'
+                            ]).draw();
+                        });
+                        $('#modalUsuariosProjeto').modal('open');
+                    }
+                });
+            }
+            
+            function addUsuarioProjeto () {
+                var email = $('#emailAddUsuario').val();
+                var id = $('#idAddProjeto').val();
+                
+                $.ajax({
+                    url: "${pageContext.request.contextPath}/projetos/usuarios/adicionar",
+                    type:'post',
+                    dataType: 'json',
+                    data: {
+                        "projeto": id,
+                        "email": email
+                    },
+                    success: function(usuario) {
+                        if (usuario) {
+                            $('#tableUsuariosProjeto').DataTable().row.add( [
+                                usuario.nome,
+                                usuario.email,
+                                '<button class="btn-floating waves-effect waves-light red delUsuarioProjeto"><i class="material-icons">delete</i></button>'
+                            ] ).draw();
+                        }
+                    }
+                });
+            }
+            
+            $("#tableUsuariosProjeto tbody").on('click', '.delUsuarioProjeto', function () {
+                var current_row = $(this).parents('tr');
+                if (current_row.hasClass('child')) {
+                    current_row = current_row.prev();
+                }
+                var data = $('#tableUsuariosProjeto').DataTable().row(current_row).data();
+                
+                var id = $('#idAddProjeto').val();
+                var email = data[1];
+                
+                $.ajax({
+                    url: "${pageContext.request.contextPath}/projetos/usuarios/deletar",
+                    type:'post',
+                    dataType: 'json',
+                    data: {
+                        "projeto": id,
+                        "email": email
+                    },
+                    success: function(usuario) {
+                        if (usuario) {
+                            $('#tableUsuariosProjeto').DataTable()
+                                .row(current_row)
+                                .remove()
+                                .draw();
+                        }
+                    }
+                });
+            } );
+            
+            function delUsuarioProjeto (email) {
+                var email = $('#emailAddUsuario').val();
+                var id = $('#idAddProjeto').val();
+                
+                $.ajax({
+                    url: "${pageContext.request.contextPath}/projetos/usuarios/adicionar",
+                    type:'post',
+                    dataType: 'json',
+                    data: {
+                        "projeto": id,
+                        "email": email
+                    },
+                    success: function(usuario) {
+                        if (usuario) {
+                            $('#tableUsuariosProjeto').DataTable().row.add( [
+                                usuario.nome,
+                                usuario.email,
+                                '.3'
+                            ] ).draw();
+                        }
+                    }
+                });
             }
             
             var lang = {

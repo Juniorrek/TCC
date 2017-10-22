@@ -11,6 +11,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -75,7 +77,40 @@ public class UsuarioDao {
         }
     }
     
-    
+    public static List<Usuario> carregar(Integer projetoId) throws SQLException {
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
+        List<Usuario> usuarios = new ArrayList<Usuario>();
+        
+        try {
+            stmt = connection.prepareStatement("SELECT u.* FROM Rel_Usu_Pro r "
+                                                + "JOIN Usuario u ON u.email = r.usu_email "
+                                                + "WHERE r.pro_id = ?");
+            stmt.setInt(1, projetoId);
+            
+            ResultSet rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                Usuario usuario = new Usuario();
+                usuario.setEmail(rs.getString("email"));
+                usuario.setNome(rs.getString("nome"));
+                
+                usuarios.add(usuario);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
+        
+        return usuarios;
+    }
     
     public static Usuario carregar(Projeto projeto) throws SQLException {
         Connection connection = new ConnectionFactory().getConnection();

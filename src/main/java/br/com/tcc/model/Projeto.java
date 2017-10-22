@@ -10,6 +10,7 @@ public class Projeto implements java.io.Serializable {
     private List<String> sinonimosObjetivo;
     private List<String> sinonimosMetodologia;
     private List<String> sinonimosResultado;
+    private int lider;
     
     public Projeto() {}
 
@@ -91,5 +92,13 @@ public class Projeto implements java.io.Serializable {
         }
         
         return retorno;
+    }
+
+    public int getLider() {
+        return lider;
+    }
+
+    public void setLider(int lider) {
+        this.lider = lider;
     }
 }
