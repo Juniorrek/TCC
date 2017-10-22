@@ -39,14 +39,18 @@ CREATE TABLE Rel_Sin_Pro (
 ALTER TABLE Rel_Arq_Pro ADD id INT AUTO_INCREMENT PRIMARY KEY;
 ALTER TABLE Rel_Arq_Pro ADD arq_nome VARCHAR(250);
 
-CREATE TABLE Rel_Usu_Art (
-    art_id INT,
-    usu_email VARCHAR(100),
-    observacoes VARCHAR(250),
+CREATE TABLE Rel_Usu_Pro (
 
-    PRIMARY KEY (art_id, usu_email),
-    FOREIGN KEY (art_id) REFERENCES Rel_Arq_Pro (id),
+    pro_id INT,
+    usu_email VARCHAR(100),
+
+
+
+    PRIMARY KEY (pro_id, usu_email),
+
+    FOREIGN KEY (pro_id) REFERENCES Projeto (id),
     FOREIGN KEY (usu_email) REFERENCES Usuario (email)
+
 );
 
 CREATE TABLE Pesquisa (

@@ -70,13 +70,15 @@
                                         <textarea id="descricaoProjeto" name="descricao" class="materialize-textarea"  data-length="200">${projeto.descricao}</textarea>
                                         <label for="descricaoProjeto">Descrição</label>
                                     </div>
-                                    <div style="margin-bottom: 50px;">
-                                        <p style="color: #9e9e9e;">Sinônimos</p>
-                                        <a class="btn waves-effect waves-light modal-trigger segment-button" href="#modalSinonimosObjetivo">Objetivo</a>
-                                        <a class="btn waves-effect waves-light modal-trigger segment-button" href="#modalSinonimosMetodologia">Metodologia</a>
-                                        <a class="btn waves-effect waves-light modal-trigger segment-button" href="#modalSinonimosResultado">Resultado</a>
-                                    </div>
-                                    <button type="submit" class="btn-floating halfway-fab waves-effect waves-light blue left"><i class="material-icons">mode_edit</i></button>
+                                    <c:if test="${projeto.lider == 1}">
+                                        <div style="margin-bottom: 50px;">
+                                            <p style="color: #9e9e9e;">Sinônimos</p>
+                                            <a class="btn waves-effect waves-light modal-trigger segment-button" href="#modalSinonimosObjetivo">Objetivo</a>
+                                            <a class="btn waves-effect waves-light modal-trigger segment-button" href="#modalSinonimosMetodologia">Metodologia</a>
+                                            <a class="btn waves-effect waves-light modal-trigger segment-button" href="#modalSinonimosResultado">Resultado</a>
+                                        </div>
+                                        <button type="submit" class="btn-floating halfway-fab waves-effect waves-light blue left"><i class="material-icons">mode_edit</i></button>
+                                    </c:if>
                                 </form>
                             </div>
                             <div id="artigos">
@@ -94,14 +96,15 @@
                                         </div>
                                     <%--</c:forEach>--%>
                                 </div>-->
-                                <button data-target="modalAdicionarArtigo" class="btn-floating halfway-fab waves-effect waves-light green center-btn modal-trigger orange-button-small"><i class="material-icons">add</i></button>
-                                 <div class="row">
+                                <div class="row">
                                     <div class="col s12">
                                         <div class="card white">
                                             <div class="card-content">
                                                 <span class="card-title">Artigos</span>
                                                 <table id="tableArtigos" class="striped centered">
-                                                    <a data-target="modalAdicionarArtigo" class="waves-effect waves-light btn modal-trigger orange-button"><i class="material-icons left">add</i>adicionar artigos</a>
+                                                    <c:if test="${projeto.lider == 1}">
+                                                        <a data-target="modalAdicionarArtigo" class="waves-effect waves-light btn modal-trigger orange-button"><i class="material-icons left">add</i>adicionar artigos</a>
+                                                    </c:if>
                                                     <thead>
                                                         <tr>
                                                             <th hidden>Id</th>
@@ -116,7 +119,9 @@
                                                                 <td>${artigo.nome.replace(".pdf", "")}</td>
                                                                 <td>
                                                                     <button class="btn-floating wavesartigo-effect waves-light blue" onclick="visualizarArtigo(${artigo.id})"><i class="material-icons">visibility</i></button>
-                                                                    <button class="btn-floating waves-effect waves-light red" onclick="deletarArtigo('${artigo.id}')"><i class="material-icons">delete</i></button>
+                                                                    <c:if test="${projeto.lider == 1}">
+                                                                        <button class="btn-floating waves-effect waves-light red" onclick="deletarArtigo('${artigo.id}')"><i class="material-icons">delete</i></button>
+                                                                    </c:if>
                                                                 </td>
                                                             </tr>
                                                         </c:forEach>

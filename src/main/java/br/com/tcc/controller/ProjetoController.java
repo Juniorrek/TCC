@@ -103,7 +103,7 @@ public class ProjetoController {
     }
     
     @RequestMapping(value = "/projetos/vizualizar", method= RequestMethod.GET)    
-    public String projetosVizualizarGet(Projeto projeto, Model model, HttpSession session, HttpServletRequest request) throws REngineException, IOException, FileNotFoundException, ClassNotFoundException, SQLException {
+    public String projetosVizualizarGet(Projeto projeto, Model model, HttpServletRequest request, HttpSession session) throws REngineException, IOException, FileNotFoundException, ClassNotFoundException, SQLException {
         Gson g = new Gson();
         
         try {
@@ -116,17 +116,18 @@ public class ProjetoController {
         model.addAttribute("sinonimosObjetivoJson", g.toJson(projeto.getSinonimosObjetivo()));
         model.addAttribute("sinonimosMetodologiaJson", g.toJson(projeto.getSinonimosMetodologia()));
         model.addAttribute("sinonimosResultadoJson", g.toJson(projeto.getSinonimosResultado()));
+        Usuario lider = UsuarioDao.carregar(projeto);
         Usuario logado = (Usuario) session.getAttribute("logado");
+        if (logado.getEmail().equals(lider.getEmail())) projeto.setLider(1);
+        else projeto.setLider(0);
         
-        String path = Singleton.UPLOAD_DIR + "/" + logado.getEmail() + "/" + projeto.getId() + "/";
+        String path = Singleton.UPLOAD_DIR + "/" + lider.getEmail() + "/" + projeto.getId() + "/";
         Call c = new Call();
         List<Artigo> segmentos_artigos = null;
         ArrayList<String> tfidf = new ArrayList<String>();
         try {
-            /*segmentos_artigos = c.articlesAnalysis(path, projeto);
-            tfidf = c.graphicTfIdf(path);*/
             Pesquisa p = new Pesquisa();
-            p.setUsuario(logado);
+            p.setUsuario(lider);
             p.setProjeto(projeto);
             segmentos_artigos = c.articlesAnalysis(path, p);
             tfidf = c.graphicTfIdf(path, p);
@@ -207,7 +208,6 @@ public class ProjetoController {
     
     @RequestMapping(value = "/projetos/ordenar", method = RequestMethod.GET)    
     public @ResponseBody String projetosOrdenar(@RequestParam("projeto") Integer id,
-                                                HttpSession session,
                                                 @RequestParam("segment") String segment,
                                                 @RequestParam("keywords") String keywords) throws IOException, REngineException, ClassNotFoundException {
         Gson g = new Gson();
@@ -218,10 +218,10 @@ public class ProjetoController {
         
         try {
             Projeto projeto = ProjetoDao.carregar(id);
-            Usuario logado = (Usuario) session.getAttribute("logado");
-            String path = Singleton.UPLOAD_DIR + "/" + logado.getEmail() + "/" + id + "/";
+            Usuario lider = UsuarioDao.carregar(projeto);
+            String path = Singleton.UPLOAD_DIR + "/" + lider.getEmail() + "/" + id + "/";
             Pesquisa p = new Pesquisa();
-            p.setUsuario(logado);
+            p.setUsuario(lider);
             p.setProjeto(projeto);
             artigos = call.ordenar(segment, tags, p);
         } catch (REXPMismatchException ex) {
@@ -258,7 +258,7 @@ public class ProjetoController {
     }*/
     
     @RequestMapping(value = "/projetos/artigos/agrupar", method = RequestMethod.GET)    
-    public @ResponseBody String projetosAgrupar(@RequestParam("grupos") int quant, @RequestParam("forma") String forma, @RequestParam("id") int id, HttpSession session) throws IOException, REngineException, SQLException, ClassNotFoundException {
+    public @ResponseBody String projetosAgrupar(@RequestParam("grupos") int quant, @RequestParam("forma") String forma, @RequestParam("id") int id) throws IOException, REngineException, SQLException, ClassNotFoundException {
         Projeto projeto=null;
         Gson g = new Gson();
         try {
@@ -267,13 +267,13 @@ public class ProjetoController {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        Usuario logado = (Usuario) session.getAttribute("logado");
-        String path = Singleton.UPLOAD_DIR + "/" + logado.getEmail() + "/" + projeto.getId() + "/";
+        Usuario lider = UsuarioDao.carregar(projeto);
+        String path = Singleton.UPLOAD_DIR + "/" + lider.getEmail() + "/" + projeto.getId() + "/";
         List<Grupo> grupos = null;
         Call c = new Call();
         try {
             Pesquisa p = new Pesquisa();
-            p.setUsuario(logado);
+            p.setUsuario(lider);
             p.setProjeto(projeto);
             p = ProjetoDao.carregarPesquisa(p, 2);
             grupos = c.toGroups(forma, quant, p);
@@ -281,5 +281,55 @@ public class ProjetoController {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return g.toJson(grupos);
+    }
+    
+    @RequestMapping(value = "/projetos/usuarios", method = RequestMethod.GET)    
+    public @ResponseBody String projetosUsuarios(@RequestParam("projeto") Integer id) {
+        List<Usuario> usuarios = null;
+        Gson g = new Gson();
+        
+        try {
+            usuarios = UsuarioDao.carregar(id);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return g.toJson(usuarios);
+    }
+    
+    @RequestMapping(value = "/projetos/usuarios/adicionar", method = RequestMethod.POST)    
+    public @ResponseBody String projetosUsuariosAdicionar(@RequestParam("projeto") Integer id, @RequestParam("email") String email) {
+        Gson g = new Gson();
+        Usuario usuario = null;
+        
+        try {
+            usuario = UsuarioDao.carregar(email);
+            
+            if (usuario == null || ProjetoDao.jaTem(id, usuario)) return g.toJson(null);
+            
+            if (usuario != null)
+                ProjetoDao.adicionar(id, usuario);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return g.toJson(usuario);
+    }
+    
+    @RequestMapping(value = "/projetos/usuarios/deletar", method = RequestMethod.POST)    
+    public @ResponseBody String projetosUsuariosDeletar(@RequestParam("projeto") Integer id, @RequestParam("email") String email) {
+        Gson g = new Gson();
+        Usuario usuario = null;
+        
+        try {
+            usuario = UsuarioDao.carregar(email);
+            
+            ProjetoDao.deletar(id, usuario);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
+            return g.toJson(null);
+        }
+        
+        return g.toJson(usuario);
     }
 }
