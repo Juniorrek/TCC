@@ -1,0 +1,109 @@
+.dataTables_filter {
+    float: left !important;
+}
+
+.orange-button, .orange-button-small{
+    background-color: #ff7d07 !important;
+    border-color: #ff7d07 !important;
+}
+
+.orange-button:hover a, .orange-button-small:hover button  {
+    background-color: #ff871c !important; 
+    border-color: #ff871c !important;
+}
+
+.orange-button {
+    position: absolute;
+    right: 20px;
+    top: 95px;
+}
+
+@media screen and (max-width: 700px) {
+	.orange-button {
+            visibility: hidden;
+	}
+}
+
+#tableArtigos {
+    width: 100% !important;
+}
+
+.abstract {
+    background-color: #F5F2F0;
+}
+.objective {
+    background-color: #F5F2F0;
+}
+.methodology {
+    background-color: #F5F2F0;
+}
+.conclusion {
+    background-color: #F5F2F0;
+}
+.segment-button {
+    margin-bottom: 5px;
+}
+.article-header {
+    background: #90caf9 !important; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#90caf9, #bbdefb) !important; /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#90caf9, #bbdefb) !important; /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#90caf9, #bbdefb) !important; /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#90caf9, #bbdefb) !important; /* Standard syntax */
+    
+    margin-bottom: 5px !important;
+    font-size: 16px !important;
+}
+
+.relevantTerms {
+    background: #ff7d07 !important; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#ff7d07, #FF871C) !important; /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#ff7d07, #FF871C) !important; /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#ff7d07, #FF871C) !important; /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#ff7d07, #FF871C) !important; /* Standard syntax */
+    
+    margin-bottom: 5px !important;
+    font-size: 16px !important;
+}
+
+.collapsible li.active i.more {
+  -ms-transform: rotate(180deg); /* IE 9 */
+  -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+  transform: rotate(180deg);
+}
+
+/*###########*/
+
+* {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+#chart {
+  position:relative;
+  height: 60vh;
+  width: 60vh;
+  top:15%;
+  margin:auto;
+}
+.chartjs-legend {
+  width:100%;
+  bottom:10%;
+}
+.chartjs-legend li {
+  cursor:pointer;
+  margin: 10px 4px;
+}
+.chartjs-legend li span {
+  position:relative;
+  padding: 6px 20px;
+  border-radius:13px;
+  color:white;
+  z-index:2;
+}

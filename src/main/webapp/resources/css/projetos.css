@@ -1,0 +1,37 @@
+.dataTables_filter {
+    float: left !important;
+}
+
+#newProject, #btnAdicionarProjeto {
+    background-color: #ff7d07 !important;
+    border-color: #ff7d07 !important;
+}
+
+#newProject:hover a, #btnAdicionarProjeto:hover button {
+    background-color: #ff871c !important; 
+    border-color: #ff871c !important;
+}
+
+#newProject {
+    position: absolute;
+    right: 20px;
+    top: 95px;
+}
+
+#btnAdicionarProjeto {
+    visibility: hidden;
+    background-color: #ff7d07;
+    border-color: #ff7d07;
+}
+
+@media screen and (max-width: 560px) {
+	#newProject {
+            visibility: hidden;
+	}
+        #btnAdicionarProjeto {
+            visibility: visible;
+        }
+}#tableProjetos {
+    width: 100% !important;
+}
+
