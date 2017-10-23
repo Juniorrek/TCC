@@ -52,6 +52,11 @@ public class ArquivoDao {
         ResultSet rs = null;
         
         try {
+            connection.setAutoCommit(false);
+            stmt = connection.prepareStatement("DELETE FROM Rel_Usu_Art WHERE art_id = ?");
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+            
             stmt = connection.prepareStatement("DELETE FROM Rel_Arq_Pro "
                                                 + "WHERE id = ?");
             stmt.setInt(1, id);
@@ -61,7 +66,9 @@ public class ArquivoDao {
                 java.io.File dest = new java.io.File(filePath);
                 dest.delete();
             }
+            connection.commit();
         } catch (SQLException | IllegalStateException ex) {
+            connection.rollback();
             Logger.getLogger(ArquivoDao.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
         } finally {

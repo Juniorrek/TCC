@@ -377,6 +377,20 @@
             <div class="modal-content">
                 <h4>Vizualizar artigo</h4>
                 <iframe width="100%" height="480"></iframe>
+                <div class="row">
+                    <div class="col s10">
+                        <div class="input-field">
+                            <textarea id="observacaoArtigo" name="observacao" class="materialize-textarea"  data-length="250"></textarea>
+                            <label for="observacaoArtigo">Observação</label>
+                        </div>
+                    </div>
+                    <div class="col s2">
+                        <button id="btnObservar" class="btn-floating waves-effect waves-light blue" onclick="editarObservacao()"><i class="material-icons">edit</i></button>
+                    </div>
+                </div>
+                <div id="observacoes">
+                    
+                </div>
             </div>
             <div class="modal-footer">
                 <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
@@ -578,10 +592,42 @@
                 location = window.location.href;
             }
             
+            var id_last_artigo;
             function visualizarArtigo(id) {
+                id_last_artigo = id;
                 var contextPath = '${pageContext.request.contextPath}';
-                $('#modalVizualizarArtigo iframe').attr('src', contextPath + "/projetos/artigos/visualizar?id=" + id); 
-                $('#modalVizualizarArtigo').modal('open');
+                $('#modalVizualizarArtigo iframe').attr('src', contextPath + "/projetos/artigos/visualizar?id=" + id);
+                
+                $.ajax({
+                    url: "${pageContext.request.contextPath}/artigos/observacao",
+                    type:'get',
+                    dataType: 'json',
+                    data: {
+                        "artigo": id
+                    },
+                    success: function(retorno) {
+                        $('#modalVizualizarArtigo #observacaoArtigo').val(retorno.observacao);
+                        var observacoes = "";
+                        retorno.observacoes.forEach(function (v, k) {
+                            observacoes += v.usuario_nome + ": " + v.observacao + "<br/>";
+                        });
+                        $('#modalVizualizarArtigo #observacoes').html(observacoes);
+                        
+                        $('#modalVizualizarArtigo').modal('open');
+                    }
+                });
+            }
+            
+            function editarObservacao() {
+                $.ajax({
+                    url: "${pageContext.request.contextPath}/artigos/observacao/editar",
+                    type:'get',
+                    dataType: 'json',
+                    data: {
+                        "artigo": id_last_artigo,
+                        "observacao": $('#modalVizualizarArtigo #observacaoArtigo').val()
+                    }
+                });
             }
             
             function deletarArtigo(id) {
