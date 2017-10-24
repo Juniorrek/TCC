@@ -643,7 +643,11 @@
                     list.push([lista[i], lista[i+1]]);
                 }
                 list.splice(0,1);
-                WordCloud(document.getElementById("beginCanvas" + subtype + num), { list: list } );
+                try {
+                    WordCloud(document.getElementById("beginCanvas" + subtype + num), { list: list } );
+                } catch (e) {
+                   //ignore
+                }
             }
             
             function tfIdfCharts(tfs, id, type) {
@@ -746,8 +750,6 @@
             }
             
             function mainWordsChart(words, id) {
-                console.log(words);
-                console.log(id);
                 var list = words.split(";");
                 var word = new Array();
                 var count = new Array();
@@ -860,7 +862,6 @@
                                                 "<div class='col s12'>" +
                                                     "<ul class='collapsible' data-collapsible='accordion'>";
                         artigos.forEach(function(v, k) {
-                            console.log(v);
                             var idx = k + 1;
                             htmlao += '<li>' +
                                         '<div class="collapsible-header article-header"' +
@@ -928,14 +929,15 @@
                                                             '<canvas id="trigramChart' + idx + '" width="400" height="400"></canvas>' +                                                                
                                                         '</div>' +
                                                     '</div>' +
-                                                    '<div id="beginWORDCLOUDord' + idx + '" class="col s12">';
-                                                    htmlao += "<canvas id='beginCanvasord" + idx + "' width='640' height='480' style='border:1px solid #000000;'></canvas></div>" +
+                                                    '<div id="beginWORDCLOUDord' + idx + '" class="col s12">' +
+                                                        '<canvas id="beginCanvasord' + idx + '" width="640" height="480" style="border:1px solid #000000;"></canvas>' +
+                                                    '</div>' +
                                                 '</div>' +
                                             '</span>' +
                                         '</div>' +
                                     '</li>';
                         });
-                        htmlao += '<li onclick="tfIdfCharts(\' + ${tfidfWord} + \', \'tfWord\', \'Palavras\')">' +
+                        htmlao += `<li onclick="tfIdfCharts('${tfidfWord}', 'tfWord', 'Palavras')">` + 
                                         '<div class="collapsible-header article-header relevantTerms"><i class="material-icons right more">expand_more</i>Termos Relevantes</div>' +  
                                         '<div class="collapsible-body">' +
                                             '<ul class="tabs tabs-fixed-width">' +
@@ -1042,7 +1044,6 @@
                                                 "<div class='col s12'>" +
                                                     "<ul class='collapsible' data-collapsible='accordion'>";                                    
                         grupos = JSON.parse(grupos);
-                        console.log(grupos);
                         cont = 1;
                         grupos.forEach(function(v, k) {
                             htmlao += "<li>" +
@@ -1059,45 +1060,80 @@
                                                             "<div id='Artigos" + v.numero + "' class='col s12'>";
                                                             htmlao += "<ul class='collapsible' data-collapsible='accordion'>";  
                                                             (v.artigos).forEach(function(t,l) {
-                                                                htmlao += "<li>";
-                                                                    htmlao += "<div class='collapsible-header'>" + t.nome + "</div>";
-                                                                    htmlao += "<div class='collapsible-body'>" + 
-                                                                                    "<span>" + 
-                                                                                    "<div class='row'>" + 
-                                                                                        "<div class='col s12'>";
-                                                                                            htmlao += "<ul class='tabs tabs-fixed-width'>" +
-                                                                                                "<li class='tab col s3'><a class='active' href='#Segmentos" + cont + "'>Segmentos</a></li>" +
-                                                                                                "<li class='tab col s3'><a href='#TF" + cont + "'>TF</a></li>" +
-                                                                                                "<li class='tab col s3'><a href='#groupWORDCLOUD" + cont + "'>WORDCLOUD</a></li>" +
-                                                                                            "</ul></div>";
-                                                                                            htmlao += "<div id='Segmentos" + cont + "' class='col s12'>" +
-                                                                                                '<h6>Resumo</h6>' +
-                                                                                                '<ul class="collapsible" data-collapsible="accordion">' +
-                                                                                                    '<li>' +
-                                                                                                        '<div class="collapsible-header abstract"> Abstract </div>' +
-                                                                                                        '<div class="collapsible-body"><span>' + t.resumo + '</span></div>' +
-                                                                                                    '</li>' +
-                                                                                                '</ul>' +
-                                                                                                '<h6>Segmentos</h6>' +
-                                                                                                '<ul class="collapsible" data-collapsible="accordion">' +
-                                                                                                    '<li>' +
-                                                                                                        '<div class="collapsible-header objective">Objetivo</div>' +
-                                                                                                        '<div class="collapsible-body"><span>' + t.objetivo + '</span></div>' +
-                                                                                                    '</li>' +
-                                                                                                    '<li>' +
-                                                                                                        '<div class="collapsible-header methodology">Metodologia</div>' +
-                                                                                                        '<div class="collapsible-body"><span>' + t.metodologia + '</span></div>' +
-                                                                                                    '</li>' +
-                                                                                                    '<li>' +
-                                                                                                        '<div class="collapsible-header conclusion">Resultado</div>' +
-                                                                                                        '<div class="collapsible-body"><span>' + t.resultado + '</span></div>' +
-                                                                                                    '</li>' +
-                                                                                                '</ul>' +
-                                                                                               "</div>";
-                                                                                       htmlao += "<div id='TF" + cont + "' class='col s12'><img src='data:image/jpg;base64," + t.imgWord + "'/></div>" +
-                                                                                               "<div id='groupWORDCLOUD" + cont + "' class='col s12'><canvas id='groupCanvas" + cont + "' width='640' height='480' style='border:1px solid #000000;'></canvas></div>";
-                                                                htmlao += "</div></span></div></li>";
-                                                                cont++;
+                                                                htmlao += '<li>' +
+                                                                            '<div class="collapsible-header article-header"' +
+                                                                                `onclick="nuvem('` + t.mainWords + `','` + cont +  `', 'ord')">` +
+                                                                                cont + ' - ' + t.nome + 
+                                                                            '</div>' +
+                                                                            '<div class="collapsible-body">' +
+                                                                                '<span>' +
+                                                                                    '<div class="row">' +
+                                                                                        '<div class="col s12">' +
+                                                                                            '<ul class="tabs tabs-fixed-width">' +
+                                                                                                '<li class="tab col s3"><a class="active" href="#Segmentos' + cont + '">Segmentos</a></li>' +
+                                                                                                '<li class="tab col s3"' +
+                                                                                                    ` onclick="mainWordsChart('` + t.mainWords + `','wordChart` + cont + `')">` +
+                                                                                                    '<a href="#TF' + cont + '">TF</a>' + 
+                                                                                                '</li>' +
+                                                                                                '<li class="tab col s3"><a href="#beginWORDCLOUDord' + cont + '">WORDCLOUD</a></li>' +
+                                                                                            '</ul>' +
+                                                                                        '</div>' +
+                                                                                        '<div id="Segmentos' + cont + '" class="col s12">' +
+                                                                                            '<h6>Resumo</h6>' +
+                                                                                            '<ul class="collapsible" data-collapsible="accordion">' +
+                                                                                                '<li>' +
+                                                                                                    '<div class="collapsible-header abstract"> Abstract </div>' +
+                                                                                                    '<div class="collapsible-body"><span>' + t.resumo + '</span></div>' +
+                                                                                                '</li>' +
+                                                                                            '</ul>' +
+                                                                                            '<h6>Segmentos</h6>' +
+                                                                                            '<ul class="collapsible" data-collapsible="accordion">' +
+                                                                                                '<li>' +
+                                                                                                    '<div class="collapsible-header objective">Objetivo</div>' +
+                                                                                                    '<div class="collapsible-body"><span>' + t.objetivo + '</span></div>' +
+                                                                                                '</li>' +
+                                                                                                '<li>' +
+                                                                                                    '<div class="collapsible-header methodology">Metodologia</div>' +
+                                                                                                    '<div class="collapsible-body"><span>' + t.metodologia + '</span></div>' +
+                                                                                                '</li>' +
+                                                                                                '<li>' +
+                                                                                                    '<div class="collapsible-header conclusion">Resultado</div>' +
+                                                                                                    '<div class="collapsible-body"><span>' + t.resultado + '</span></div>' +
+                                                                                                '</li>' +
+                                                                                            '</ul>' +
+                                                                                        '</div>' +
+                                                                                        '<div id="TF' + cont + '" class="col s12">' +
+                                                                                            '<ul class="tabs tabs-fixed-width">' +
+                                                                                               '<li class="tab col s3">' + 
+                                                                                                    '<a href="#word' + cont + '">Palavra</a>' + 
+                                                                                                '</li>' +
+                                                                                                '<li class="tab col s3">' +
+                                                                                                    '<a href="#bigram' + cont + '"' + 
+                                                                                                    ` onclick="mainWordsChart('` + t.mainBigrams + `','bigramChart` + cont + `')">Bigrama</a>` +
+                                                                                                '</li>' +
+                                                                                                '<li class="tab col s3">' +
+                                                                                                    '<a href="#trigram' + cont + '"' + 
+                                                                                                    ` onclick="mainWordsChart('` + t.mainTrigrams + `','trigramChart` + cont + `')">Trigrama</a>` +
+                                                                                                '</li>' +
+                                                                                            '</ul>' +
+                                                                                            '<div id="word' + cont + '">' +
+                                                                                                '<canvas id="wordChart' + cont + '" width="400" height="400"></canvas>' +                                                                
+                                                                                            '</div>' +
+                                                                                            '<div id="bigram' + cont + '">' +
+                                                                                                '<canvas id="bigramChart' + cont + '" width="400" height="400"></canvas>' +                                                                
+                                                                                            '</div>' +
+                                                                                            '<div id="trigram' + cont + '">' +
+                                                                                                '<canvas id="trigramChart' + cont + '" width="400" height="400"></canvas>' +                                                                
+                                                                                            '</div>' +
+                                                                                        '</div>' +
+                                                                                        '<div id="beginWORDCLOUDord' + cont + '" class="col s12">' +
+                                                                                            '<canvas id="beginCanvasord' + cont + '" width="640" height="480" style="border:1px solid #000000;"></canvas>' +
+                                                                                        '</div>' +
+                                                                                    '</div>' +
+                                                                                '</span>' +
+                                                                            '</div>' +
+                                                                        '</li>';
+                                                                        cont++;
                                                             });
                                                             htmlao += "</ul>";
                                                             htmlao += "</div>" +
@@ -1116,6 +1152,7 @@
                                     list.push([t, 100]);
                                 });
                                 list.splice(0,1);
+                                try {
                                 WordCloud(document.getElementById("myCanvas" + v.numero), { list: list } );
                                 (v.artigos).forEach(function(g, h) {
                                     var lista = (g.mainWords).split(" ");
@@ -1124,9 +1161,12 @@
                                         list2.push([lista[i], lista[i+1]]);
                                     }
                                     list2.splice(0,1);
-                                    WordCloud(document.getElementById("groupCanvas" + num), { list: list2 } );
+                                    WordCloud(document.getElementById('beginCanvasord' + num), { list: list2 } );
                                     num++;
                                 });
+                                } catch (e) {
+                                    console.log(e.message);
+                                }
                             });
                             $('ul.tabs').tabs();
                             $('.collapsible').collapsible();

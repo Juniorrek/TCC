@@ -118,8 +118,11 @@ public class ProjetoController {
         model.addAttribute("sinonimosResultadoJson", g.toJson(projeto.getSinonimosResultado()));
         Usuario lider = UsuarioDao.carregar(projeto);
         Usuario logado = (Usuario) session.getAttribute("logado");
-        if (logado.getEmail().equals(lider.getEmail())) projeto.setLider(1);
-        else projeto.setLider(0);
+        
+        if (logado.getEmail().equals(lider.getEmail())) 
+            projeto.setLider(1);
+        else 
+            projeto.setLider(0);
         
         String path = Singleton.UPLOAD_DIR + "/" + lider.getEmail() + "/" + projeto.getId() + "/";
         Call c = new Call();
@@ -135,6 +138,7 @@ public class ProjetoController {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }
         model.addAttribute("segmentos_artigos", segmentos_artigos);
+        
         if (tfidf != null) {
             model.addAttribute("tfidfWord", tfidf.get(0));
             model.addAttribute("tfidfBigram", tfidf.get(1));

@@ -386,7 +386,7 @@ public class Call {
                     }
                    
                     ArrayList<String> tfs = new ArrayList<>();
-                    tfs.add(wordTop20);
+                    tfs.add(wordTop20.replace("'", ""));
                     tfs.add(bigramTop20);
                     tfs.add(trigramTop20);
                     projetoDao.editarPesquisa(p);
