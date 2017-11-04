@@ -111,6 +111,7 @@
                                                         <tr>
                                                             <th hidden>Id</th>
                                                             <th>Nome</th>
+                                                            <th>Comentarios</th>
                                                             <th>Ação</th>
                                                         </tr>
                                                     </thead>
@@ -119,6 +120,7 @@
                                                             <tr>
                                                                 <td hidden></td>
                                                                 <td>${artigo.nome.replace(".pdf", "")}</td>
+                                                                <td><div class="chip">${artigo.comentarios}</div></td>
                                                                 <td>
                                                                     <button class="btn-floating wavesartigo-effect waves-light blue" onclick="visualizarArtigo(${artigo.id})"><i class="material-icons">visibility</i></button>
                                                                     <c:if test="${projeto.lider == 1}">
@@ -512,7 +514,7 @@
                     "columnDefs": [
                         { 
                             "width": "20%",
-                            "targets": 2,
+                            "targets": 3,
                             "orderable": false,
                             "searchable": false
                         }
@@ -611,7 +613,9 @@
                         $('#modalVizualizarArtigo #observacaoArtigo').val(retorno.observacao);
                         var observacoes = "";
                         retorno.observacoes.forEach(function (v, k) {
-                            observacoes += v.usuario_nome + ": " + v.observacao + "<br/>";
+                            observacoes += '<div class="card white"><div class="card-content"><span class="card-title">'
+                                            +  v.usuario_nome + '</span>' +
+                                            '<p>' + v.observacao + '</p></div></div>';
                         });
                         $('#modalVizualizarArtigo #observacoes').html(observacoes);
                         
