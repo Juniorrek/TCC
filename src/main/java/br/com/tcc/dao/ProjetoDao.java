@@ -211,6 +211,7 @@ public class ProjetoDao {
         Connection connection = new ConnectionFactory().getConnection();
         PreparedStatement stmt = null;
         ResultSet rs = null;
+        ResultSet rs2 = null;
         List<String> sinonimosObjetivo = new ArrayList<String>();
         List<String> sinonimosMetodologia = new ArrayList<String>();
         List<String> sinonimosResultado = new ArrayList<String>();
@@ -238,6 +239,14 @@ public class ProjetoDao {
                     Artigo artigo = new Artigo();
                     artigo.setId(rs.getInt("id"));
                     artigo.setNome(rs.getString("arq_nome"));
+                    
+                    //Numero comentarios
+                    stmt = connection.prepareStatement("SELECT COUNT(*) comentarios FROM Rel_Usu_Art WHERE art_id = ?");
+                    stmt.setInt(1, artigo.getId());
+                    rs2 = stmt.executeQuery();
+                    if (rs2.next()) artigo.setComentarios(rs2.getInt("comentarios"));
+                    else artigo.setComentarios(0);
+                    
                     artigos.add(artigo);
                 }
                 projeto.setArtigos(artigos);
@@ -277,6 +286,9 @@ public class ProjetoDao {
             Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
         } finally {
+            if (rs2 != null)
+                try { rs2.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
             if (rs != null)
                 try { rs.close(); }
                 catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }

@@ -1,8 +1,11 @@
 package br.com.tcc.model;
 
 public class Artigo implements java.io.Serializable {
+    private static final long serialVersionUID = -4222251466973563418L;
+    
     private int id;
     private String objetivo, metodologia, resultado, resumo, nome, filepath, mainWords, mainBigrams, mainTrigrams, imgWord, wordcloud;
+    private Integer comentarios;
 
     public Artigo() {}
 
@@ -102,5 +105,11 @@ public class Artigo implements java.io.Serializable {
         this.mainTrigrams = mainTrigrams;
     }
 
-    
+    public Integer getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(Integer comentarios) {
+        this.comentarios = comentarios;
+    }
 }

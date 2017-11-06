@@ -24,7 +24,9 @@
             </ul>
             <nav class="blue blue-darken-1">
                 <div class="container nav-wrapper">
-                    <a href="${pageContext.request.contextPath}/principal" class="brand-logo">Tritomus</a>
+                    <a href="${pageContext.request.contextPath}/principal" class="brand-logo">
+                        <img class="responsive-img" style="height: 60px;" src="${pageContext.request.contextPath}/resources/images/artemisLogo.png" />
+                    </a>
                     <a href="#" data-activates="mobile-menu" class="button-collapse"><i class="material-icons">menu</i></a>
                     <ul class="right hide-on-med-and-down">
                       <li><a href="${pageContext.request.contextPath}/principal"><i class="material-icons left">home</i>Home</a></li>

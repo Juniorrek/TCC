@@ -26,7 +26,9 @@
             </ul>
             <nav class="blue blue-darken-1">
                 <div class="container nav-wrapper">
-                    <a href="${pageContext.request.contextPath}/principal" class="brand-logo">Tritomus</a>
+                    <a href="${pageContext.request.contextPath}/principal" class="brand-logo">
+                        <img class="responsive-img" style="height: 60px;" src="${pageContext.request.contextPath}/resources/images/artemisLogo.png" />
+                    </a>
                     <a href="#" data-activates="mobile-menu" class="button-collapse"><i class="material-icons">menu</i></a>
                     <ul class="right hide-on-med-and-down">
                       <li><a href="${pageContext.request.contextPath}/principal"><i class="material-icons left">home</i>Home</a></li>
@@ -109,6 +111,7 @@
                                                         <tr>
                                                             <th hidden>Id</th>
                                                             <th>Nome</th>
+                                                            <th>Comentarios</th>
                                                             <th>Ação</th>
                                                         </tr>
                                                     </thead>
@@ -117,6 +120,7 @@
                                                             <tr>
                                                                 <td hidden></td>
                                                                 <td>${artigo.nome.replace(".pdf", "")}</td>
+                                                                <td><div class="chip">${artigo.comentarios}</div></td>
                                                                 <td>
                                                                     <button class="btn-floating wavesartigo-effect waves-light blue" onclick="visualizarArtigo(${artigo.id})"><i class="material-icons">visibility</i></button>
                                                                     <c:if test="${projeto.lider == 1}">
@@ -511,7 +515,7 @@
                     "columnDefs": [
                         { 
                             "width": "20%",
-                            "targets": 2,
+                            "targets": 3,
                             "orderable": false,
                             "searchable": false
                         }
@@ -610,7 +614,9 @@
                         $('#modalVizualizarArtigo #observacaoArtigo').val(retorno.observacao);
                         var observacoes = "";
                         retorno.observacoes.forEach(function (v, k) {
-                            observacoes += v.usuario_nome + ": " + v.observacao + "<br/>";
+                            observacoes += '<div class="card white"><div class="card-content"><span class="card-title">'
+                                            +  v.usuario_nome + '</span>' +
+                                            '<p>' + v.observacao + '</p></div></div>';
                         });
                         $('#modalVizualizarArtigo #observacoes').html(observacoes);
                         
