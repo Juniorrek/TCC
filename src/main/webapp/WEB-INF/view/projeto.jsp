@@ -354,7 +354,8 @@
             </div>
             <div class="modal-footer">
                 <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
-                <a class="modal-action modal-close waves-effect waves-light btn-flat green accent-4">Pronto</a>
+                <a class="waves-effect waves-light btn-flat green accent-4" id="trigger-upload"><i class="tiny material-icons">file_upload</i>Enviar</a> 
+                <!--<a class="modal-action modal-close waves-effect waves-light btn-flat green accent-4">Pronto</a>-->
             </div>
         </div>
                                         
@@ -1202,86 +1203,102 @@
             };
         </script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/fine-uploader/fine-uploader/fine-uploader.min.js"></script>
-        <script type="text/template" id="qq-template">
-            <div class="qq-uploader-selector qq-uploader" qq-drop-area-text="Arraste seus artigos aqui">
-                <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
-                    <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
-                </div>
-                <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
-                    <span class="qq-upload-drop-area-text-selector"></span>
-                </div>
-                <div class="qq-upload-button-selector qq-upload-button">
-                    <div>Inserir um artigo</div>
-                </div>
-                <span class="qq-drop-processing-selector qq-drop-processing">
-                    <span>Processing dropped files...</span>
-                    <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
-                </span>
-                <ul class="qq-upload-list-selector qq-upload-list" aria-live="polite" aria-relevant="additions removals">
-                    <li>
-                        <div class="qq-progress-bar-container-selector">
-                            <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-progress-bar-selector qq-progress-bar"></div>
-                        </div>
-                        <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
-                        <img class="qq-thumbnail-selector" qq-max-size="100" qq-server-scale>
-                        <span class="qq-upload-file-selector qq-upload-file"></span>
-                        <span class="qq-edit-filename-icon-selector qq-edit-filename-icon" aria-label="Edit filename"></span>
-                        <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
-                        <span class="qq-upload-size-selector qq-upload-size"></span>
-                        <button type="button" class="qq-btn qq-upload-cancel-selector qq-upload-cancel">Cancel</button>
-                        <button type="button" class="qq-btn qq-upload-retry-selector qq-upload-retry">Retry</button>
-                        <button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">Delete</button>
-                        <span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
-                    </li>
-                </ul>
-
-                <dialog class="qq-alert-dialog-selector">
-                    <div class="qq-dialog-message-selector"></div>
-                    <div class="qq-dialog-buttons">
-                        <button type="button" class="qq-cancel-button-selector">Close</button>
-                    </div>
-                </dialog>
-
-                <dialog class="qq-confirm-dialog-selector">
-                    <div class="qq-dialog-message-selector"></div>
-                    <div class="qq-dialog-buttons">
-                        <button type="button" class="qq-cancel-button-selector">No</button>
-                        <button type="button" class="qq-ok-button-selector">Yes</button>
-                    </div>
-                </dialog>
-
-                <dialog class="qq-prompt-dialog-selector">
-                    <div class="qq-dialog-message-selector"></div>
-                    <input type="text">
-                    <div class="qq-dialog-buttons">
-                        <button type="button" class="qq-cancel-button-selector">Cancel</button>
-                        <button type="button" class="qq-ok-button-selector">Ok</button>
-                    </div>
-                </dialog>
+    <script type="text/template" id="qq-template-manual-trigger">
+        <div class="qq-uploader-selector qq-uploader" qq-drop-area-text="Arraste arquivos aqui">
+            <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
+                <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
             </div>
-        </script>
-        <script>
-            var uploader = new qq.FineUploader({
-                element: document.getElementById("uploader"),
-                request: {
-                    endpoint: "${pageContext.request.contextPath}/projetos/artigos/adicionar",
-                    params: {
-                        projeto: '${projeto.id}'
-                    }
-                },
-                success: true,
-                callbacks: {
-                    onComplete: function(id, name, response) {
-                        if (response.success) {
-                            $('#tableArtigos').load(document.URL +  ' #tableArtigos');
-                        }
+            <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+                <span class="qq-upload-drop-area-text-selector"></span>
+            </div>
+            <div class="buttons">
+                <div class="qq-upload-button-selector qq-upload-button">
+                    <div>Selecionar arquivos</div>
+                </div>
+            </div>
+            <span class="qq-drop-processing-selector qq-drop-processing">
+                <span>Processando arquivos descartados...</span>
+                <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+            </span>
+            <ul class="qq-upload-list-selector qq-upload-list" aria-live="polite" aria-relevant="additions removals">
+                <li>
+                    <div class="qq-progress-bar-container-selector">
+                        <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-progress-bar-selector qq-progress-bar"></div>
+                    </div>
+                    <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                    <img class="qq-thumbnail-selector" qq-max-size="100" qq-server-scale>
+                    <span class="qq-upload-file-selector qq-upload-file"></span>
+                    <span class="qq-edit-filename-icon-selector qq-edit-filename-icon" aria-label="Editar nome do arquivo"></span>
+                    <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+                    <span class="qq-upload-size-selector qq-upload-size"></span>
+                    <button type="button" class="qq-btn qq-upload-cancel-selector qq-upload-cancel">Cancelar</button>
+                    <button type="button" class="qq-btn qq-upload-retry-selector qq-upload-retry">Tentar novamente</button>
+                    <button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">Deletar</button>
+                    <span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                </li>
+            </ul>
+
+            <dialog class="qq-alert-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <div class="qq-dialog-buttons">
+                    <button type="button" class="qq-cancel-button-selector">Fechar</button>
+                </div>
+            </dialog>
+
+            <dialog class="qq-confirm-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <div class="qq-dialog-buttons">
+                    <button type="button" class="qq-cancel-button-selector">Não</button>
+                    <button type="button" class="qq-ok-button-selector">Sim</button>
+                </div>
+            </dialog>
+
+            <dialog class="qq-prompt-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <input type="text">
+                <div class="qq-dialog-buttons">
+                    <button type="button" class="qq-cancel-button-selector">Cancelar</button>
+                    <button type="button" class="qq-ok-button-selector">Ok</button>
+                </div>
+            </dialog>
+        </div>
+    </script>
+
+    <script>
+        var manualUploader = new qq.FineUploader({
+            element: document.getElementById('uploader'),
+            request: {
+                endpoint: "${pageContext.request.contextPath}/projetos/artigos/adicionar",
+                params: {
+                    projeto: '${projeto.id}'
+                }
+            },
+            validation: {
+                allowedExtensions: ['pdf'],
+                sizeLimit: 10485760 // 10 MB = 10 * 1024 * 1024 bytes
+            },
+            success: true,
+            callbacks: {
+                onAllComplete: function(succeeded, failed) {
+                    console.log(succeeded);
+                    console.log(failed);
+                    console.log("Failed length: " + failed.length);
+                    if (succeeded.length !== 0) {
+//                        $('#tableArtigos').load(document.URL +  ' #tableArtigos');
+                    } else {
+                        console.error("Problemas ao baixar os  artigos");
+                        console.log(failed);
                     }
                 }
-                //autoUpload: false,
-                //text: {
-                //    uploadButton: '<i class="icon-plus icon-white"></i> Select Files'
-                //}
-            });
-        </script>
+            },
+            template: 'qq-template-manual-trigger',
+            autoUpload: false,
+            debug: true
+        });
+
+        qq(document.getElementById("trigger-upload")).attach("click", function() {
+            manualUploader.uploadStoredFiles();
+        });
+    </script>
     </body>
 </html>

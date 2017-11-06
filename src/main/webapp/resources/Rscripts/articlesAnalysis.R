@@ -7,7 +7,7 @@ articlesAnalysis = function (txt_folder, synonyms = NULL) {
   library(tidyr)
   
   file_names <- list.files(path = txt_folder, pattern = ".txt")
-  file_names <- substr(file_names, 1, 50)
+  file_names <- substr(file_names, 1, stri_length(file_names) - 7)
   
   articles <- data_frame(file = dir(path = txt_folder, pattern = ".txt", full.names = TRUE)) %>%
     mutate(text = unlist(gsub('[0-9]+', '', map(file, read_lines)))) %>%

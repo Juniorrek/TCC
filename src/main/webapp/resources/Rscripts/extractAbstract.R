@@ -3,8 +3,10 @@ extractAbstract = function (pdfFolder, pdfToText) {
   myfiles <- list.files(path = pdfFolder, pattern = ".pdf",  full.names = TRUE)
   
   #Remoção dos espaços para que o pdftotext.exe funcione
-  sapply(myfiles, FUN = function(i){
-    file.rename(from = i, to =  paste0(dirname(i), "/", gsub(" ", "_", basename(i))))
+  sapply(myfiles, FUN = function(i) {
+    newName <- gsub("[^a-zA-Z\\d ]", "", basename(i), perl=TRUE)
+    newName <- gsub(" ", "_", newName)
+    file.rename(from = i, to =  paste0(dirname(i), "/", newName))
   })
   
   #Atualiza a lista com os nomes agora sem espaços

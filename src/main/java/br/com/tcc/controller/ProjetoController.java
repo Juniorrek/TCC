@@ -151,6 +151,7 @@ public class ProjetoController {
     @RequestMapping(value = "/projetos/artigos/adicionar", method = RequestMethod.POST)    
     public @ResponseBody String projetosArtigosAdicionar(@RequestParam("qqfile") MultipartFile file, @RequestParam("projeto") Integer id, HttpServletRequest request) {
         try {
+            System.out.println("projetosArtigosAdicionar called");
             Projeto projeto = ProjetoDao.carregar(id);
             Usuario usuario = UsuarioDao.carregar(projeto);
             

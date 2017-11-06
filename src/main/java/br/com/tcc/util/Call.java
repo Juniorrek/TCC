@@ -21,6 +21,7 @@ public class Call {
         private final String pdftotext = Singleton.PDF_TO_TEXT_PATH; //caminho pro pdftotext
         
         public List<Artigo> articlesAnalysis(String pathorigem, Pesquisa p) throws REXPMismatchException, REngineException, IOException, FileNotFoundException, ClassNotFoundException, SQLException {
+            System.out.println("articlesAnalysis called");
             RConnection connection = null;
             String path = pathorigem + "temp";
             File f = new File(path);
@@ -116,6 +117,7 @@ public class Call {
                             artigo.setMainBigrams(mainBigrams);
                             artigo.setMainTrigrams(mainTrigrams);
                             artigos.add(artigo);
+                            System.out.println("Artigo " + i + ": " + artigo.getNome());
                         }
                         p.setLista(artigos);
                         projetoDao.salvarPesquisa(p);
