@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.rosuda.REngine.REXPMismatchException;
@@ -449,7 +450,7 @@ public class ProjetoDao {
             stmt.setString(1, p.getUsuario().getEmail());
             stmt.setInt(2, p.getProjeto().getId());
             stmt.executeUpdate();
-            stmt = connection.prepareStatement("INSERT INTO Pesquisa (usuario, projeto, lista, sinonimo_objetivo, sinonimo_metodologia, sinonimo_resultado) VALUES (?, ?, ?, ?, ?, ?)");
+            stmt = connection.prepareStatement("INSERT INTO Pesquisa (usuario, projeto, lista, sinonimo_objetivo, sinonimo_metodologia, sinonimo_resultado, termos_relevantes) VALUES (?, ?, ?, ?, ?, ?, ?)");
             stmt.setString(1, p.getUsuario().getEmail());
             stmt.setInt(2, p.getProjeto().getId());
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -463,6 +464,16 @@ public class ProjetoDao {
             stmt.setString(4,p.getSinonimosObjetivo());
             stmt.setString(5,p.getSinonimosMetodologia());
             stmt.setString(6,p.getSinonimosResultado());
+            ArrayList<String> lista = new ArrayList();
+            lista.add("novo");
+            bos = new ByteArrayOutputStream();
+            oos = new ObjectOutputStream(bos);
+            oos.writeObject(lista);
+            oos.flush();
+            oos.close();
+            bos.close();
+            data = bos.toByteArray();
+            stmt.setObject(7, data);
             stmt.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -506,4 +517,30 @@ public class ProjetoDao {
                 catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
         }
     }
+    
+    public static void excluirPesquisa(Pesquisa p) throws SQLException, REXPMismatchException, IOException, ClassNotFoundException {
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
+        
+        try {
+            Pesquisa p2 = carregarPesquisa(p, 2);
+            if(Objects.nonNull(p2)){
+                stmt = connection.prepareStatement("DELETE FROM Pesquisa WHERE usuario=? and projeto=?");
+                stmt.setString(1, p.getUsuario().getEmail());
+                stmt.setInt(2, p.getProjeto().getId());
+                stmt.executeUpdate();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
+    }
+    
 }

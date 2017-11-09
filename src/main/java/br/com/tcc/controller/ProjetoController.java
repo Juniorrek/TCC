@@ -133,7 +133,7 @@ public class ProjetoController {
             p.setUsuario(lider);
             p.setProjeto(projeto);
             segmentos_artigos = c.articlesAnalysis(path, p);
-            tfidf = c.graphicTfIdf(path, p);
+            tfidf = c.graphicTfIdf(p);
         } catch (REXPMismatchException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -1070,7 +1070,7 @@
                                                                 htmlao += '<li>' +
                                                                             '<div class="collapsible-header article-header"' +
                                                                                 `onclick="nuvem('` + t.mainWords + `','` + cont +  `', 'ord')">` +
-                                                                                cont + ' - ' + t.nome + 
+                                                                                t.nome + 
                                                                             '</div>' +
                                                                             '<div class="collapsible-body">' +
                                                                                 '<span>' +

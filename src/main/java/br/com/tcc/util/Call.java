@@ -46,6 +46,7 @@ public class Call {
                     connection.eval("temp <- gsub(\"\\\\..*\", \"\", list.files(\"" + path + "\" , pattern = \".txt\"))");
                     connection.eval("origem <- gsub(\"\\\\..*\", \"\", list.files(\"" + pathorigem + "\" , pattern = \".pdf\"))");
                     if(connection.eval("length(origem)==0").asString().equals("TRUE")) {
+                        projetoDao.excluirPesquisa(p);
                         return null;
                     }
                     if(Objects.nonNull(p2)){    
@@ -352,15 +353,22 @@ public class Call {
         }*/
         
         
-        public ArrayList<String> graphicTfIdf(String pathorigem, Pesquisa p) throws REXPMismatchException, REngineException, IOException, FileNotFoundException, ClassNotFoundException, SQLException {
+        public ArrayList<String> graphicTfIdf(Pesquisa p) throws REXPMismatchException, REngineException, IOException, FileNotFoundException, ClassNotFoundException, SQLException {
             RConnection connection = null;
             ProjetoDao projetoDao = new ProjetoDao();
             p = projetoDao.carregarPesquisa(p, 2);
+            System.out.println("entrei no tfidf");
             if(!Objects.nonNull(p)){
+                System.out.println("sem pesquisa");
                 return null;
-            }                
-            if(p.getTermosRelevantes()==null){
+            }
+            if(!Objects.nonNull(p.getLista()) || p.getLista().size()<2){
+                System.out.println("lista null ou lista menor q 2");
+                return null;
+            }
+            if(p.getTermosRelevantes().get(0).equals("novo")){
                 try {
+                    System.out.println("novotfidf");
                     connection = new RConnection();
                     connection.eval("library(dplyr)");
                     connection.eval("library(readr)");
