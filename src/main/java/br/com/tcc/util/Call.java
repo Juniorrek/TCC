@@ -59,6 +59,7 @@ public class Call {
                         }
                     }
                     else{
+                        connection.eval("origemadapt <- origem");
                         analise++;
                     }
                     
