@@ -413,7 +413,7 @@ public class ProjetoDao {
                 ByteArrayInputStream bais = new ByteArrayInputStream(rs.getBytes("lista"));
                 ObjectInputStream ins = new ObjectInputStream(bais);
                 List<Artigo> lista =(List<Artigo>)ins.readObject();
-                p.setLista(lista);                
+                p.setLista(lista);
                 if(rs.getBytes("termos_relevantes")!=null){
                     bais = new ByteArrayInputStream(rs.getBytes("termos_relevantes"));
                     ins = new ObjectInputStream(bais);
@@ -422,7 +422,7 @@ public class ProjetoDao {
                 }
                 return p;
             } else {
-                return p;
+                return null;
             }
         } catch (SQLException ex) {
             Logger.getLogger(ProjetoDao.class.getName()).log(Level.SEVERE, null, ex);

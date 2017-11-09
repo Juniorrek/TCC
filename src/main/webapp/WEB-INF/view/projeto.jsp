@@ -380,7 +380,7 @@
                                         
         <div id="modalVizualizarArtigo" class="modal">
             <div class="modal-content">
-                <h4>Vizualizar artigo</h4>
+                <h4>Visualizar artigo</h4>
                 <iframe width="100%" height="480"></iframe>
                 <div class="row">
                     <div class="col s10">
