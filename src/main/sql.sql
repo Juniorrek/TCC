@@ -65,3 +65,13 @@ CREATE TABLE Pesquisa (
     FOREIGN KEY (usuario) REFERENCES Usuario (email),
     FOREIGN KEY (projeto) REFERENCES Projeto (id)
 );
+
+CREATE TABLE Rel_Usu_Art (
+    art_id INT,
+    usu_email VARCHAR(100),
+    observacoes VARCHAR(250),
+
+    PRIMARY KEY (art_id, usu_email),
+    FOREIGN KEY (art_id) REFERENCES Rel_Arq_Pro (id),
+    FOREIGN KEY (usu_email) REFERENCES Usuario (email)
+);

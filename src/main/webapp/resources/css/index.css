@@ -16,3 +16,21 @@
     justify-content: center;
     align-items: center;
 }
+
+.functionality-title {
+    color: #000000;
+    font-size: 30px !important;
+}
+
+.functionality-desc {
+    color: #000000;
+    font-size: 20px !important;
+}
+
+.indicator-item {
+    background-color: rgb(33, 150, 243) !important;
+}
+
+.indicator-item.active {
+    background-color: red !important;
+}
