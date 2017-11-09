@@ -8,19 +8,18 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 
-        <link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="node_modules/font-awesome/css/font-awesome.min.css">
-        <link rel="stylesheet" type="text/css" href="node_modules/fine-uploader/fine-uploader/fine-uploader-new.min.css">
-        <link rel="stylesheet" type="text/css" href="resources/css/style.css">
-</script>
-
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/fine-uploader/fine-uploader/fine-uploader-new.min.css">
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css">
+        <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/icons/favicon.ico">
     </head>
     <body>
         <header>
             <nav class="navbar navbar-expand-lg navbar-dark bg-ocean">
                 <div class="container">
-                    <a class="navbar-brand" href="#">
-                        <img src="resources/images/tritomus.png" width="40" height="32" class="d-inline-block align-top" alt="">
+                    <a class="navbar-brand" href="${pageContext.request.contextPath}/principal">
+                        <img src="${pageContext.request.contextPath}/resources/images/tritomus.png" width="40" height="32" class="d-inline-block align-top" alt="">
                         Tritomus
                     </a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsHeader" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,23 +29,23 @@
                     <div class="collapse navbar-collapse" id="navbarsHeader">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="principal.jsp">Home</span></a>
+                                <a class="nav-link" href="${pageContext.request.contextPath}/principal">&nbsp; Home <span class="sr-only">(current)</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="projetos.jsp">Projetos</a>
+                                <a class="nav-link" href="${pageContext.request.contextPath}/projetos">&nbsp; Projetos</a>
                             </li>
                             <li class="nav-item active">
-                                <a class="nav-link" href="artigos.jsp">Artigos <span class="sr-only">(current)</a>
+                                <a class="nav-link" href="${pageContext.request.contextPath}/artigos">&nbsp; Artigos</a>
                             </li>
                         </ul>
                         <ul class="navbar-nav">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle fa-fw" aria-hidden="true"></i> Nome</a>
                                 <div class="dropdown-menu" aria-labelledby="dropdown">
-                                    <a class="dropdown-item" href="#"><i class="fa fa-address-card fa-fw" aria-hidden="true"></i> Meu perfil</a>
-                                    <a class="dropdown-item" href="#"><i class="fa fa-cog fa-fw" aria-hidden="true"></i> Outra parada</a>
+                                    <a class="dropdown-item" href="#"><i class="fa fa-address-card fa-fw" aria-hidden="true"></i>&nbsp; Meu perfil</a>
+                                    <a class="dropdown-item" href="#"><i class="fa fa-cog fa-fw" aria-hidden="true"></i>&nbsp; Outra parada</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="index.jsp"><i class="fa fa-sign-out fa-fw" aria-hidden="true"></i> Logout</a>
+                                    <a class="dropdown-item" href="${pageContext.request.contextPath}/logout"><i class="fa fa-sign-out fa-fw" aria-hidden="true"></i>&nbsp; Logout</a>
                                 </div>
                             </li>
                         </ul>
@@ -63,10 +62,10 @@
             </div>
         </div>
 
-        <script type="text/javascript" src="node_modules/jquery/dist/jquery.js"></script>
-        <script type="text/javascript" src="node_modules/popper.js/dist/umd/popper.min.js"></script>
-        <script type="text/javascript" src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
-        <script type="text/javascript" src="node_modules/fine-uploader/fine-uploader/fine-uploader.min.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/jquery/dist/jquery.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/popper.js/dist/umd/popper.min.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/bootstrap/dist/js/bootstrap.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/fine-uploader/fine-uploader/fine-uploader.min.js"></script>
         <script type="text/template" id="qq-template">
             <div class="qq-uploader-selector qq-uploader" qq-drop-area-text="Drop files here">
                 <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
@@ -129,9 +128,14 @@
             var uploader = new qq.FineUploader({
                 element: document.getElementById("uploader"),
                 request: {
-                    endpoint: 'upload'
-                }
-            })
+                    endpoint: "${pageContext.request.contextPath}/InserirServlet"
+                },
+                success: true
+                //autoUpload: false,
+                //text: {
+                //    uploadButton: '<i class="icon-plus icon-white"></i> Select Files'
+                //}
+            });
         </script>
     </body>
 </html>

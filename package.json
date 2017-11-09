@@ -6,10 +6,13 @@
   "author": "Juniorrek <juniorrek@hotmail.com>",
   "license": "MIT",
   "dependencies": {
-    "bootstrap": "4.0.0-beta",
+    "chart.js": "^2.7.0",
+    "datatables.net": "^1.10.15",
+    "datatables.net-dt": "^1.10.16",
     "fine-uploader": "^5.15.0",
-    "font-awesome": "^4.7.0",
     "jquery": "^3.2.1",
-    "popper.js": "^1.12.3"
+    "material-design-icons-iconfont": "^3.0.3",
+    "materialize-css": "^0.100.2",
+    "wordcloud": "^1.0.6"
   }
 }

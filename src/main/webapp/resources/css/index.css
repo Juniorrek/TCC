@@ -1,0 +1,18 @@
+.background-image {
+    background: url('../images/background-grayscale.png');
+}
+
+.mais-button {
+    background-color: #ff7d07 !important;
+    border-color: #ff7d07 !important;
+    color: white;
+}
+     
+.center {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
