@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.REngineException;
 import org.rosuda.REngine.Rserve.RConnection;
@@ -21,7 +22,6 @@ public class Call {
         private final String pdftotext = Singleton.PDF_TO_TEXT_PATH; //caminho pro pdftotext
         
         public List<Artigo> articlesAnalysis(String pathorigem, Pesquisa p) throws REXPMismatchException, REngineException, IOException, FileNotFoundException, ClassNotFoundException, SQLException {
-            System.out.println("articlesAnalysis called");
             RConnection connection = null;
             String path = pathorigem + "temp";
             File f = new File(path);
@@ -43,10 +43,18 @@ public class Call {
                     ProjetoDao projetoDao = new ProjetoDao();
                     Pesquisa p2 = projetoDao.carregarPesquisa(p, 1);
                     int analise=0;
-                    if(p2!=null){
-                        connection.eval("temp <- gsub(\"\\\\..*\", \"\", list.files(\"" + path + "\" , pattern = \".txt\"))");
-                        connection.eval("origem <- gsub(\"\\\\..*\", \"\", list.files(\"" + pathorigem + "\" , pattern = \".pdf\"))");   
-                        if(!connection.eval("(all.equal(temp, origem))==TRUE").asString().equals("TRUE")){
+                    connection.eval("temp <- gsub(\"\\\\..*\", \"\", list.files(\"" + path + "\" , pattern = \".txt\"))");
+                    connection.eval("origem <- gsub(\"\\\\..*\", \"\", list.files(\"" + pathorigem + "\" , pattern = \".pdf\"))");
+                    if(connection.eval("length(origem)==0").asString().equals("TRUE")) {
+                        projetoDao.excluirPesquisa(p);
+                        return null;
+                    }
+                    if(Objects.nonNull(p2)){    
+                        connection.eval("origemadapt <- gsub(\"_\", \"\", origem)"); //para adaptação
+                        connection.eval("origemadapt <- gsub(\"-\", \"\", origemadapt)"); //para adaptação
+                        connection.eval("origemadapt <- gsub(\" \", \"_\", origemadapt)"); //para adaptação
+                        connection.eval("origemadapt <- paste(origemadapt, \"pdf\", sep=\"\")"); //para adaptação
+                        if(!connection.eval("setequal(origemadapt, temp)").asString().equals("TRUE")){
                             analise++;
                         }
                     }
@@ -60,12 +68,13 @@ public class Call {
                         connection.eval("synonyms$methodology <- c(" + p.getSinonimosMetodologia() + ")");
                         connection.eval("synonyms$conclusion <- c(" + p.getSinonimosResultado() + ")");
                         
-                        connection.eval("excluir <- temp[!temp %in% origem]"); //Excluir arquivos que não serão usados na anÃ¡lise
+                        connection.eval("excluir <- temp[!temp %in% origemadapt]"); //Excluir arquivos que não serão usados na analise
                         connection.eval("excluir <- paste(excluir, \".txt\", sep=\"\")");
                         connection.eval("excluir <- paste(\"" + path + "/\", excluir, sep=\"\")");
                         connection.eval("file.remove(excluir)");
                                                 
-                        connection.eval("incluir <- origem[!origem %in% temp]"); //Arquivos que serão adicionados na anÃ¡lise
+                        connection.eval("incluir <- which(!origemadapt %in% temp)"); //Arquivos que serão adicionados na analise
+                        connection.eval("incluir <- origem[incluir]");
                         connection.eval("incluir <- paste(incluir, \".pdf\", sep=\"\")");
                         String caminhoTemporario = pathorigem + "temp2";
                         connection.eval("incluir <- paste(\"" + pathorigem + "\", incluir, sep=\"\")");
@@ -73,11 +82,12 @@ public class Call {
                         f2.mkdirs();
                         connection.eval("file.copy(incluir,\"" + caminhoTemporario + "\")");
                         connection.eval("xx <- extractAbstract(\"" + caminhoTemporario + "\",\'\"" + pdftotext + "\"\')");
-                        connection.eval("junk <- dir(path = \"" + caminhoTemporario + "\", pattern = \".+abstract.+\", full.names = TRUE)");
+                        connection.eval("junk <- dir(path = \"" + caminhoTemporario + "\", pattern = \"*pdf$\", full.names = TRUE)");
                         connection.eval("file.remove(junk)");
                         connection.eval("incluir <- list.files(\"" + caminhoTemporario + "\" , pattern = \".txt\")");
                         connection.eval("incluir <- paste(\"" + caminhoTemporario + "/\", incluir, sep=\"\")");
                         connection.eval("file.copy(incluir,\"" + path + "\")");
+                        connection.eval("file.remove(incluir)");
                         f2.delete();
 
                         connection.eval("meanVal <- articlesAnalysis(\"" + path + "\")");
@@ -343,12 +353,22 @@ public class Call {
         }*/
         
         
-        public ArrayList<String> graphicTfIdf(String pathorigem, Pesquisa p) throws REXPMismatchException, REngineException, IOException, FileNotFoundException, ClassNotFoundException, SQLException {
+        public ArrayList<String> graphicTfIdf(Pesquisa p) throws REXPMismatchException, REngineException, IOException, FileNotFoundException, ClassNotFoundException, SQLException {
             RConnection connection = null;
             ProjetoDao projetoDao = new ProjetoDao();
             p = projetoDao.carregarPesquisa(p, 2);
-            if(p.getTermosRelevantes()==null){
+            System.out.println("entrei no tfidf");
+            if(!Objects.nonNull(p)){
+                System.out.println("sem pesquisa");
+                return null;
+            }
+            if(!Objects.nonNull(p.getLista()) || p.getLista().size()<2){
+                System.out.println("lista null ou lista menor q 2");
+                return null;
+            }
+            if(p.getTermosRelevantes().get(0).equals("novo")){
                 try {
+                    System.out.println("novotfidf");
                     connection = new RConnection();
                     connection.eval("library(dplyr)");
                     connection.eval("library(readr)");
@@ -391,6 +411,7 @@ public class Call {
                     tfs.add(wordTop20.replace("'", ""));
                     tfs.add(bigramTop20);
                     tfs.add(trigramTop20);
+                    p.setTermosRelevantes(tfs);
                     projetoDao.editarPesquisa(p);
                     return tfs;
                 } catch (RserveException e) {
