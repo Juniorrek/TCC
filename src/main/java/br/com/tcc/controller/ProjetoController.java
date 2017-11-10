@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.sql.SQLException;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -157,9 +158,10 @@ public class ProjetoController {
             
             String filePath = Singleton.UPLOAD_DIR + "/"
                                 + usuario.getEmail() + "/"
-                                + projeto.getId().toString() + "/"
-                                + file.getOriginalFilename();
-            ArquivoDao.adicionar(file, projeto, filePath);
+                                + projeto.getId().toString() + "/";
+            String nomeArquivo = Normalizer.normalize(file.getOriginalFilename(), Normalizer.Form.NFD).replaceAll("[^a-zA-Z\\d_ ]", "");
+            nomeArquivo = nomeArquivo.substring(0, nomeArquivo.length()-3) + ".pdf";
+            ArquivoDao.adicionar(file, projeto, filePath, nomeArquivo);
         } catch (SQLException | IOException | IllegalStateException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }

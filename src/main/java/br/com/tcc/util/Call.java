@@ -50,9 +50,9 @@ public class Call {
                         return null;
                     }
                     if(Objects.nonNull(p2)){    
-                        connection.eval("origemadapt <- gsub(\"_\", \"\", origem)"); //para adaptação
-                        connection.eval("origemadapt <- gsub(\"-\", \"\", origemadapt)"); //para adaptação
-                        connection.eval("origemadapt <- gsub(\" \", \"_\", origemadapt)"); //para adaptação
+                        //connection.eval("origemadapt <- gsub(\"_\", \"\", origem)"); //para adaptação
+                        //connection.eval("origemadapt <- gsub(\"-\", \"\", origemadapt)"); //para adaptação
+                        connection.eval("origemadapt <- gsub(\" \", \"_\", origem)"); //para adaptação
                         connection.eval("origemadapt <- paste(origemadapt, \"pdf\", sep=\"\")"); //para adaptação
                         if(!connection.eval("setequal(origemadapt, temp)").asString().equals("TRUE")){
                             analise++;
