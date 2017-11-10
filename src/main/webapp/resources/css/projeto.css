@@ -119,3 +119,37 @@
 #fine-uploader-manual-trigger .qq-uploader .qq-total-progress-bar-container {
     width: 60%;
 }
+
+.overflow-text {
+    display: inline-block;
+    white-space: nowrap;
+    width: 32em;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+.overflow-text:hover {
+    background-color: white;
+    border: solid 2px lightgray;
+    border-radius: 6px;
+    overflow:visible;
+}
+
+@media screen and (max-width: 1250px) {
+    .overflow-text {
+        width: 24em;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .overflow-text {
+        width: 16em;
+    }
+}
+
+@media screen and (max-width: 536px) {
+    .overflow-text {
+        width: 12em;
+    }
+}
+

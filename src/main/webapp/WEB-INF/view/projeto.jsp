@@ -119,7 +119,7 @@
                                                         <c:forEach items="${projeto.artigos}" var="artigo">
                                                             <tr>
                                                                 <td hidden></td>
-                                                                <td>${artigo.nome.replaceAll("_"," ").replace(".pdf", "").replaceAll("[^a-zA-Z\\d ]", "")}</td>
+                                                                <td><div class="overflow-text">${artigo.nome.replaceAll("_"," ").replace(".pdf", "").replaceAll("[^a-zA-Z\\d ]", "")}</div></td>
                                                                 <td><div class="chip">${artigo.comentarios}</div></td>
                                                                 <td>
                                                                     <button class="btn-floating wavesartigo-effect waves-light blue" onclick="visualizarArtigo(${artigo.id})"><i class="material-icons">visibility</i></button>

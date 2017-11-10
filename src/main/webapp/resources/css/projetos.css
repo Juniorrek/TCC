@@ -35,3 +35,30 @@
     width: 100% !important;
 }
 
+.overflow-text {
+    display: inline-block;
+    white-space: nowrap;
+    width: 32em;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+.overflow-text:hover {
+    background-color: white;
+    border: solid 2px lightgray;
+    border-radius: 6px;
+    overflow:visible;
+}
+
+@media screen and (max-width: 768px) {
+    .overflow-text {
+        width: 24em;
+    }
+}
+
+@media screen and (max-width: 512px) {
+    .overflow-text {
+        width: 12em;
+    }
+}
+

@@ -63,7 +63,7 @@
                                     <c:forEach items="${projetos}" var="projeto">
                                         <tr>
                                             <td hidden>${projeto.id}</td>
-                                            <td>${projeto.nome}</td>
+                                            <td><div class="overflow-text">${projeto.nome}</div></td>
                                             <td>
                                                 <button class="btn-floating waves-effect waves-light blue" onclick="vizualizarProjeto(${projeto.id})"><i class="material-icons">visibility</i></button>
                                                 <c:if test="${projeto.lider == 1}">
