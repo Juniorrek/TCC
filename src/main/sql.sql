@@ -95,3 +95,11 @@ CREATE TABLE Rel_Usu_Art (
     FOREIGN KEY (art_id) REFERENCES Rel_Arq_Pro (id),
     FOREIGN KEY (usu_email) REFERENCES Usuario (email)
 );
+
+CREATE TABLE RecuperarSenhaToken (
+
+    email VARCHAR(100),
+
+    token VARCHAR(100)
+
+);

@@ -13,8 +13,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.Email;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.SimpleEmail;
 
 public class UsuarioDao {
     public static void cadastrar(Cadastro cadastro) throws SQLException {
@@ -234,6 +239,114 @@ public class UsuarioDao {
             ResultSet rs = stmt.executeQuery();
             
             return rs.next();
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
+    }
+    
+    public static void recuperarSenha(String email, String url) throws SQLException, EmailException {
+        String token = UUID.randomUUID().toString().replace("-", "").toUpperCase();
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
+        
+        
+        
+        try {
+            stmt = connection.prepareStatement("INSERT INTO RecuperarSenhaToken (email, token) "
+                                                + "VALUES (?, ?)");
+            stmt.setString(1, email);
+            stmt.setString(2, token);
+            stmt.executeUpdate();
+            
+            Email e = new SimpleEmail();
+            e.setHostName("smtp.googlemail.com");
+            e.setSmtpPort(465);
+            e.setAuthenticator(new DefaultAuthenticator("tritomus2017@gmail.com", "2017tritomus"));
+            e.setSSLOnConnect(true);
+            e.setFrom("tritomus2017@gmail.com");
+            e.setSubject("Redefinir senha");
+            e.setMsg(url + "/TCC/esqueci_senha/redefinir?token=" + token + "&email=" + email);
+            e.addTo(email);
+            e.send();
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } catch (EmailException ex) {
+            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
+    }
+    
+    public static boolean validaRecuperarSenha(String email, String token) throws SQLException {
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            stmt = connection.prepareStatement("SELECT * FROM RecuperarSenhaToken "
+                                                + "WHERE email = ? AND token = ?");
+            stmt.setString(1, email);
+            stmt.setString(2, token);
+            rs = stmt.executeQuery();
+            
+            return rs.next();
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (rs != null)
+                try { rs.close(); }
+                catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
+    }
+    
+    public static void redefinirSenha(String email, String senha, String token) throws SQLException {
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
+        
+        //CRIPTOGRAFA
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(senha.getBytes(), 0, senha.length());
+            senha = new BigInteger(1, md.digest()).toString(16);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try {
+            //ALTERA SENHA
+            stmt = connection.prepareStatement("UPDATE Usuario SET senha = ? WHERE email = ?");
+            stmt.setString(1, senha);
+            stmt.setString(2, email);
+            stmt.executeUpdate();
+            
+            //APAGA O TOKEN GERADO
+            stmt = connection.prepareStatement("DELETE FROM RecuperarSenhaToken "
+                                                + "WHERE email = ? AND token = ?");
+            stmt.setString(1, email);
+            stmt.setString(2, token);
+            stmt.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;

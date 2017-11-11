@@ -76,6 +76,10 @@ moment@~2.18.0:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
 
+toastr@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/toastr/-/toastr-2.1.2.tgz#fd69066ae7578a5b3357725fc9c7c335e9b681df"
+
 wordcloud@^1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/wordcloud/-/wordcloud-1.0.6.tgz#7e98e0a2fd2410c5ddbf67536135f0ae6e9e91b1"

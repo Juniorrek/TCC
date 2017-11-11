@@ -28,7 +28,7 @@ public class Cadastro extends Usuario implements java.io.Serializable {
             email.setAuthenticator(new DefaultAuthenticator("tritomus2017@gmail.com", "2017tritomus"));
             email.setSSLOnConnect(true);
             email.setFrom("tritomus2017@gmail.com");
-            email.setSubject("TestMail");
+            email.setSubject("Confirmar email");
             email.setMsg(url + "/TCC/confirmarCadastro?email=" + this.getEmail());
             email.addTo(this.getEmail());
             email.send();
