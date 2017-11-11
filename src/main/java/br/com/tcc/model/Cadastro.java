@@ -20,7 +20,7 @@ public class Cadastro extends Usuario implements java.io.Serializable {
         this.confirmacaoSenha = confirmacaoSenha;
     }
     
-    public void enviarEmailConfirmacao() {
+    public void enviarEmailConfirmacao(String url) {
         try {
             Email email = new SimpleEmail();
             email.setHostName("smtp.googlemail.com");
@@ -29,7 +29,7 @@ public class Cadastro extends Usuario implements java.io.Serializable {
             email.setSSLOnConnect(true);
             email.setFrom("tritomus2017@gmail.com");
             email.setSubject("TestMail");
-            email.setMsg("http://localhost:8084/TCC/confirmarCadastro?email=" + this.getEmail());
+            email.setMsg(url + "/TCC/confirmarCadastro?email=" + this.getEmail());
             email.addTo(this.getEmail());
             email.send();
         } catch (EmailException ex) {

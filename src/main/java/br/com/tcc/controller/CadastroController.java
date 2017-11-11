@@ -5,8 +5,10 @@ import br.com.tcc.model.Cadastro;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,12 +25,13 @@ public class CadastroController {
     }
     
     @RequestMapping("/cadastrar")    
-    public String cadastrar(@Valid Cadastro cadastro, BindingResult br, RedirectAttributes ra) {
+    public String cadastrar(@Valid Cadastro cadastro, BindingResult br, RedirectAttributes ra, HttpServletRequest request) {
         if (!br.hasErrors()) {
             if (cadastro.getSenha().equals(cadastro.getConfirmacaoSenha())) {
                 try {
+                    String path = request.getRequestURL().toString().replace(request.getRequestURI(), "");
                     UsuarioDao.cadastrar(cadastro);
-                    cadastro.enviarEmailConfirmacao();
+                    cadastro.enviarEmailConfirmacao(path);
                     return "confirmacaoCadastro";
                 } catch (SQLException ex) {
                     ra.addFlashAttribute("retorno", "toastr.error('Erro ao cadastrar !!!');");

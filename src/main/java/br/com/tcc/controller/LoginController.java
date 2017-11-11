@@ -7,6 +7,7 @@ import br.com.tcc.model.Usuario;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -25,7 +26,7 @@ public class LoginController {
     }
     
     @RequestMapping("/logar")    
-    public String logar(@Valid Login login, BindingResult br, RedirectAttributes ra, HttpSession session) {
+    public String logar(@Valid Login login, BindingResult br, RedirectAttributes ra, HttpSession session, HttpServletRequest request) {
         if (!br.hasErrors()) {
             try {
                 int validaLogin = UsuarioDao.validaLogin(login.getEmail(), login.getSenha());
@@ -39,7 +40,8 @@ public class LoginController {
                     ra.addFlashAttribute("retorno", "toastr.error('Email não confirmado !!!');");
                     Cadastro cadastro = new Cadastro();
                     cadastro.setEmail(login.getEmail());
-                    cadastro.enviarEmailConfirmacao();
+                    String path = request.getRequestURL().toString().replace(request.getRequestURI(), "");
+                    cadastro.enviarEmailConfirmacao(path);
                 } else if (validaLogin == 2) {
                     ra.addFlashAttribute("retorno", "toastr.error('Usuário não cadastrado !!!');");
                 }
