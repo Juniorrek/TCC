@@ -125,7 +125,7 @@ public class ProjetoController {
         else 
             projeto.setLider(0);
         
-        String path = Singleton.UPLOAD_DIR + "/" + lider.getEmail() + "/" + projeto.getId() + "/";
+        String path = Singleton.UPLOAD_DIR + "/" + projeto.getId() + "/";
         Call c = new Call();
         List<Artigo> segmentos_artigos = null;
         ArrayList<String> tfidf = new ArrayList<String>();
@@ -157,7 +157,6 @@ public class ProjetoController {
             Usuario usuario = UsuarioDao.carregar(projeto);
             
             String filePath = Singleton.UPLOAD_DIR + "/"
-                                + usuario.getEmail() + "/"
                                 + projeto.getId().toString() + "/";
             String nomeArquivo = Normalizer.normalize(file.getOriginalFilename(), Normalizer.Form.NFD).replaceAll("[^a-zA-Z\\d_ ]", "");
             nomeArquivo = nomeArquivo.substring(0, nomeArquivo.length()-3) + ".pdf";
@@ -226,7 +225,7 @@ public class ProjetoController {
         try {
             Projeto projeto = ProjetoDao.carregar(id);
             Usuario lider = UsuarioDao.carregar(projeto);
-            String path = Singleton.UPLOAD_DIR + "/" + lider.getEmail() + "/" + id + "/";
+            String path = Singleton.UPLOAD_DIR + "/" + id + "/";
             Pesquisa p = new Pesquisa();
             p.setUsuario(lider);
             p.setProjeto(projeto);
@@ -252,7 +251,7 @@ public class ProjetoController {
         model.addAttribute("projeto", projeto);
         
         Usuario logado = (Usuario) session.getAttribute("logado");
-        String path = Singleton.UPLOAD_DIR + "/" + logado.getEmail() + "/" + projeto.getId() + "/";
+        String path = Singleton.UPLOAD_DIR + "/" + projeto.getId() + "/";
         List<Grupo> grupos = null;
         Call c = new Call();
         try {
@@ -275,7 +274,7 @@ public class ProjetoController {
         }
         
         Usuario lider = UsuarioDao.carregar(projeto);
-        String path = Singleton.UPLOAD_DIR + "/" + lider.getEmail() + "/" + projeto.getId() + "/";
+        String path = Singleton.UPLOAD_DIR + "/" + projeto.getId() + "/";
         List<Grupo> grupos = null;
         Call c = new Call();
         try {
