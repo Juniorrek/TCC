@@ -49,7 +49,7 @@ public class Call {
                         projetoDao.excluirPesquisa(p);
                         return null;
                     }
-                    if(Objects.nonNull(p2)){    
+                    if(p2 != null){    
                         //connection.eval("origemadapt <- gsub(\"_\", \"\", origem)"); //para adaptação
                         //connection.eval("origemadapt <- gsub(\"-\", \"\", origemadapt)"); //para adaptação
                         connection.eval("origemadapt <- gsub(\" \", \"_\", origem)"); //para adaptação
@@ -354,16 +354,17 @@ public class Call {
         }*/
         
         
-        public ArrayList<String> graphicTfIdf(Pesquisa p) throws REXPMismatchException, REngineException, IOException, FileNotFoundException, ClassNotFoundException, SQLException {
+        public ArrayList<String> graphicTfIdf(String pathorigem, Pesquisa p) throws REXPMismatchException, REngineException, IOException, FileNotFoundException, ClassNotFoundException, SQLException {
             RConnection connection = null;
+            String path = pathorigem + "temp";
             ProjetoDao projetoDao = new ProjetoDao();
             p = projetoDao.carregarPesquisa(p, 2);
             System.out.println("entrei no tfidf");
-            if(!Objects.nonNull(p)){
+            if(!(p != null)){
                 System.out.println("sem pesquisa");
                 return null;
             }
-            if(!Objects.nonNull(p.getLista()) || p.getLista().size()<2){
+            if((p != null && !(p.getLista() != null)) || p.getLista().size()<2){
                 System.out.println("lista null ou lista menor q 2");
                 return null;
             }
@@ -381,6 +382,7 @@ public class Call {
                     connection.eval("source('" + Singleton.FIND_TF_IDF_BIGRAM + "')");
                     connection.eval("source('" + Singleton.FIND_TF_IDF_TRIGRAM + "')");
                     
+                    connection.eval("meanVal <- readRDS(\"" + path + "/segmentos.rds\")");
                     connection.eval("wordTop20 <- find_tf_idf(meanVal) %>% top_n(20, tf_idf)");
                     connection.eval("bigramTop20 <- find_tf_idf_bigram(meanVal) %>% top_n(20, tf_idf)");
                     connection.eval("trigramTop20 <- find_tf_idf_trigram(meanVal) %>% top_n(20, tf_idf)");
@@ -427,8 +429,9 @@ public class Call {
             }
         }
         
-        public List<Artigo> ordenar(String segment, List<Tag> tags, Pesquisa p) throws REXPMismatchException, IOException, REngineException, SQLException, ClassNotFoundException {
+        public List<Artigo> ordenar(String segment, List<Tag> tags, Pesquisa p, String pathorigem) throws REXPMismatchException, IOException, REngineException, SQLException, ClassNotFoundException {
             RConnection connection = null;
+            String path = pathorigem + "temp";
             String keywords = "c(";
             for (Tag t : tags) {
                 keywords += "'" + t.getTag() + "',";
@@ -444,6 +447,7 @@ public class Call {
                     connection.eval("library(purrr)");
                     connection.eval("library(tidytext)");
                     connection.eval("source('" + Singleton.ARRANGE_BY_RELEVANCY + "')");
+                    connection.eval("meanVal <- readRDS(\"" + path + "/segmentos.rds\")");
                     connection.eval("ordenado <- arrangeByRelevancy(meanVal, \"" + segment + "\", " + keywords + ")");
                     List<Artigo> artigos = new ArrayList();
                     ProjetoDao projetoDao = new ProjetoDao();
@@ -479,8 +483,9 @@ public class Call {
         }
         
         
-        public List<Grupo> toGroups(String segmento, int x, Pesquisa p) throws REXPMismatchException, IOException, REngineException {
+        public List<Grupo> toGroups(String segmento, int x, Pesquisa p, String pathorigem) throws REXPMismatchException, IOException, REngineException {
             RConnection connection = null;
+            String path = pathorigem + "temp";
             try {
                     connection = new RConnection();
                     connection.eval("library(tm)");
@@ -490,6 +495,7 @@ public class Call {
                     connection.eval("library(tidyr)");         
                     connection.eval("library(purrr)");                  
                     connection.eval("source('" + Singleton.TO_GROUPS + "')");
+                    connection.eval("meanVal <- readRDS(\"" + path + "/segmentos.rds\")");
                     connection.eval("meanVal2 <- toGroups(meanVal, \"" + segmento + "\", " + x + ")");
                     connection.eval("grupoOrd <- meanVal2[order(meanVal2$id),]");
                     connection.eval("ret <- NULL");

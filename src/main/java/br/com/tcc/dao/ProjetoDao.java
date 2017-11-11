@@ -524,7 +524,7 @@ public class ProjetoDao {
         
         try {
             Pesquisa p2 = carregarPesquisa(p, 2);
-            if(Objects.nonNull(p2)){
+            if(p2 != null){
                 stmt = connection.prepareStatement("DELETE FROM Pesquisa WHERE usuario=? and projeto=?");
                 stmt.setString(1, p.getUsuario().getEmail());
                 stmt.setInt(2, p.getProjeto().getId());

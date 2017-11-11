@@ -134,7 +134,7 @@ public class ProjetoController {
             p.setUsuario(lider);
             p.setProjeto(projeto);
             segmentos_artigos = c.articlesAnalysis(path, p);
-            tfidf = c.graphicTfIdf(p);
+            tfidf = c.graphicTfIdf(path, p);
         } catch (REXPMismatchException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -230,7 +230,7 @@ public class ProjetoController {
             Pesquisa p = new Pesquisa();
             p.setUsuario(lider);
             p.setProjeto(projeto);
-            artigos = call.ordenar(segment, tags, p);
+            artigos = call.ordenar(segment, tags, p, path);
         } catch (REXPMismatchException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
@@ -283,7 +283,7 @@ public class ProjetoController {
             p.setUsuario(lider);
             p.setProjeto(projeto);
             p = ProjetoDao.carregarPesquisa(p, 2);
-            grupos = c.toGroups(forma, quant, p);
+            grupos = c.toGroups(forma, quant, p, path);
         } catch (REXPMismatchException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }

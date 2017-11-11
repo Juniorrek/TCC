@@ -13,7 +13,7 @@ extractAbstract = function (pdfFolder, pdfToText) {
   myfiles <- list.files(path = pdfFolder, pattern = ".pdf",  full.names = TRUE)
   
   #Transforma os PDFs em .txt utilizando o pdftotext.exe
-  lapply(myfiles, function(i) system(paste(pdfToText, paste0('"', i, '"')), wait = TRUE))
+  lapply(myfiles, function(i) system(paste(pdfToText, paste('-enc UTF-8', paste0('"', i, '"'))), wait = TRUE))
   
   #Guarda os nomes dos arquivos txt criados
   mytxtfiles <- list.files(path = pdfFolder, pattern = "txt",  full.names = TRUE)

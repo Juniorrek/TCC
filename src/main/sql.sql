@@ -1,3 +1,23 @@
+/* COMANDOS UTEIS */
+/* desabilitar safe mode caso precise */
+SET SQL_SAFE_UPDATES = 0;
+
+
+/* limpar dps dos commit destruidor */
+DELETE FROM rel_sin_pro;
+
+DELETE FROM rel_usu_art;
+
+DELETE FROM rel_usu_pro;
+
+DELETE FROM rel_arq_pro;
+
+DELETE FROM pesquisa;
+
+DELETE FROM projeto;
+
+/* BANCO DE DADOS */
+
 CREATE DATABASE TCC;
 
 USE TCC;
