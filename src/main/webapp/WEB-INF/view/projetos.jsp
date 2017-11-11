@@ -81,7 +81,7 @@
             </div>
         </div>
                     
-        <form:form modelAttribute="projeto" action="${pageContext.request.contextPath}/projetos/adicionar" method="post">
+        <form:form id="addProj" modelAttribute="projeto" action="${pageContext.request.contextPath}/projetos/adicionar" method="post">
             <div id="modalAdicionarProjeto" class="modal">
                 <div class="modal-content">
                     <h4>Adicionar projeto</h4>
@@ -100,7 +100,7 @@
                 </div>
                 <div class="modal-footer">
                     <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
-                    <button type="submit" class="waves-effect waves-green btn green">Adicionar</button>
+                    <button id="submitProj" type="submit" class="waves-effect waves-green btn green">Adicionar</button>
                 </div>
             </div>
         </form:form>
@@ -185,6 +185,11 @@
                 
                 $('.modal').modal();
                 
+               $("#addProj").submit(function () {
+                    $("#submitProj").attr("disabled", true);
+                    return true;
+                });
+
                 $('#tableProjetos').DataTable({
                     "language": lang,
                     "dom": 'Bfrtip',
