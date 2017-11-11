@@ -43,7 +43,7 @@ public class LoginController {
                     String path = request.getRequestURL().toString().replace(request.getRequestURI(), "");
                     cadastro.enviarEmailConfirmacao(path);
                 } else if (validaLogin == 2) {
-                    ra.addFlashAttribute("retorno", "toastr.error('Usuário não cadastrado !!!');");
+                    ra.addFlashAttribute("retorno", "toastr.error('Email ou senha incorretos !!!');");
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);

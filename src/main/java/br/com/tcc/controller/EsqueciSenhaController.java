@@ -49,7 +49,8 @@ public class EsqueciSenhaController {
     public String redefinir_confirmar(String email, String token, String senha, RedirectAttributes ra) {
         try {
             if (UsuarioDao.validaRecuperarSenha(email, token)) {
-                UsuarioDao.redefinirSenha(email, senha, token);
+                UsuarioDao.redefinirSenha(email, senha);
+                UsuarioDao.apagarToken(email, token);
                 ra.addFlashAttribute("retorno", "toastr.success('Senha redefinida com sucesso !!!');");
             } else {
                 ra.addFlashAttribute("retorno", "toastr.error('Erro ao redefinir senha, token ou email inválido !!!');");

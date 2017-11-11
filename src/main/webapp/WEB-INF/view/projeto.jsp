@@ -20,7 +20,7 @@
     <body>
         <header>
             <ul id="dropdown-logado" class="dropdown-content">
-                <li><a href="#!">Meu perfil</a></li>
+                <li class="active"><a href="${pageContext.request.contextPath}/meuPerfil/alterarSenha">Alterar senha</a></li>
                 <li class="divider"></li>
                 <li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
             </ul>
@@ -39,7 +39,7 @@
                       <li><a href="${pageContext.request.contextPath}/principal"><i class="material-icons left">home</i>Home</a></li>
                       <li class="active"><a href="${pageContext.request.contextPath}/projetos"><i class="material-icons left">work</i>Projetos</a></li>
                       <li class="divider"></li>
-                      <li><a href="#!">Meu perfil</a></li>
+                      <li><a href="${pageContext.request.contextPath}/meuPerfil/alterarSenha">Alterar senha</a></li>
                       <li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
                     </ul>
                 </div>

@@ -321,7 +321,31 @@ public class UsuarioDao {
         }
     }
     
-    public static void redefinirSenha(String email, String senha, String token) throws SQLException {
+    public static void apagarToken(String email, String token) throws SQLException {
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
+        
+        try {
+            //APAGA O TOKEN GERADO
+            stmt = connection.prepareStatement("DELETE FROM RecuperarSenhaToken "
+                                                + "WHERE email = ? AND token = ?");
+            stmt.setString(1, email);
+            stmt.setString(2, token);
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
+    }
+    
+    public static void redefinirSenha(String email, String senha) throws SQLException {
         Connection connection = new ConnectionFactory().getConnection();
         PreparedStatement stmt = null;
         
@@ -340,17 +364,46 @@ public class UsuarioDao {
             stmt.setString(1, senha);
             stmt.setString(2, email);
             stmt.executeUpdate();
-            
-            //APAGA O TOKEN GERADO
-            stmt = connection.prepareStatement("DELETE FROM RecuperarSenhaToken "
-                                                + "WHERE email = ? AND token = ?");
-            stmt.setString(1, email);
-            stmt.setString(2, token);
-            stmt.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
         } finally {
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
+    }
+    
+    public static boolean validaSenhaAtual(Usuario logado, String novaSenha) throws SQLException {
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        //CRIPTOGRAFA
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(novaSenha.getBytes(), 0, novaSenha.length());
+            novaSenha = new BigInteger(1, md.digest()).toString(16);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try {
+            stmt = connection.prepareStatement("SELECT senha FROM Usuario WHERE email = ? AND senha = ?");
+            stmt.setString(1, logado.getEmail());
+            stmt.setString(2, novaSenha);
+            rs = stmt.executeQuery();
+            return rs.next();
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (rs != null)
+                try { rs.close(); }
+                catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
             if (stmt != null)
                 try { stmt.close(); }
                 catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
