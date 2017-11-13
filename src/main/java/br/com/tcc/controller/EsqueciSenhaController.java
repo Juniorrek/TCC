@@ -50,7 +50,7 @@ public class EsqueciSenhaController {
         try {
             if (UsuarioDao.validaRecuperarSenha(email, token)) {
                 UsuarioDao.redefinirSenha(email, senha);
-                UsuarioDao.apagarToken(email, token);
+                UsuarioDao.apagarTokenRecuperacao(email, token);
                 ra.addFlashAttribute("retorno", "toastr.success('Senha redefinida com sucesso !!!');");
             } else {
                 ra.addFlashAttribute("retorno", "toastr.error('Erro ao redefinir senha, token ou email inválido !!!');");

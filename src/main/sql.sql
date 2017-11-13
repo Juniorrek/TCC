@@ -103,3 +103,11 @@ CREATE TABLE RecuperarSenhaToken (
     token VARCHAR(100)
 
 );
+
+CREATE TABLE ConfirmarEmailToken (
+
+    email varchar(100),
+
+    token varchar(100)
+
+);

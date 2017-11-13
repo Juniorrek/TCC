@@ -252,12 +252,73 @@ public class UsuarioDao {
         }
     }
     
-    public static void recuperarSenha(String email, String url) throws SQLException, EmailException {
+    public static boolean confirmado(String email) throws SQLException {
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
+        
+        try {
+            stmt = connection.prepareStatement("SELECT * FROM Usuario "
+                                                + "WHERE email = ? AND confirmacao = 1");
+            stmt.setString(1, email);
+            
+            ResultSet rs = stmt.executeQuery();
+            
+            return rs.next();
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
+    }
+    
+    public static void enviarEmailConfirmacao(String email, String url) throws SQLException, EmailException {
         String token = UUID.randomUUID().toString().replace("-", "").toUpperCase();
         Connection connection = new ConnectionFactory().getConnection();
         PreparedStatement stmt = null;
         
-        
+        try {
+            stmt = connection.prepareStatement("INSERT INTO ConfirmarEmailToken (email, token) "
+                                                + "VALUES (?, ?)");
+            stmt.setString(1, email);
+            stmt.setString(2, token);
+            stmt.executeUpdate();
+            
+            Email e = new SimpleEmail();
+            e.setHostName("smtp.googlemail.com");
+            e.setSmtpPort(465);
+            e.setAuthenticator(new DefaultAuthenticator("tritomus2017@gmail.com", "2017tritomus"));
+            e.setSSLOnConnect(true);
+            e.setFrom("tritomus2017@gmail.com");
+            e.setSubject("Confirmar email");
+            e.setMsg(url + "/TCC/confirmarCadastro?token=" + token + "&email=" + email);
+            e.addTo(email);
+            e.send();
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } catch (EmailException ex) {
+            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
+    }
+    
+    public static void recuperarSenha(String email, String url) throws SQLException, EmailException {
+        String token = UUID.randomUUID().toString().replace("-", "").toUpperCase();
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
         
         try {
             stmt = connection.prepareStatement("INSERT INTO RecuperarSenhaToken (email, token) "
@@ -321,13 +382,66 @@ public class UsuarioDao {
         }
     }
     
-    public static void apagarToken(String email, String token) throws SQLException {
+    public static boolean validarConfirmarEmail(String email, String token) throws SQLException {
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            stmt = connection.prepareStatement("SELECT * FROM ConfirmarEmailToken "
+                                                + "WHERE email = ? AND token = ?");
+            stmt.setString(1, email);
+            stmt.setString(2, token);
+            rs = stmt.executeQuery();
+            
+            return rs.next();
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (rs != null)
+                try { rs.close(); }
+                catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
+    }
+    
+    public static void apagarTokenRecuperacao(String email, String token) throws SQLException {
         Connection connection = new ConnectionFactory().getConnection();
         PreparedStatement stmt = null;
         
         try {
             //APAGA O TOKEN GERADO
             stmt = connection.prepareStatement("DELETE FROM RecuperarSenhaToken "
+                                                + "WHERE email = ? AND token = ?");
+            stmt.setString(1, email);
+            stmt.setString(2, token);
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException ex) { Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex); }
+        }
+    }
+    
+    public static void apagarTokenConfirmacao(String email, String token) throws SQLException {
+        Connection connection = new ConnectionFactory().getConnection();
+        PreparedStatement stmt = null;
+        
+        try {
+            //APAGA O TOKEN GERADO
+            stmt = connection.prepareStatement("DELETE FROM ConfirmarEmailToken "
                                                 + "WHERE email = ? AND token = ?");
             stmt.setString(1, email);
             stmt.setString(2, token);

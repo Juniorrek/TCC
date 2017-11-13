@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import org.apache.commons.mail.EmailException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,15 +38,13 @@ public class LoginController {
                     
                     return "redirect:/principal";
                 } else if (validaLogin == 1) {
-                    ra.addFlashAttribute("retorno", "toastr.error('Email não confirmado !!!');");
-                    Cadastro cadastro = new Cadastro();
-                    cadastro.setEmail(login.getEmail());
-                    String path = request.getRequestURL().toString().replace(request.getRequestURI(), "");
-                    cadastro.enviarEmailConfirmacao(path);
+                    ra.addFlashAttribute("retorno", "toastr.error('Email não confirmado, email de confirmação enviado !!!');");
+                    String url = request.getRequestURL().toString().replace(request.getRequestURI(), "");
+                    UsuarioDao.enviarEmailConfirmacao(login.getEmail(), url);
                 } else if (validaLogin == 2) {
                     ra.addFlashAttribute("retorno", "toastr.error('Email ou senha incorretos !!!');");
                 }
-            } catch (SQLException ex) {
+            } catch (SQLException | EmailException ex) {
                 Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
                 ra.addFlashAttribute("retorno", "toastr.error('Erro ao validar email !!!');");
             }
