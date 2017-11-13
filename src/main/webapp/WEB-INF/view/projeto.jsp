@@ -845,7 +845,6 @@
             
             function limparFiltros() {
                 $('#analise').html(nofilter);
-                $('ul.tabs').tabs();
                 $('.collapsible').collapsible();
             }
             
