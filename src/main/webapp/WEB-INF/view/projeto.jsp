@@ -13,6 +13,7 @@
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/materialize-css/dist/css/materialize.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/fine-uploader/fine-uploader/fine-uploader-new.min.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/datatables.net-dt/css/jquery.dataTables.css">
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/toastr/build/toastr.min.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/projeto.css">
         <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/icons/favicon.ico">
@@ -447,6 +448,7 @@
         <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/loading.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/wordcloud/src/wordcloud2.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/chart.js/dist/Chart.bundle.min.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/toastr/build/toastr.min.js"></script>
         <script type="text/javascript">
             var nofilter = "";
             $(document).ready(function(){
@@ -626,15 +628,44 @@
             }
             
             function editarObservacao() {
-                $.ajax({
-                    url: "${pageContext.request.contextPath}/artigos/observacao/editar",
-                    type:'get',
-                    dataType: 'json',
-                    data: {
-                        "artigo": id_last_artigo,
-                        "observacao": $('#modalVizualizarArtigo #observacaoArtigo').val()
-                    }
-                });
+                toastr.options = {
+                  "closeButton": false,
+                  "debug": false,
+                  "newestOnTop": false,
+                  "progressBar": true,
+                  "positionClass": "toast-top-right",
+                  "preventDuplicates": false,
+                  "onclick": null,
+                  "showDuration": "300",
+                  "hideDuration": "1000",
+                  "timeOut": "5000",
+                  "extendedTimeOut": "1000",
+                  "showEasing": "swing",
+                  "hideEasing": "linear",
+                  "showMethod": "fadeIn",
+                  "hideMethod": "fadeOut"
+                };
+                        
+                var newComment = $('#modalVizualizarArtigo #observacaoArtigo').val();
+                if (newComment.length === 0) {
+                    toastr.error('Comentários não podem ser vázios.');
+                    return;
+                }
+                else
+                    $.ajax({
+                        url: "${pageContext.request.contextPath}/artigos/observacao/editar",
+                        type:'get',
+                        data: {
+                            "artigo": id_last_artigo,
+                            "observacao": $('#modalVizualizarArtigo #observacaoArtigo').val()
+                        }
+                    })
+                    .done(function() {
+                        toastr.success(' Comentário editado com sucesso! ');
+                    })
+                    .fail(function(jqXHR, textStatus) {
+                        toastr.error(' Problemas ao editar comentário. ');
+                    });
             }
             
             function deletarArtigo(id) {
