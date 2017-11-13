@@ -146,7 +146,7 @@
                                                     <div class="collapsible-header article-header" 
                                                          onclick="nuvem('${artigo.mainWords}','${status.count}')">
                                                          <i class="material-icons right more">expand_more</i>
-                                                         ${artigo.nome.replace("_", " ").replace(".pdf", "")}
+                                                         <div class="overflow-text">${artigo.nome.replaceAll("_"," ").replace(".pdf", "").replaceAll("[^a-zA-Z\\d ]", "")}</div>
                                                     </div>
                                                     <div class="collapsible-body">
                                                         <span>
@@ -317,7 +317,7 @@
                                             </div>
                                             <br/>
                                             <div class="input-field">
-                                                <div class="chips keywords"></div>
+                                                <div id="sort-words" class="chips keywords"></div>
                                                 <label>Keywords</label>
                                             </div>
                                              <div class="row">
@@ -446,6 +446,7 @@
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/datatables.net/js/jquery.dataTables.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/materialize-css/dist/js/materialize.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/loading.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/analysisValidation.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/wordcloud/src/wordcloud2.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/chart.js/dist/Chart.bundle.min.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/toastr/build/toastr.min.js"></script>
@@ -881,6 +882,9 @@
             }
             
             $('#btnOrdenar').click(function () {
+                if (!sortValidation()) {
+                    return;
+                }
                 var segment = $('#selectPorOrdenacao').val();
                 var keywords = $('.chips.keywords').material_chip('data');
                 
@@ -903,7 +907,7 @@
                             htmlao += '<li>' +
                                         '<div class="collapsible-header article-header"' +
                                             `onclick="nuvem('` + v.mainWords + `','` + idx +  `', 'ord')">` +
-                                            idx + ' - ' + v.nome + 
+                                            '<div class="overflow-text">' + idx + ' - ' + v.nome.replace(/_/g," ").replace(".pdf", "").replace(/[^a-zA-Z\\d ]/g, "") + '</div>' + 
                                         '</div>' +
                                         '<div class="collapsible-body">' +
                                             '<span>' +
@@ -1065,6 +1069,8 @@
             });
                         
             function agrupar() {
+                if (!groupsValidation())
+                    return;
                 var grupos = $('#grupos').val();
                 var forma = $('#forma').val();
                 $.ajax({
@@ -1100,7 +1106,7 @@
                                                                 htmlao += '<li>' +
                                                                             '<div class="collapsible-header article-header"' +
                                                                                 `onclick="nuvem('` + t.mainWords + `','` + cont +  `', 'ord')">` +
-                                                                                t.nome + 
+                                                                                '<div class="overflow-text">' + t.nome.replace(/_/g," ").replace(".pdf", "").replace(/[^a-zA-Z\\d ]/g, "") + '</div>' 
                                                                             '</div>' +
                                                                             '<div class="collapsible-body">' +
                                                                                 '<span>' +
