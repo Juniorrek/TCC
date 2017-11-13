@@ -20,6 +20,12 @@ function groupsValidation () {
 function sortValidation () {
     var category = $('#selectPorOrdenacao').val();
     var sortWords = $('#sort-words').children().length - 1;
+    var articlesCount = $('.article-header').length - 1;
+    
+    if (articlesCount < 2) {
+        toastr.error('É necessário 2 ou mais artigos para executar uma ordenação.');
+        return false;
+    }
     
     if (category === null) {
         toastr.error('Uma categoria deve ser selecionada para executar a ordenação.');
