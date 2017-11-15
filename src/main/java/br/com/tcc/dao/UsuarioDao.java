@@ -298,7 +298,7 @@ public class UsuarioDao {
             e.setSubject("Confirmar email");
             e.setMsg(url + "/TCC/confirmarCadastro?token=" + token + "&email=" + email);
             e.addTo(email);
-            e.send();
+            String aa = e.send();
         } catch (SQLException ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;

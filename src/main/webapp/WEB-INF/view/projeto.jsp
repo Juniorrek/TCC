@@ -451,6 +451,15 @@
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/chart.js/dist/Chart.bundle.min.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/toastr/build/toastr.min.js"></script>
         <script type="text/javascript">
+            toastr.options.timeOut = 3000;
+            toastr.options.extendedTimeOut = 0;
+            <c:if test="${retornoSinonimos == 1}">
+                toastr.error('Não é possível realizar análises sem definir sinônimos!')
+            </c:if>
+            ${retorno}
+        </script>
+        
+        <script type="text/javascript">
             var nofilter = "";
             $(document).ready(function(){
                 

@@ -133,8 +133,14 @@ public class ProjetoController {
             Pesquisa p = new Pesquisa();
             p.setUsuario(lider);
             p.setProjeto(projeto);
-            segmentos_artigos = c.articlesAnalysis(path, p);
-            tfidf = c.graphicTfIdf(path, p);
+            if(projeto.getSinonimosObjetivo().size() > 0 && projeto.getSinonimosMetodologia().size() > 0 && projeto.getSinonimosResultado().size() > 0){
+                segmentos_artigos = c.articlesAnalysis(path, p);
+                tfidf = c.graphicTfIdf(path, p);
+            }
+            else{
+                tfidf = null;
+                model.addAttribute("retornoSinonimos", 1);
+            }
         } catch (REXPMismatchException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }
