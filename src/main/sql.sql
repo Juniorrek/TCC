@@ -45,15 +45,16 @@ CREATE TABLE Rel_Arq_Pro (
     pro_id INT,
     arq_caminho VARCHAR(500),
 
-    FOREIGN KEY (pro_id) REFERENCES Projeto (id)
+    FOREIGN KEY (pro_id) REFERENCES Projeto (id) ON DELETE CASCADE
 );
+
 
 CREATE TABLE Rel_Sin_Pro (
     pro_id INT,
     sinonimo VARCHAR(50),
     segmento INT,
 
-    FOREIGN KEY (pro_id) REFERENCES Projeto (id)
+    FOREIGN KEY (pro_id) REFERENCES Projeto (id) ON DELETE CASCADE
 );
 
 ALTER TABLE Rel_Arq_Pro ADD id INT AUTO_INCREMENT PRIMARY KEY;
@@ -68,10 +69,11 @@ CREATE TABLE Rel_Usu_Pro (
 
     PRIMARY KEY (pro_id, usu_email),
 
-    FOREIGN KEY (pro_id) REFERENCES Projeto (id),
+    FOREIGN KEY (pro_id) REFERENCES Projeto (id) ON DELETE CASCADE,
     FOREIGN KEY (usu_email) REFERENCES Usuario (email)
 
 );
+
 
 CREATE TABLE Pesquisa (
 	usuario VARCHAR(100),
@@ -83,7 +85,7 @@ CREATE TABLE Pesquisa (
     sinonimo_resultado VARCHAR(500),
     
     FOREIGN KEY (usuario) REFERENCES Usuario (email),
-    FOREIGN KEY (projeto) REFERENCES Projeto (id)
+    FOREIGN KEY (projeto) REFERENCES Projeto (id) ON DELETE CASCADE
 );
 
 CREATE TABLE Rel_Usu_Art (
@@ -92,7 +94,7 @@ CREATE TABLE Rel_Usu_Art (
     observacoes VARCHAR(250),
 
     PRIMARY KEY (art_id, usu_email),
-    FOREIGN KEY (art_id) REFERENCES Rel_Arq_Pro (id),
+    FOREIGN KEY (art_id) REFERENCES Rel_Arq_Pro (id) ON DELETE CASCADE,
     FOREIGN KEY (usu_email) REFERENCES Usuario (email)
 );
 
@@ -111,3 +113,21 @@ CREATE TABLE ConfirmarEmailToken (
     token varchar(100)
 
 );
+
+
+/* ALTERAÇÕES PARA INSERIR O ON DELETE CASCADE E SER POSSÍVEL EXCLUIR PROJETO DIRETAMENTE*/
+ALTER TABLE rel_arq_pro DROP FOREIGN KEY rel_arq_pro_ibfk_1;
+ALTER TABLE rel_arq_pro ADD FOREIGN KEY (pro_id) REFERENCES projeto(id) ON DELETE CASCADE;
+
+ALTER TABLE Pesquisa DROP FOREIGN KEY pesquisa_ibfk_2;
+ALTER TABLE Pesquisa ADD FOREIGN KEY (projeto) REFERENCES projeto(id) ON DELETE CASCADE;
+
+ALTER TABLE rel_usu_pro DROP FOREIGN KEY rel_usu_pro_ibfk_1;
+ALTER TABLE rel_usu_pro ADD FOREIGN KEY (pro_id) REFERENCES projeto(id) ON DELETE CASCADE;
+
+ALTER TABLE rel_sin_pro DROP FOREIGN KEY rel_sin_pro_ibfk_1;
+ALTER TABLE rel_sin_pro ADD FOREIGN KEY (pro_id) REFERENCES projeto(id) ON DELETE CASCADE;
+
+ALTER TABLE rel_usu_art DROP FOREIGN KEY rel_usu_art_ibfk_1;
+ALTER TABLE rel_usu_art ADD FOREIGN KEY (art_id) REFERENCES rel_arq_pro(id) ON DELETE CASCADE;
+/*FIM ALTERAÇÕES*/

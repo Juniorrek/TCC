@@ -7,6 +7,7 @@ import br.com.tcc.model.Projeto;
 import br.com.tcc.model.Usuario;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -363,11 +364,13 @@ public class ProjetoDao {
         }
     }
     
-    public static void deletar(Projeto projeto) throws SQLException {
+    public static void deletar(String path, Projeto projeto) throws SQLException {
         Connection connection = new ConnectionFactory().getConnection();
         PreparedStatement stmt = null;
         
         try {
+            ArquivoDao.limparPastasProjeto(path + "temp");
+            ArquivoDao.limparPastasProjeto(path);           
             
             stmt = connection.prepareStatement("DELETE FROM Rel_Sin_Pro "
                                                 + "WHERE pro_id = ?");

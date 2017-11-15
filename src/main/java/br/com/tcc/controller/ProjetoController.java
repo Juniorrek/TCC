@@ -85,7 +85,8 @@ public class ProjetoController {
     @RequestMapping("/projetos/deletar")    
     public String projetosDeletar(Projeto projeto, RedirectAttributes ra) {
         try {
-            ProjetoDao.deletar(projeto);
+            String path = Singleton.UPLOAD_DIR + "/" + projeto.getId() + "/";
+            ProjetoDao.deletar(path, projeto);
             ra.addFlashAttribute("retorno", "toastr.success('Projeto deletado com sucesso !!!');");
         } catch (SQLException ex) {
             ra.addFlashAttribute("retorno", "toastr.error('Erro ao deletar projeto !!!');");

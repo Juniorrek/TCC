@@ -94,6 +94,16 @@ public class ArquivoDao {
         return arq_nomes;
     }
     
+    public static void limparPastasProjeto(String path){
+        File folder = new File(path);
+        File[] listOfFiles = folder.listFiles();
+        for(File f: listOfFiles){
+            if(f.isFile())
+                f.delete();
+        }
+        folder.delete();
+    }
+    
     public static String carregarFilePath(Integer id) throws SQLException {
         Connection connection = new ConnectionFactory().getConnection();
         PreparedStatement stmt = null;
