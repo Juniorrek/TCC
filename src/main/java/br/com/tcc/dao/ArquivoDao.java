@@ -96,12 +96,14 @@ public class ArquivoDao {
     
     public static void limparPastasProjeto(String path){
         File folder = new File(path);
-        File[] listOfFiles = folder.listFiles();
-        for(File f: listOfFiles){
-            if(f.isFile())
-                f.delete();
+        if(folder.exists() && folder.isDirectory()) { 
+            File[] listOfFiles = folder.listFiles();
+            for(File f: listOfFiles){
+                if(f.isFile())
+                    f.delete();
+            }
+            folder.delete();
         }
-        folder.delete();
     }
     
     public static String carregarFilePath(Integer id) throws SQLException {
