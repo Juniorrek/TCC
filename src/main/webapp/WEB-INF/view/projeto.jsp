@@ -359,7 +359,8 @@
             </div>
             <div class="modal-footer">
                 <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
-                <a class="waves-effect waves-light btn-flat green accent-4" id="trigger-upload"><i class="tiny material-icons">file_upload</i>Enviar</a> 
+                <a class="waves-effect waves-light btn-flat green accent-4" id="check" style="display:none" onclick="reload()"><i class="tiny material-icons">check</i><span>Pronto</span></a> 
+                <a class="waves-effect waves-light btn-flat blue accent-3" id="trigger-upload"><i class="tiny material-icons">file_upload</i><span>Enviar</span></a> 
                 <!--<a class="modal-action modal-close waves-effect waves-light btn-flat green accent-4">Pronto</a>-->
             </div>
         </div>
@@ -606,7 +607,7 @@
             }
             
             function reload() {
-                location = window.location.href;
+                location.reload();
             }
             
             var id_last_artigo;
@@ -1334,6 +1335,9 @@
                     console.log(succeeded);
                     console.log(failed);
                     if (succeeded.length !== 0) {
+                          $('#trigger-upload')[0].style.display = "none";
+                          $('#check')[0].style.display = "inline-block";
+//                        reload();
 //                        $('#tableArtigos').load(document.URL +  ' #tableArtigos');
                     } else {
                         console.error("Problemas ao baixar os  artigos");
