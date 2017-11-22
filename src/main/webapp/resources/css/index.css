@@ -64,7 +64,7 @@
 }
 
 .carousel {
-    height: 799px !important;
+    height: calc(100vh - 64px) !important
 }
 
 .flex-container {

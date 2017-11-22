@@ -40,7 +40,7 @@
                     <div class="flex-container">
                         <div class="container-item">
                                 <h4 class="functionality-title">Artemis é uma ferramenta WEB de análise de artigos acadêmicos que tem como objetivo facilitar o processo de revisão de literatura</h4>
-                                <h5 class="functionality-desc">Clique no botão abaixo e descubra como nossas funcionalidades podem te ajudar</h5>
+                                <h5 class="functionality-desc">Clique no botão abaixo e conheça nossas funcionalidades</h5>
 <!--                            <div class="row col s12" style="display: block;">
                                 <a href="${pageContext.request.contextPath}/cadastro" class="btn blue blue-darken-1">Cadastro</a>
                                 <p style="margin: 10px; display: inline-block;">ou</p>
