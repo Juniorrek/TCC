@@ -1116,7 +1116,7 @@
                                                                 htmlao += '<li>' +
                                                                             '<div class="collapsible-header article-header"' +
                                                                                 `onclick="nuvem('` + t.mainWords + `','` + cont +  `', 'ord')">` +
-                                                                                '<div class="overflow-text">' + t.nome.replace(/_/g," ").replace(".pdf", "").replace(/[^a-zA-Z\\d ]/g, "") + '</div>' 
+                                                                                '<div class="overflow-text">' + t.nome.replace(/_/g," ").replace(".pdf", "").replace(/[^a-zA-Z\\d ]/g, "") + '</div>' +
                                                                             '</div>' +
                                                                             '<div class="collapsible-body">' +
                                                                                 '<span>' +
