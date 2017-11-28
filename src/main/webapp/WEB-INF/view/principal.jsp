@@ -48,9 +48,6 @@
                     <div class="row col s12">
                         <h5 style="text-align: justify;">Artemis é uma ferramenta WEB de análise de artigos acadêmicos que tem como objetivo facilitar o processo de revisão de literatura</h5>
                     </div>
-                    <div class="row col s12" style="display: block;">
-                        <a href="#" class="btn blue blue-darken-1">Saiba mais</a>
-                    </div>
                 </div>
                 <div class="col s1">
                 </div>
