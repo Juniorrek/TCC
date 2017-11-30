@@ -5,8 +5,11 @@ import br.com.tcc.model.Cadastro;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import org.apache.commons.mail.EmailException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,14 +26,25 @@ public class CadastroController {
     }
     
     @RequestMapping("/cadastrar")    
-    public String cadastrar(@Valid Cadastro cadastro, BindingResult br, RedirectAttributes ra) {
+    public String cadastrar(@Valid Cadastro cadastro, BindingResult br, RedirectAttributes ra, HttpServletRequest request) {
         if (!br.hasErrors()) {
             if (cadastro.getSenha().equals(cadastro.getConfirmacaoSenha())) {
                 try {
-                    UsuarioDao.cadastrar(cadastro);
-                    cadastro.enviarEmailConfirmacao();
-                    return "confirmacaoCadastro";
-                } catch (SQLException ex) {
+                    if (!UsuarioDao.existe(cadastro.getEmail())) {
+                        String url = request.getRequestURL().toString().replace(request.getRequestURI(), "");
+                        UsuarioDao.cadastrar(cadastro);
+                        UsuarioDao.enviarEmailConfirmacao(cadastro.getEmail(), url);
+                        return "confirmacaoCadastro";
+                    } else {
+                        if (UsuarioDao.confirmado(cadastro.getEmail())) {
+                            ra.addFlashAttribute("retorno", "toastr.error('Erro, email já cadastrado !!!');");
+                        } else {
+                            String url = request.getRequestURL().toString().replace(request.getRequestURI(), "");
+                            UsuarioDao.enviarEmailConfirmacao(cadastro.getEmail(), url);
+                            ra.addFlashAttribute("retorno", "toastr.error('Erro, email não confirmado, email de confirmação enviado !!!');");
+                        }
+                    }
+                } catch (SQLException | EmailException ex) {
                     ra.addFlashAttribute("retorno", "toastr.error('Erro ao cadastrar !!!');");
                 }
             } else {
@@ -44,13 +58,18 @@ public class CadastroController {
     }
     
     @RequestMapping("/confirmarCadastro")    
-    public String confirmarCadastro(String email, RedirectAttributes ra) {
+    public String confirmarCadastro(String email, String token, RedirectAttributes ra) {
         try {
-            UsuarioDao.confirmarCadastro(email);
-            ra.addFlashAttribute("retorno", "toastr.success('Email ativado com sucesso !!!');");
+            if (UsuarioDao.validarConfirmarEmail(email, token)) {
+                UsuarioDao.confirmarCadastro(email);
+                UsuarioDao.apagarTokenConfirmacao(email, token);
+                ra.addFlashAttribute("retorno", "toastr.success('Email confirmado com sucesso !!!');");
+            } else {
+                ra.addFlashAttribute("retorno", "toastr.error('Erro ao confirmar email, token ou email inválido !!!');");
+            }
         } catch (SQLException ex) {
             Logger.getLogger(CadastroController.class.getName()).log(Level.SEVERE, null, ex);
-            ra.addFlashAttribute("retorno", "toastr.error('Erro ao ativar email !!!');");
+            ra.addFlashAttribute("retorno", "toastr.error('Erro ao confirmar email !!!');");
         }
         
         return "redirect:/login";

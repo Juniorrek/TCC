@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.sql.SQLException;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -84,7 +85,8 @@ public class ProjetoController {
     @RequestMapping("/projetos/deletar")    
     public String projetosDeletar(Projeto projeto, RedirectAttributes ra) {
         try {
-            ProjetoDao.deletar(projeto);
+            String path = Singleton.UPLOAD_DIR + "/" + projeto.getId() + "/";
+            ProjetoDao.deletar(path, projeto);
             ra.addFlashAttribute("retorno", "toastr.success('Projeto deletado com sucesso !!!');");
         } catch (SQLException ex) {
             ra.addFlashAttribute("retorno", "toastr.error('Erro ao deletar projeto !!!');");
@@ -124,7 +126,7 @@ public class ProjetoController {
         else 
             projeto.setLider(0);
         
-        String path = Singleton.UPLOAD_DIR + "/" + lider.getEmail() + "/" + projeto.getId() + "/";
+        String path = Singleton.UPLOAD_DIR + "/" + projeto.getId() + "/";
         Call c = new Call();
         List<Artigo> segmentos_artigos = null;
         ArrayList<String> tfidf = new ArrayList<String>();
@@ -132,8 +134,14 @@ public class ProjetoController {
             Pesquisa p = new Pesquisa();
             p.setUsuario(lider);
             p.setProjeto(projeto);
-            segmentos_artigos = c.articlesAnalysis(path, p);
-            tfidf = c.graphicTfIdf(path, p);
+            if(projeto.getSinonimosObjetivo().size() > 0 && projeto.getSinonimosMetodologia().size() > 0 && projeto.getSinonimosResultado().size() > 0){
+                segmentos_artigos = c.articlesAnalysis(path, p);
+                tfidf = c.graphicTfIdf(path, p);
+            }
+            else{
+                tfidf = null;
+                model.addAttribute("retornoSinonimos", 1);
+            }
         } catch (REXPMismatchException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -156,10 +164,10 @@ public class ProjetoController {
             Usuario usuario = UsuarioDao.carregar(projeto);
             
             String filePath = Singleton.UPLOAD_DIR + "/"
-                                + usuario.getEmail() + "/"
-                                + projeto.getId().toString() + "/"
-                                + file.getOriginalFilename();
-            ArquivoDao.adicionar(file, projeto, filePath);
+                                + projeto.getId().toString() + "/";
+            String nomeArquivo = Normalizer.normalize(file.getOriginalFilename(), Normalizer.Form.NFD).replaceAll("[^a-zA-Z\\d_ ]", "");
+            nomeArquivo = nomeArquivo.substring(0, nomeArquivo.length()-3) + ".pdf";
+            ArquivoDao.adicionar(file, projeto, filePath, nomeArquivo);
         } catch (SQLException | IOException | IllegalStateException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -224,11 +232,11 @@ public class ProjetoController {
         try {
             Projeto projeto = ProjetoDao.carregar(id);
             Usuario lider = UsuarioDao.carregar(projeto);
-            String path = Singleton.UPLOAD_DIR + "/" + lider.getEmail() + "/" + id + "/";
+            String path = Singleton.UPLOAD_DIR + "/" + id + "/";
             Pesquisa p = new Pesquisa();
             p.setUsuario(lider);
             p.setProjeto(projeto);
-            artigos = call.ordenar(segment, tags, p);
+            artigos = call.ordenar(segment, tags, p, path);
         } catch (REXPMismatchException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
@@ -250,7 +258,7 @@ public class ProjetoController {
         model.addAttribute("projeto", projeto);
         
         Usuario logado = (Usuario) session.getAttribute("logado");
-        String path = Singleton.UPLOAD_DIR + "/" + logado.getEmail() + "/" + projeto.getId() + "/";
+        String path = Singleton.UPLOAD_DIR + "/" + projeto.getId() + "/";
         List<Grupo> grupos = null;
         Call c = new Call();
         try {
@@ -273,7 +281,7 @@ public class ProjetoController {
         }
         
         Usuario lider = UsuarioDao.carregar(projeto);
-        String path = Singleton.UPLOAD_DIR + "/" + lider.getEmail() + "/" + projeto.getId() + "/";
+        String path = Singleton.UPLOAD_DIR + "/" + projeto.getId() + "/";
         List<Grupo> grupos = null;
         Call c = new Call();
         try {
@@ -281,7 +289,7 @@ public class ProjetoController {
             p.setUsuario(lider);
             p.setProjeto(projeto);
             p = ProjetoDao.carregarPesquisa(p, 2);
-            grupos = c.toGroups(forma, quant, p);
+            grupos = c.toGroups(forma, quant, p, path);
         } catch (REXPMismatchException ex) {
             Logger.getLogger(ProjetoController.class.getName()).log(Level.SEVERE, null, ex);
         }

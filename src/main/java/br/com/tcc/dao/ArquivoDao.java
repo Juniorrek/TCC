@@ -2,8 +2,6 @@ package br.com.tcc.dao;
 
 import br.com.tcc.factory.ConnectionFactory;
 import br.com.tcc.model.Projeto;
-import br.com.tcc.model.Usuario;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -17,7 +15,7 @@ import java.util.logging.Logger;
 import org.springframework.web.multipart.MultipartFile;
 
 public class ArquivoDao {
-    public static void adicionar(MultipartFile file, Projeto projeto, String filePath) throws SQLException, IOException {
+    public static void adicionar(MultipartFile file, Projeto projeto, String filePath, String nome) throws SQLException, IOException {
         Connection connection = new ConnectionFactory().getConnection();
         PreparedStatement stmt = null;
         
@@ -25,12 +23,11 @@ public class ArquivoDao {
             stmt = connection.prepareStatement("INSERT INTO Rel_Arq_Pro (pro_id, arq_caminho, arq_nome) "
                                                 + "VALUES (?, ?, ?)");
             stmt.setInt(1, projeto.getId());
-            stmt.setString(2, filePath);
-            stmt.setString(3, file.getOriginalFilename());
+            stmt.setString(2, filePath + nome);
+            stmt.setString(3, nome);
             
             stmt.executeUpdate();
-            
-            java.io.File dest = new java.io.File(filePath);
+            java.io.File dest = new java.io.File(filePath + nome);
             dest.mkdirs();
             file.transferTo(dest);
         } catch (SQLException | IOException | IllegalStateException ex) {
@@ -95,6 +92,18 @@ public class ArquivoDao {
         }
         
         return arq_nomes;
+    }
+    
+    public static void limparPastasProjeto(String path){
+        File folder = new File(path);
+        if(folder.exists() && folder.isDirectory()) { 
+            File[] listOfFiles = folder.listFiles();
+            for(File f: listOfFiles){
+                if(f.isFile())
+                    f.delete();
+            }
+            folder.delete();
+        }
     }
     
     public static String carregarFilePath(Integer id) throws SQLException {

@@ -4,7 +4,7 @@ extractAbstract = function (pdfFolder, pdfToText) {
   
   #Remoção dos espaços para que o pdftotext.exe funcione
   sapply(myfiles, FUN = function(i) {
-    newName <- gsub("[^a-zA-Z\\d ]", "", basename(i), perl=TRUE)
+    newName <- gsub("[^a-zA-Z\\d_ ]", "", basename(i), perl=TRUE)
     newName <- gsub(" ", "_", newName)
     file.rename(from = i, to =  paste0(dirname(i), "/", newName))
   })
@@ -13,7 +13,7 @@ extractAbstract = function (pdfFolder, pdfToText) {
   myfiles <- list.files(path = pdfFolder, pattern = ".pdf",  full.names = TRUE)
   
   #Transforma os PDFs em .txt utilizando o pdftotext.exe
-  lapply(myfiles, function(i) system(paste(pdfToText, paste0('"', i, '"')), wait = TRUE))
+  lapply(myfiles, function(i) system(paste(pdfToText, paste('-enc UTF-8', paste0('"', i, '"'))), wait = TRUE))
   
   #Guarda os nomes dos arquivos txt criados
   mytxtfiles <- list.files(path = pdfFolder, pattern = "txt",  full.names = TRUE)

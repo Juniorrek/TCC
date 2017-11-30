@@ -13,6 +13,7 @@
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/materialize-css/dist/css/materialize.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/fine-uploader/fine-uploader/fine-uploader-new.min.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/datatables.net-dt/css/jquery.dataTables.css">
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/toastr/build/toastr.min.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/projeto.css">
         <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/icons/favicon.ico">
@@ -20,7 +21,7 @@
     <body>
         <header>
             <ul id="dropdown-logado" class="dropdown-content">
-                <li><a href="#!">Meu perfil</a></li>
+                <li class="active"><a href="${pageContext.request.contextPath}/meuPerfil/alterarSenha">Alterar senha</a></li>
                 <li class="divider"></li>
                 <li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
             </ul>
@@ -39,7 +40,7 @@
                       <li><a href="${pageContext.request.contextPath}/principal"><i class="material-icons left">home</i>Home</a></li>
                       <li class="active"><a href="${pageContext.request.contextPath}/projetos"><i class="material-icons left">work</i>Projetos</a></li>
                       <li class="divider"></li>
-                      <li><a href="#!">Meu perfil</a></li>
+                      <li><a href="${pageContext.request.contextPath}/meuPerfil/alterarSenha">Alterar senha</a></li>
                       <li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
                     </ul>
                 </div>
@@ -119,7 +120,7 @@
                                                         <c:forEach items="${projeto.artigos}" var="artigo">
                                                             <tr>
                                                                 <td hidden></td>
-                                                                <td>${artigo.nome.replace(".pdf", "")}</td>
+                                                                <td><div class="overflow-text">${artigo.nome.replaceAll("_"," ").replace(".pdf", "").replaceAll("[^a-zA-Z\\d ]", "")}</div></td>
                                                                 <td><div class="chip">${artigo.comentarios}</div></td>
                                                                 <td>
                                                                     <button class="btn-floating wavesartigo-effect waves-light blue" onclick="visualizarArtigo(${artigo.id})"><i class="material-icons">visibility</i></button>
@@ -145,7 +146,7 @@
                                                     <div class="collapsible-header article-header" 
                                                          onclick="nuvem('${artigo.mainWords}','${status.count}')">
                                                          <i class="material-icons right more">expand_more</i>
-                                                         ${artigo.nome.replace("_", " ").replace(".pdf", "")}
+                                                         <div class="overflow-text">${artigo.nome.replaceAll("_"," ").replace(".pdf", "").replaceAll("[^a-zA-Z\\d ]", "")}</div>
                                                     </div>
                                                     <div class="collapsible-body">
                                                         <span>
@@ -316,7 +317,7 @@
                                             </div>
                                             <br/>
                                             <div class="input-field">
-                                                <div class="chips keywords"></div>
+                                                <div id="sort-words" class="chips keywords"></div>
                                                 <label>Keywords</label>
                                             </div>
                                              <div class="row">
@@ -358,7 +359,8 @@
             </div>
             <div class="modal-footer">
                 <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
-                <a class="waves-effect waves-light btn-flat green accent-4" id="trigger-upload"><i class="tiny material-icons">file_upload</i>Enviar</a> 
+                <a class="waves-effect waves-light btn-flat green accent-4" id="check" style="display:none" onclick="reload()"><i class="tiny material-icons">check</i><span>Pronto</span></a> 
+                <a class="waves-effect waves-light btn-flat blue accent-3" id="trigger-upload"><i class="tiny material-icons">file_upload</i><span>Enviar</span></a> 
                 <!--<a class="modal-action modal-close waves-effect waves-light btn-flat green accent-4">Pronto</a>-->
             </div>
         </div>
@@ -445,8 +447,19 @@
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/datatables.net/js/jquery.dataTables.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/materialize-css/dist/js/materialize.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/loading.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/analysisValidation.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/wordcloud/src/wordcloud2.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/chart.js/dist/Chart.bundle.min.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/toastr/build/toastr.min.js"></script>
+        <script type="text/javascript">
+            toastr.options.timeOut = 3000;
+            toastr.options.extendedTimeOut = 0;
+            <c:if test="${retornoSinonimos == 1}">
+                toastr.error('Não é possível realizar análises sem definir sinônimos!')
+            </c:if>
+            ${retorno}
+        </script>
+        
         <script type="text/javascript">
             var nofilter = "";
             $(document).ready(function(){
@@ -594,7 +607,7 @@
             }
             
             function reload() {
-                location = window.location.href;
+                location.reload();
             }
             
             var id_last_artigo;
@@ -626,15 +639,44 @@
             }
             
             function editarObservacao() {
-                $.ajax({
-                    url: "${pageContext.request.contextPath}/artigos/observacao/editar",
-                    type:'get',
-                    dataType: 'json',
-                    data: {
-                        "artigo": id_last_artigo,
-                        "observacao": $('#modalVizualizarArtigo #observacaoArtigo').val()
-                    }
-                });
+                toastr.options = {
+                  "closeButton": false,
+                  "debug": false,
+                  "newestOnTop": false,
+                  "progressBar": true,
+                  "positionClass": "toast-top-right",
+                  "preventDuplicates": false,
+                  "onclick": null,
+                  "showDuration": "300",
+                  "hideDuration": "1000",
+                  "timeOut": "5000",
+                  "extendedTimeOut": "1000",
+                  "showEasing": "swing",
+                  "hideEasing": "linear",
+                  "showMethod": "fadeIn",
+                  "hideMethod": "fadeOut"
+                };
+                        
+                var newComment = $('#modalVizualizarArtigo #observacaoArtigo').val();
+                if (newComment.length === 0) {
+                    toastr.error('Comentários não podem ser vázios.');
+                    return;
+                }
+                else
+                    $.ajax({
+                        url: "${pageContext.request.contextPath}/artigos/observacao/editar",
+                        type:'get',
+                        data: {
+                            "artigo": id_last_artigo,
+                            "observacao": $('#modalVizualizarArtigo #observacaoArtigo').val()
+                        }
+                    })
+                    .done(function() {
+                        toastr.success(' Comentário editado com sucesso! ');
+                    })
+                    .fail(function(jqXHR, textStatus) {
+                        toastr.error(' Problemas ao editar comentário. ');
+                    });
             }
             
             function deletarArtigo(id) {
@@ -814,7 +856,6 @@
             
             function limparFiltros() {
                 $('#analise').html(nofilter);
-                $('ul.tabs').tabs();
                 $('.collapsible').collapsible();
             }
             
@@ -851,6 +892,9 @@
             }
             
             $('#btnOrdenar').click(function () {
+                if (!sortValidation()) {
+                    return;
+                }
                 var segment = $('#selectPorOrdenacao').val();
                 var keywords = $('.chips.keywords').material_chip('data');
                 
@@ -873,7 +917,7 @@
                             htmlao += '<li>' +
                                         '<div class="collapsible-header article-header"' +
                                             `onclick="nuvem('` + v.mainWords + `','` + idx +  `', 'ord')">` +
-                                            idx + ' - ' + v.nome + 
+                                            '<div class="overflow-text">' + idx + ' - ' + v.nome.replace(/_/g," ").replace(".pdf", "").replace(/[^a-zA-Z\\d ]/g, "") + '</div>' + 
                                         '</div>' +
                                         '<div class="collapsible-body">' +
                                             '<span>' +
@@ -1035,6 +1079,8 @@
             });
                         
             function agrupar() {
+                if (!groupsValidation())
+                    return;
                 var grupos = $('#grupos').val();
                 var forma = $('#forma').val();
                 $.ajax({
@@ -1070,7 +1116,7 @@
                                                                 htmlao += '<li>' +
                                                                             '<div class="collapsible-header article-header"' +
                                                                                 `onclick="nuvem('` + t.mainWords + `','` + cont +  `', 'ord')">` +
-                                                                                cont + ' - ' + t.nome + 
+                                                                                '<div class="overflow-text">' + t.nome.replace(/_/g," ").replace(".pdf", "").replace(/[^a-zA-Z\\d ]/g, "") + '</div>' +
                                                                             '</div>' +
                                                                             '<div class="collapsible-body">' +
                                                                                 '<span>' +
@@ -1288,8 +1334,10 @@
                 onAllComplete: function(succeeded, failed) {
                     console.log(succeeded);
                     console.log(failed);
-                    console.log("Failed length: " + failed.length);
                     if (succeeded.length !== 0) {
+                          $('#trigger-upload')[0].style.display = "none";
+                          $('#check')[0].style.display = "inline-block";
+//                        reload();
 //                        $('#tableArtigos').load(document.URL +  ' #tableArtigos');
                     } else {
                         console.error("Problemas ao baixar os  artigos");
@@ -1299,7 +1347,10 @@
             },
             template: 'qq-template-manual-trigger',
             autoUpload: false,
-            debug: true
+            debug: true,
+            formatFileName: function(name) {
+                return name.replace(/_/g," ").replace(".pdf", "").replace(/[^a-zA-Z\\d ]/g, "");
+            }
         });
 
         qq(document.getElementById("trigger-upload")).attach("click", function() {

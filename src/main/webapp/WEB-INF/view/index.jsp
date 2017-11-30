@@ -9,6 +9,7 @@
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/node_modules/materialize-css/dist/css/materialize.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/index.css">
+        <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet">
         <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/icons/favicon.ico">
     </head>
     <body class="background-image">
@@ -32,64 +33,145 @@
         </header>
 
             <div class="carousel carousel-slider center" data-indicators="true">
-              <div class="carousel-fixed-item center">
+              <div class="carousel-fixed-item">
                 <a class="btn waves-effect mais-button" onclick="nextCarousel()"><i class="material-icons right">arrow_forward</i>MAIS</a>
               </div>
               <div class="carousel-item transparent" href="#one!">
-                    <div class="row">
-                        <div class="col s6">
-                            <div class="row col s12">
-                                <h4>Artemis é uma ferramenta WEB de análise de artigos acadêmicos que tem como objetivo facilitar o processo de revisão de literatura</h4>
-                            </div>
-                            <div class="row col s12">
-                                <h5>Clique no botão abaixo e descubra como nossas funcionalidades podem te ajudar</h5>
-                            </div>
+                    <div class="flex-container">
+                        <div class="container-item">
+                                <h4 class="functionality-title">Artemis é uma ferramenta WEB de análise de artigos acadêmicos que tem como objetivo facilitar o processo de revisão de literatura</h4>
+                                <h5 class="functionality-desc">Clique no botão abaixo e conheça nossas funcionalidades</h5>
 <!--                            <div class="row col s12" style="display: block;">
                                 <a href="${pageContext.request.contextPath}/cadastro" class="btn blue blue-darken-1">Cadastro</a>
                                 <p style="margin: 10px; display: inline-block;">ou</p>
                                 <a href="#" class="btn blue blue-darken-1">Saiba mais</a>
                             </div>-->
                         </div>
-                        <div class="col s6">
+                        <div class="flex-container">
                             <img class="responsive-img" src="${pageContext.request.contextPath}/resources/images/reverseArtemisLogo.png" />
                         </div>
                     </div>
               </div>
                         
               <div class="carousel-item transparent white-text" href="#two!">
-                <h2>Extração de fragmentos dos artigos</h2>
-                <p class="white-text">
+                <h2 class="functionality-title">Extração de fragmentos dos artigos</h2>
+                <p class="functionality-desc">
                     Cada artigo é divido em texto completo, abstract, introdução, metodologia e conclusão. Dessa forma
                     é mais prático verificar o conteúdo e as abordagens presentes em cada artigo
                 </p>
                 
-                <img src="${pageContext.request.contextPath}/resources/images/example.png" alt="Example">
+                <div class="functionality-container">
+                    
+                    <div class="img-container">
+                        <img src="${pageContext.request.contextPath}/resources/images/abstract-pdf.png" />
+                    </div>
+                    
+                    <div class="arrow-container">
+                        <i class="large material-icons">arrow_forward</i>
+                    </div>
+                    
+                    <div class="img-container">
+                        <img src="${pageContext.request.contextPath}/resources/images/abstract-app.png" />
+                    </div>
+                                 
+                </div>
+                
               </div>
                         
               <div class="carousel-item transparent white-text" href="#three!">
-                <h2>Termos relevantes</h2>
-                <p class="white-text">
+                <h2 class="functionality-title">Termos relevantes</h2>
+                <p class="functionality-desc">
                     Os termos mais relaventes de cada artigo são mostrados de acordo com seu conteúdo e o conteúdo dos outros artigos envolvidos na análise
                 </p>
                 
-                <p style="background-color: yellow; color: black"> Uma print aqui </p>
+                <div class="functionality-container">
+                    
+                    <div class="img-container">
+                        <img src="${pageContext.request.contextPath}/resources/images/articles-list.png" />
+                    </div>
+                    
+                    <div class="arrow-container">
+                        <i class="large material-icons">arrow_forward</i>
+                    </div>
+                    
+                    <div class="img-container">
+                        <img src="${pageContext.request.contextPath}/resources/images/mainly-words.png" />
+                    </div>
+                                 
+                </div>
+                
               </div>
                         
               <div class="carousel-item transparent white-text" href="#four!">
-                <h2>Ordenação</h2>
-                <p class="white-text">Artigos podem ser ordenados por relevância de acordo com palavras inseridas pelo usuário</p>
-                
-                <p style="background-color: yellow; color: black"> Uma print aqui </p>
+                <h2 class="functionality-title">Ordenação</h2>
+                <p class="functionality-desc">
+                    Artigos podem ser ordenados por relevância de acordo com palavras inseridas pelo usuário
+                </p>
+
+                <div class="functionality-container">
+                    
+                    <div class="img-container">
+                        <img src="${pageContext.request.contextPath}/resources/images/sort-menu.png" />
+                    </div>
+                    
+                    <div class="arrow-container">
+                        <i class="large material-icons">arrow_forward</i>
+                    </div>
+                    
+                    <div class="img-container">
+                        <img src="${pageContext.request.contextPath}/resources/images/sort-result.png" />
+                    </div>
+                                 
+                </div>
+
               </div>
                         
               <div class="carousel-item transparent white-text" href="#five!">
-                <h2>Agrupamento</h2>
-                <p class="white-text">Artigos podem ser dividos em grupos de acordo com seu conteúdo</p>
+                <h2 class="functionality-title">Agrupamento</h2>
+                <p class="functionality-desc">
+                    Artigos podem ser dividos em grupos de acordo com seu conteúdo
+                </p>
+                
+                <div class="functionality-container">
+                    
+                    <div class="img-container">
+                        <img src="${pageContext.request.contextPath}/resources/images/groups-menu.png" />
+                    </div>
+                    
+                    <div class="arrow-container">
+                        <i class="large material-icons">arrow_forward</i>
+                    </div>
+                    
+                    <div class="img-container">
+                        <img src="${pageContext.request.contextPath}/resources/images/groups-result.png" />
+                    </div>
+                                 
+                </div>
+                    
               </div>
                         
               <div class="carousel-item transparent white-text" href="#six!">
-                <h2>Projetos compartilhados</h2>
-                <p class="white-text">Múltiplas pessoas podem trabalhar em um mesmo projeto, podendo fazer diferentes análises sobre um mesmo artigo</p>
+                <h2 class="functionality-title">Projetos compartilhados</h2>
+                <p class="functionality-desc">
+                    Múltiplas pessoas podem trabalhar em um mesmo projeto, podendo fazer diferentes análises sobre um mesmo artigo
+                </p>
+                
+                <div class="functionality-container">
+                    
+                    <div class="img-container">
+                        <img src="${pageContext.request.contextPath}/resources/images/articles.png" />
+                    </div>
+                    
+                    <div class="arrow-container">
+                        <i class="large material-icons">arrow_forward</i>
+                    </div>
+                    
+                    <div class="img-container">
+                        <img src="${pageContext.request.contextPath}/resources/images/comment.png" />
+                    </div>
+                                 
+                </div>
+
               </div>
                     
             </div>
@@ -100,13 +182,13 @@
         <script type="text/javascript">
             $(document).ready(function(){
                 $(".button-collapse").sideNav();
-                carouselFillScreen();
+//                carouselFillScreen();
             });
             
             $('.carousel.carousel-slider').carousel({fullWidth: true, dist: 0});
             
             $( window ).resize(function() {
-                carouselFillScreen();
+//                carouselFillScreen();
             });
             
             function carouselFillScreen() {

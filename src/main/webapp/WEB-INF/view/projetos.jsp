@@ -18,7 +18,7 @@
     <body>
         <header>
             <ul id="dropdown-logado" class="dropdown-content">
-                <li><a href="#!">Meu perfil</a></li>
+                <li class="active"><a href="${pageContext.request.contextPath}/meuPerfil/alterarSenha">Alterar senha</a></li>
                 <li class="divider"></li>
                 <li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
             </ul>
@@ -37,7 +37,7 @@
                       <li><a href="${pageContext.request.contextPath}/principal"><i class="material-icons left">home</i>Home</a></li>
                       <li class="active"><a href="${pageContext.request.contextPath}/projetos"><i class="material-icons left">work</i>Projetos</a></li>
                       <li class="divider"></li>
-                      <li><a href="#!">Meu perfil</a></li>
+                      <li><a href="${pageContext.request.contextPath}/meuPerfil/alterarSenha">Alterar senha</a></li>
                       <li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
                     </ul>
                 </div>
@@ -63,7 +63,7 @@
                                     <c:forEach items="${projetos}" var="projeto">
                                         <tr>
                                             <td hidden>${projeto.id}</td>
-                                            <td>${projeto.nome}</td>
+                                            <td><div class="overflow-text">${projeto.nome}</div></td>
                                             <td>
                                                 <button class="btn-floating waves-effect waves-light blue" onclick="vizualizarProjeto(${projeto.id})"><i class="material-icons">visibility</i></button>
                                                 <c:if test="${projeto.lider == 1}">
@@ -81,7 +81,7 @@
             </div>
         </div>
                     
-        <form:form modelAttribute="projeto" action="${pageContext.request.contextPath}/projetos/adicionar" method="post">
+        <form:form id="addProj" modelAttribute="projeto" action="${pageContext.request.contextPath}/projetos/adicionar" method="post">
             <div id="modalAdicionarProjeto" class="modal">
                 <div class="modal-content">
                     <h4>Adicionar projeto</h4>
@@ -100,7 +100,7 @@
                 </div>
                 <div class="modal-footer">
                     <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Voltar</a>
-                    <button type="submit" class="waves-effect waves-green btn green">Adicionar</button>
+                    <button id="submitProj" type="submit" class="waves-effect waves-green btn green">Adicionar</button>
                 </div>
             </div>
         </form:form>
@@ -185,6 +185,11 @@
                 
                 $('.modal').modal();
                 
+               $("#addProj").submit(function () {
+                    $("#submitProj").attr("disabled", true);
+                    return true;
+                });
+
                 $('#tableProjetos').DataTable({
                     "language": lang,
                     "dom": 'Bfrtip',
